@@ -1,4 +1,4 @@
-# HAT Starter app for JavaScript
+# SafeTrace JavaScript application
 [Open a new issue on Github][2]
 
 A simple application showcasing how you can work with the `HAT` in a JavaScript app. 
