@@ -1,6 +1,5 @@
 # SafeTrace JavaScript application
-[Open a new issue on Github][2]
-​
+
 COVID SafeTrace
 Citizen-generative risk tracing with personal data accounts
 
