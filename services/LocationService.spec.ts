@@ -6,6 +6,7 @@ import locationService, {
 } from './LocationService';
 
 jest.mock('expo-location', () => ({}));
+jest.mock('expo-task-manager', () => ({}));
 
 jest.mock('react-native', () => ({
     AsyncStorage: {
