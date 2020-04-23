@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import logo from '../assets/safetrace-logo.png';
 import sharedStyles from '../styles/shared';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../Main';
 
 const styles = StyleSheet.create({
     screen: {
@@ -23,8 +26,12 @@ const styles = StyleSheet.create({
     },
 });
 
-// @todo: Type checking
-const Landing: FunctionComponent<any> = ({ navigation }) => {
+type Props = {
+    navigation: StackNavigationProp<RootStackParamList>;
+    route?: RouteProp<RootStackParamList, 'Landing'>;
+};
+
+const Landing: FunctionComponent<Props> = ({ navigation }) => {
     return (
         <SafeAreaView style={sharedStyles.safeArea}>
             <View style={[sharedStyles.container, styles.screen]}>

@@ -22,6 +22,7 @@ export interface IHATService {
     isAuthenticated(): boolean;
     authenticate(config: any): void;
     writeLocationData(location: any): Promise<void>;
+    requestLocationData(): Promise<ILocationData[]>;
 }
 
 export class HATService implements IHATService {
@@ -128,6 +129,17 @@ export class HATService implements IHATService {
             console.error('Problem writing data to hat', error.message);
             // Failed to write data...
         }
+    }
+
+    public async requestLocationData() {
+        const data = await this.hat
+            .hatData()
+            .getAllDefault<ILocationData>('safetrace', 'locations');
+        return (
+            (data.parsedBody &&
+                data.parsedBody.map((dsObject) => dsObject.data)) ||
+            []
+        );
     }
 }
 

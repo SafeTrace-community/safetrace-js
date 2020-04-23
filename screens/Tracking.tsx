@@ -1,10 +1,20 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, Image } from 'react-native';
+import {
+    View,
+    Text,
+    SafeAreaView,
+    StyleSheet,
+    Image,
+    Button,
+} from 'react-native';
 import * as Location from 'expo-location';
 import sharedStyles from '../styles/shared';
 import logo from '../assets/safetrace-logo.png';
 import { HatContext } from '../context/HatContext';
 import locationService from '../services/LocationService';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../Main';
 
 const styles = StyleSheet.create({
     screen: {
@@ -27,6 +37,9 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 5,
     },
+    actions: {
+        marginBottom: 20,
+    },
 
     paragraph: {
         marginBottom: 15,
@@ -34,7 +47,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const Tracking: React.FunctionComponent = () => {
+type Props = {
+    navigation: StackNavigationProp<RootStackParamList>;
+    route?: RouteProp<RootStackParamList, 'Tracking'>;
+};
+
+const Tracking: React.FunctionComponent<Props> = ({ navigation }) => {
     enum TRACKING_STATUS {
         'ENABLED',
         'DENIED',
@@ -78,40 +96,21 @@ const Tracking: React.FunctionComponent = () => {
 
                     {trackingStatus === TRACKING_STATUS.ENABLED && (
                         <>
-                            <Text style={styles.heading}>Congratulations</Text>
+                            <View style={styles.actions}>
+                                <Button
+                                    title="Your location logs"
+                                    onPress={() => {
+                                        navigation.navigate('ViewLocations');
+                                    }}
+                                />
+                            </View>
 
                             <Text style={styles.paragraph}>
-                                You are privately tracking your location data
-                                with the SafeTrace contact tracing application.
-                                You are the only person who has access to your
-                                location information.
+                                Your SafeTrace personal data account is logging
+                                your location privately. It is privately stored
+                                in that account and no one else can see it.
                             </Text>
 
-                            <Text style={styles.paragraph}>
-                                As we ramp up our contact tracing capability, we
-                                will begin to show you your risk of exposure to
-                                COVID-19.
-                            </Text>
-
-                            <Text style={styles.paragraph}>
-                                If your public health authority needs to trace
-                                the exposure of someone who has a confirmed case
-                                of COVID-19 we may try to contact you through
-                                this application.
-                            </Text>
-
-                            <Text style={styles.paragraph}>
-                                {' '}
-                                If you have any questions about this
-                                application, please contact us at
-                                info@safetrace.io
-                            </Text>
-
-                            <Text style={styles.paragraph}>
-                                Stay safe, stay at home
-                            </Text>
-
-                            <Text style={styles.paragraph}> </Text>
                             <Text style={styles.paragraph}>{hatDomain}</Text>
                         </>
                     )}

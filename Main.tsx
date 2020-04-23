@@ -5,8 +5,18 @@ import CreateAccount from './screens/CreateAccount';
 import Tracking from './screens/Tracking';
 import Landing from './screens/Landing';
 import { HatContext } from './context/HatContext';
+import ViewLocations from './screens/ViewLocations';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+    // Specifying undefined means that the route doesn't have params
+    // see: https://reactnavigation.org/docs/typescript/
+    Tracking: undefined;
+    ViewLocations: undefined;
+    Landing: undefined;
+    CreateAccount: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const Main: FunctionComponent = () => {
     const { isAuthenticated, authenticateFromStoredToken } = useContext(
@@ -26,6 +36,14 @@ const Main: FunctionComponent = () => {
                             name="Tracking"
                             component={Tracking}
                             options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="ViewLocations"
+                            component={ViewLocations}
+                            options={{
+                                headerBackTitle: 'Back',
+                                headerTitle: 'Location logs',
+                            }}
                         />
                     </>
                 ) : (
