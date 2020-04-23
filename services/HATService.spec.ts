@@ -1,6 +1,9 @@
 import hatService, { HATService } from './HATService';
 import { HatClient } from '@dataswift/hat-js';
-import locationService, { LocationService } from './LocationService';
+import locationService, {
+    LocationService,
+    ILocationData,
+} from './LocationService';
 
 jest.useFakeTimers();
 
@@ -10,6 +13,7 @@ jest.mock('@dataswift/hat-js', () => ({
         return {
             hatData: jest.fn().mockReturnValue({
                 create: jest.fn().mockResolvedValue({ parsedBody: {} }),
+                getAllDefault: jest.fn().mockResolvedValue({ parsedBody: {} }),
             }),
         };
     }),
@@ -24,7 +28,7 @@ describe('HatService', () => {
         mockLocationService.overwriteExistingLocations.mockClear();
     });
 
-    describe('Writing location data to the HAT', () => {
+    describe('writing location data to the HAT', () => {
         test('sending saved locations to HAT', async () => {
             const storedLocations = [
                 { coords: { lng: 1, lat: 3 }, timestamp: 32454 },
@@ -178,6 +182,50 @@ describe('HatService', () => {
 
                 writeLocationSpy.mockRestore();
             });
+        });
+    });
+
+    describe('getting locations from the HAT', () => {
+        test('getting the locations', async () => {
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .getAllDefault.mockResolvedValueOnce({
+                    parsedBody: [
+                        {
+                            endpoint: 'safetrace/locations',
+                            recordId: '0a6edd5e-69b4-499d-97e0-bc374fbe69cf',
+                            data: {
+                                coords: {
+                                    speed: -1,
+                                    heading: -1,
+                                    accuracy: 65,
+                                    altitude: 19.153566360473633,
+                                    latitude: 51.5302747697369,
+                                    longitude: -0.09434700051002931,
+                                    altitudeAccuracy: 10,
+                                },
+                                timestamp: 1587588327022.461,
+                            } as ILocationData,
+                        },
+                    ],
+                });
+
+            const locations = await hatService.requestLocationData();
+
+            expect(locations).toEqual([
+                {
+                    coords: {
+                        speed: -1,
+                        heading: -1,
+                        accuracy: 65,
+                        altitude: 19.153566360473633,
+                        latitude: 51.5302747697369,
+                        longitude: -0.09434700051002931,
+                        altitudeAccuracy: 10,
+                    },
+                    timestamp: 1587588327022.461,
+                },
+            ]);
         });
     });
 });

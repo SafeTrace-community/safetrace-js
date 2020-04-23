@@ -13,6 +13,9 @@ import * as WebBrowser from 'expo-web-browser';
 import sharedStyles from '../styles/shared';
 import Constants from 'expo-constants';
 import { HatContext } from '../context/HatContext';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../Main';
+import { RouteProp } from '@react-navigation/native';
 
 interface ICreateAccountProps {
     handleAccountSuccess(authToken: string): Promise<void>;
@@ -61,7 +64,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const CreateAccount: React.FunctionComponent = () => {
+type Props = {
+    navigation: StackNavigationProp<RootStackParamList>;
+    route?: RouteProp<RootStackParamList, 'CreateAccount'>;
+};
+
+const CreateAccount: React.FunctionComponent<Props> = () => {
     const [error, setError] = useState<string | null>(null);
     const [email, setEmail] = useState('');
     const { authenticateWithToken } = useContext(HatContext);
