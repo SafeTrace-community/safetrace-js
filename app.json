@@ -7,6 +7,7 @@
             "android"
         ],
         "scheme": "safetrace",
+        "owner": "ryanhyslop",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
@@ -23,6 +24,8 @@
         ],
         "ios": {
             "supportsTablet": true,
+            "bundleIdentifier": "io.safetrace.safetrace",
+            "buildNumber": "0.0.1",
             "infoPlist": {
                 "UIBackgroundModes": [
                     "location",
@@ -36,7 +39,11 @@
         },
         "android": {
             "package": "io.safetrace.safetrace",
-            "versionCode": 0
+            "versionCode": 2,
+            "permissions": [
+                "ACCESS_COARSE_LOCATION",
+                "ACCESS_FINE_LOCATION"
+            ]
         },
         "androidStatusBar": {
             "hidden": false,
