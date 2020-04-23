@@ -1,0 +1,183 @@
+import hatService, { HATService } from './HATService';
+import { HatClient } from '@dataswift/hat-js';
+import locationService, { LocationService } from './LocationService';
+
+jest.useFakeTimers();
+
+jest.mock('./LocationService');
+jest.mock('@dataswift/hat-js', () => ({
+    HatClient: jest.fn().mockImplementation(() => {
+        return {
+            hatData: jest.fn().mockReturnValue({
+                create: jest.fn().mockResolvedValue({ parsedBody: {} }),
+            }),
+        };
+    }),
+}));
+
+const mockLocationService = locationService as jest.Mocked<LocationService>;
+const mockHatClient: jest.Mock<HatClient> = HatClient as any;
+
+describe('HatService', () => {
+    beforeEach(() => {
+        mockLocationService.getLocations.mockClear();
+        mockLocationService.overwriteExistingLocations.mockClear();
+    });
+
+    describe('Writing location data to the HAT', () => {
+        test('sending saved locations to HAT', async () => {
+            const storedLocations = [
+                { coords: { lng: 1, lat: 3 }, timestamp: 32454 },
+            ];
+
+            mockLocationService.getLocations.mockResolvedValue(storedLocations);
+            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+
+            await hatService.writeLocationData();
+            //@ts-ignore
+            expect(
+                mockHatClient.mock.results[0].value.hatData().create
+            ).toBeCalledWith('safetrace', 'locations', storedLocations);
+        });
+
+        test('clearing sent locations from saved locations', async () => {
+            const storedLocations = [
+                { coords: { lng: 1, lat: 3 }, timestamp: 12345 },
+            ];
+
+            mockLocationService.getLocations.mockResolvedValue(storedLocations);
+
+            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+
+            await hatService.writeLocationData();
+            expect(
+                mockLocationService.overwriteExistingLocations
+            ).toBeCalledWith([]);
+        });
+
+        test('not removing any new locations that have been stored since the writeLocation was called', async (done) => {
+            const storedLocations = [
+                {
+                    coords: {
+                        accuracy: 10,
+                        altitude: 0,
+                        altitudeAccuracy: -1,
+                        heading: 80.58,
+                        latitude: 37.33019528,
+                        longitude: -122.02552394,
+                        speed: 3.96,
+                    },
+                    timestamp: 1587568889623.5708,
+                },
+            ];
+
+            const newLocationUpdate = {
+                coords: {
+                    accuracy: 10,
+                    altitude: 0,
+                    altitudeAccuracy: -1,
+                    heading: 88.99,
+                    latitude: 37.33019612,
+                    longitude: -122.02543657,
+                    speed: 3.61,
+                },
+                timestamp: 1587568891522.1028,
+            };
+
+            //@ts-ignore
+            mockLocationService.getLocations.mockResolvedValueOnce(
+                storedLocations
+            );
+
+            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .create.mockReturnValue(
+                    new Promise((resolve) =>
+                        setTimeout(() => {
+                            resolve({ parsedBody: {} });
+                        }, 100)
+                    )
+                );
+
+            hatService.writeLocationData().then(() => {
+                try {
+                    expect(
+                        mockLocationService.overwriteExistingLocations
+                    ).toBeCalledWith([newLocationUpdate]);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+
+            mockLocationService.getLocations.mockResolvedValueOnce([
+                ...storedLocations,
+                newLocationUpdate,
+            ]);
+
+            jest.runAllTimers();
+        });
+
+        test('not changing the saved locations if the request to write fails', async () => {
+            const storedLocations = [
+                { coords: { lng: 1, lat: 3 }, timestamp: 12345 },
+            ];
+
+            mockLocationService.getLocations.mockResolvedValueOnce(
+                storedLocations
+            );
+
+            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .create.mockRejectedValue({});
+
+            await hatService.writeLocationData();
+
+            expect(
+                mockLocationService.overwriteExistingLocations
+            ).not.toHaveBeenCalled();
+        });
+
+        describe('throttling writes to HAT location data', () => {
+            beforeEach(() => {
+                const now = Date.now();
+                Date.now = jest.fn().mockReturnValue(now);
+            });
+            afterEach(() => {
+                //@ts-ignore
+                Date.now.mockRestore();
+            });
+
+            test('only writing after a period of time set on the static LOCATION_WRITE_DELAY has passed', async () => {
+                const writeLocationSpy = jest.spyOn(
+                    hatService,
+                    'writeLocationData'
+                );
+
+                await hatService.throttleWriteLocationData();
+
+                expect(writeLocationSpy).not.toBeCalled();
+
+                //@ts-ignore
+                Date.now.mockReturnValue(Date.now() + 1000);
+
+                await hatService.throttleWriteLocationData();
+                expect(writeLocationSpy).not.toBeCalled();
+
+                //@ts-ignore
+                Date.now.mockReturnValue(
+                    Date.now() + (HATService.LOCATION_WRITE_DELAY - 1000)
+                ); // -1000 to account for the first test increment above
+
+                await hatService.throttleWriteLocationData();
+                expect(writeLocationSpy).toBeCalled();
+
+                writeLocationSpy.mockRestore();
+            });
+        });
+    });
+});

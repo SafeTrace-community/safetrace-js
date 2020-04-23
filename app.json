@@ -1,0 +1,60 @@
+{
+    "expo": {
+        "name": "safetrace",
+        "slug": "safetrace",
+        "platforms": [
+            "ios",
+            "android"
+        ],
+        "scheme": "safetrace",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": [
+            "**/*"
+        ],
+        "ios": {
+            "supportsTablet": true,
+            "infoPlist": {
+                "UIBackgroundModes": [
+                    "location",
+                    "fetch"
+                ],
+                "NSLocationAlwaysUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
+                "NSLocationUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
+                "NSLocationWhenInUseUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
+                "NSLocationAlwaysAndWhenInUseUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account."
+            }
+        },
+        "android": {
+            "package": "io.safetrace.safetrace",
+            "versionCode": 0
+        },
+        "androidStatusBar": {
+            "hidden": false,
+            "translucent": true,
+            "barStyle": "dark-content",
+            "backgroundColor": "#FFFFFF"
+        },
+        "hooks": {
+            "postPublish": [
+                {
+                    "file": "sentry-expo/upload-sourcemaps",
+                    "config": {
+                        "organization": "uvd",
+                        "project": "safetrace",
+                        "authToken": "5193ef65505f43898efbbd13ed3cad477f6f1121da314c5db60b5908d6cd03c7"
+                    }
+                }
+            ]
+        }
+    }
+}
