@@ -28,16 +28,22 @@ export class LocationService implements ILocationService {
     public static LOCATION_STORAGE_KEY = '@SafeTrace:locationData';
 
     public async startLocationTracking() {
-        return await Location.startLocationUpdatesAsync(
-            TASK_BACKGROUND_LOCATION_NAME,
-            {
-                accuracy: Location.Accuracy.High,
-                activityType: Location.ActivityType.AutomotiveNavigation,
-                pausesUpdatesAutomatically: false,
-                timeInterval: 2 * 60000,
-                distanceInterval: 2,
-            }
+        let isRegistered = await TaskManager.isTaskRegisteredAsync(
+            TASK_BACKGROUND_LOCATION_NAME
         );
+
+        if (!isRegistered) {
+            await Location.startLocationUpdatesAsync(
+                TASK_BACKGROUND_LOCATION_NAME,
+                {
+                    accuracy: Location.Accuracy.High,
+                    activityType: Location.ActivityType.AutomotiveNavigation,
+                    pausesUpdatesAutomatically: false,
+                    timeInterval: 2 * 60000,
+                    distanceInterval: 2,
+                }
+            );
+        }
     }
 
     public async stopLocationTracking() {
