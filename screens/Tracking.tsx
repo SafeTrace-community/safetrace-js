@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginTop: 40,
+        marginBottom: 20,
     },
 
     contentContainer: {
@@ -101,6 +102,12 @@ const Tracking: React.FunctionComponent<Props> = ({ navigation }) => {
                                     title="Your location logs"
                                     onPress={() => {
                                         navigation.navigate('ViewLocations');
+                                    }}
+                                />
+                                <Button
+                                    title="Stop tracking? (delete)"
+                                    onPress={() => {
+                                        navigation.navigate('DeleteAccount');
                                     }}
                                 />
                             </View>

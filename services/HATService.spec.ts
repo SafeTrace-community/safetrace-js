@@ -4,16 +4,22 @@ import locationService, {
     LocationService,
     ILocationData,
 } from './LocationService';
+import * as SecureStore from 'expo-secure-store';
+import { TOKEN_STORAGE_KEY } from '../Constants';
 
 jest.useFakeTimers();
-
+jest.mock('expo-secure-store');
 jest.mock('./LocationService');
+
 jest.mock('@dataswift/hat-js', () => ({
     HatClient: jest.fn().mockImplementation(() => {
         return {
             hatData: jest.fn().mockReturnValue({
                 create: jest.fn().mockResolvedValue({ parsedBody: {} }),
                 getAllDefault: jest.fn().mockResolvedValue({ parsedBody: {} }),
+            }),
+            auth: jest.fn().mockReturnValue({
+                signOut: jest.fn(),
             }),
         };
     }),
@@ -226,6 +232,27 @@ describe('HatService', () => {
                     timestamp: 1587588327022.461,
                 },
             ]);
+        });
+    });
+
+    describe('deleting an account', () => {
+        test('removing the token from storage', async () => {
+            await hatService.deleteAccount();
+            expect(SecureStore.deleteItemAsync).toBeCalledWith(
+                TOKEN_STORAGE_KEY
+            );
+        });
+
+        test('signing out of the HAT via SDK', async () => {
+            await hatService.deleteAccount();
+            expect(
+                mockHatClient.mock.results[0].value.auth().signOut
+            ).toBeCalled();
+        });
+
+        test('calling stopLocationTracking on the Location Service', async () => {
+            await hatService.deleteAccount();
+            expect(locationService.stopLocationTracking).toBeCalled();
         });
     });
 });
