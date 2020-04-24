@@ -5,6 +5,7 @@ import {
     SafeAreaView,
     StyleSheet,
     Image,
+    TouchableOpacity,
     Button,
 } from 'react-native';
 import * as Location from 'expo-location';
@@ -15,6 +16,7 @@ import locationService from '../services/LocationService';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Main';
+import * as WebBrowser from 'expo-web-browser';
 
 const styles = StyleSheet.create({
     screen: {
@@ -42,9 +44,28 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
 
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+    },
+
     paragraph: {
         marginBottom: 15,
         textAlign: 'center',
+    },
+
+    news: {
+        paddingTop: 20,
+        paddingBottom: 20,
+    },
+
+    hatDomain: {
+        textAlign: 'center',
+        fontSize: 12,
+        color: '#ccc',
+        paddingTop: 30,
     },
 });
 
@@ -118,7 +139,36 @@ const Tracking: React.FunctionComponent<Props> = ({ navigation }) => {
                                 in that account and no one else can see it.
                             </Text>
 
-                            <Text style={styles.paragraph}>{hatDomain}</Text>
+                            <View style={styles.news}>
+                                <Button
+                                    title="📰 SafeTrace news"
+                                    onPress={() => {
+                                        WebBrowser.openBrowserAsync(
+                                            'https://www.safetrace.io/news'
+                                        );
+                                    }}
+                                />
+                            </View>
+
+                            <View style={styles.footer}>
+                                <Text>
+                                    For more information visit the SafeTrace
+                                    homepage:
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        WebBrowser.openBrowserAsync(
+                                            'https://www.safetrace.io'
+                                        )
+                                    }
+                                >
+                                    <Text style={styles.paragraph}>
+                                        https://www.safetrace.io
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <Text style={styles.hatDomain}>{hatDomain}</Text>
                         </>
                     )}
                 </View>
