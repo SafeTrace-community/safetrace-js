@@ -13,6 +13,7 @@ jest.mock('react-native', () => ({
     AsyncStorage: {
         setItem: jest.fn().mockResolvedValue({}),
         getItem: jest.fn().mockResolvedValue({}),
+        removeItem: jest.fn().mockResolvedValue({}),
     },
 }));
 
@@ -94,6 +95,13 @@ describe('Location Service', () => {
             expect(MockAsyncStorage.setItem).toBeCalledWith(
                 LocationService.LOCATION_STORAGE_KEY,
                 JSON.stringify([])
+            );
+        });
+
+        test('deleting location storage', async () => {
+            await locationService.deleteLocationStorage();
+            expect(MockAsyncStorage.removeItem).toBeCalledWith(
+                LocationService.LOCATION_STORAGE_KEY
             );
         });
     });

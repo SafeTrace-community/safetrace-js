@@ -22,6 +22,7 @@ export interface ILocationService {
     addLocations(location: ILocationData[]): Promise<void>;
     getLocations(): Promise<ILocationData[]>;
     overwriteExistingLocations(locations: ILocationData[]): Promise<void>;
+    deleteLocationStorage(): Promise<void>;
 }
 
 export class LocationService implements ILocationService {
@@ -93,6 +94,14 @@ export class LocationService implements ILocationService {
                 LocationService.LOCATION_STORAGE_KEY,
                 JSON.stringify([...locations])
             );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async deleteLocationStorage(): Promise<void> {
+        try {
+            await AsyncStorage.removeItem(LocationService.LOCATION_STORAGE_KEY);
         } catch (error) {
             console.error(error);
         }

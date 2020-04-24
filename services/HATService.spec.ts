@@ -254,5 +254,10 @@ describe('HatService', () => {
             await hatService.deleteAccount();
             expect(locationService.stopLocationTracking).toBeCalled();
         });
+
+        test('clearing any stored locations in the cache', async () => {
+            await hatService.deleteAccount();
+            expect(mockLocationService.deleteLocationStorage).toBeCalledWith();
+        });
     });
 });

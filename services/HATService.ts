@@ -144,8 +144,9 @@ export class HATService implements IHATService {
     }
 
     public async deleteAccount() {
-        await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
         await locationService.stopLocationTracking();
+        await locationService.deleteLocationStorage();
+        await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
         await this.hat.auth().signOut();
     }
 }
