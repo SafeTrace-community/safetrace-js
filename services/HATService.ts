@@ -1,10 +1,10 @@
 import { HatClient, HatClientConfig } from '@dataswift/hat-js';
 import * as SecureStore from 'expo-secure-store';
 
-// import * as TaskManager from 'expo-task-manager';
 import * as Sentry from 'sentry-expo';
 import { TOKEN_STORAGE_KEY } from '../Constants';
 import locationService from './LocationService';
+import { Linking } from 'expo';
 
 interface ILocationData {
     coords: {
@@ -22,11 +22,13 @@ export interface IHATService {
     isAuthenticated(): boolean;
     authenticate(config: any): void;
     deleteAccount(): void;
+    getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
     writeLocationData(location: any): Promise<void>;
     requestLocationData(): Promise<ILocationData[]>;
 }
 
 export class HATService implements IHATService {
+    public static APPLICATION_ID: string = 'safe-trace-dev';
     private namespace: string = 'safetrace';
     private hat: HatClient;
     private lastLocationWrite: number | null = null;
@@ -43,6 +45,30 @@ export class HATService implements IHATService {
             SecureStore.setItemAsync(TOKEN_STORAGE_KEY, newToken);
         },
     };
+
+    public async getLoginUrl(
+        hatDomain: string
+    ): Promise<[string | null, string | null]> {
+        const isValidRegisteredHat = await this.hat
+            .auth()
+            .isDomainRegistered(hatDomain);
+        if (!isValidRegisteredHat) {
+            return ['The HAT url supplied is not valid', null];
+        }
+        const redirect = Linking.makeUrl('/login-success');
+        const fallback = Linking.makeUrl('/login-failure');
+
+        const url = this.hat
+            .auth()
+            .generateHatLoginUrl(
+                hatDomain,
+                HATService.APPLICATION_ID,
+                redirect,
+                fallback
+            );
+
+        return [null, `https://${url}`];
+    }
 
     public isAuthenticated() {
         try {

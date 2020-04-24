@@ -11,6 +11,14 @@ jest.useFakeTimers();
 jest.mock('expo-secure-store');
 jest.mock('./LocationService');
 
+jest.mock('expo', () => {
+    return {
+        Linking: {
+            makeUrl: jest.fn().mockReturnValue(''),
+        },
+    };
+});
+
 jest.mock('@dataswift/hat-js', () => ({
     HatClient: jest.fn().mockImplementation(() => {
         return {
@@ -20,6 +28,8 @@ jest.mock('@dataswift/hat-js', () => ({
             }),
             auth: jest.fn().mockReturnValue({
                 signOut: jest.fn(),
+                generateHatLoginUrl: jest.fn(),
+                isDomainRegistered: jest.fn(),
             }),
         };
     }),
@@ -32,6 +42,54 @@ describe('HatService', () => {
     beforeEach(() => {
         mockLocationService.getLocations.mockClear();
         mockLocationService.overwriteExistingLocations.mockClear();
+    });
+
+    describe('getting login url', () => {
+        test('returning an error if the HAT URL is invalid', async () => {
+            mockHatClient.mock.results[0].value
+                .auth()
+                .isDomainRegistered.mockResolvedValue(false);
+            const [error] = await hatService.getLoginUrl('invalid-hat-url.net');
+            expect(error).toEqual('The HAT url supplied is not valid');
+        });
+
+        test('calling the generateHatLoginUrl HAT SDK with the correct params', async () => {
+            mockHatClient.mock.results[0].value
+                .auth()
+                .isDomainRegistered.mockResolvedValue(true);
+            const hatDomain = 'mypdhat.hubat.net';
+            const mockedRedirectLink = '';
+            const mockedFallbackLink = '';
+
+            await hatService.getLoginUrl('mypdhat.hubat.net');
+
+            expect(
+                mockHatClient.mock.results[0].value.auth().generateHatLoginUrl
+            ).toBeCalledWith(
+                hatDomain,
+                HATService.APPLICATION_ID,
+                mockedRedirectLink,
+                mockedFallbackLink
+            );
+        });
+
+        test('returning no error and the url if all goes well', async () => {
+            mockHatClient.mock.results[0].value
+                .auth()
+                .isDomainRegistered.mockResolvedValue(true);
+
+            const urlReturned = 'https://mypdhat.hubat.net/auth';
+            mockHatClient.mock.results[0].value
+                .auth()
+                .generateHatLoginUrl.mockReturnValue(urlReturned);
+
+            const [error, url] = await hatService.getLoginUrl(
+                'mypdhat.hubat.net'
+            );
+
+            expect(error).toBe(null);
+            expect(url).toBe(`https://${urlReturned}`);
+        });
     });
 
     describe('writing location data to the HAT', () => {

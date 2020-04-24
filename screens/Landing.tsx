@@ -24,6 +24,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
+    actions: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    loginAction: {
+        flexDirection: 'row',
+    },
+    createAccountAction: {
+        marginBottom: 20,
+    },
 });
 
 type Props = {
@@ -36,15 +46,27 @@ const Landing: FunctionComponent<Props> = ({ navigation }) => {
         <SafeAreaView style={sharedStyles.safeArea}>
             <View style={[sharedStyles.container, styles.screen]}>
                 <View style={styles.logoContainer}>
-                    <Image source={logo} style={{ width: 305, height: 159 }} />
+                    <Image source={logo} style={{ width: 230, height: 120 }} />
                 </View>
-                <Button
-                    title="Create account"
-                    onPress={() => {
-                        navigation.navigate('CreateAccount');
-                    }}
-                    testID="createAccountButton"
-                />
+                <View style={styles.actions}>
+                    <View style={styles.createAccountAction}>
+                        <Button
+                            title="Create account"
+                            onPress={() => {
+                                navigation.navigate('CreateAccount');
+                            }}
+                            testID="createAccountButton"
+                        />
+                    </View>
+                    <View style={styles.loginAction}>
+                        <Text>Already have an account? </Text>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Login')}
+                        >
+                            <Text>Click here to login</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         </SafeAreaView>
     );
