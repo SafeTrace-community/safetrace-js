@@ -144,12 +144,16 @@ describe('HatContext provider', () => {
             const deleteAccountBtn = getByTestId('deleteAccountBtn');
             mockedHatService.isAuthenticated.mockReturnValue(true);
 
-            await fireEvent.press(deleteAccountBtn);
+            fireEvent.press(deleteAccountBtn);
 
-            expect(mockedHatService.deleteAccount).toBeCalled();
+            await act(async () =>
+                wait(() => {
+                    expect(mockedHatService.deleteAccount).toBeCalled();
 
-            expect(getByTestId('isAuthenticated').children.join('')).toEqual(
-                'true'
+                    expect(
+                        getByTestId('isAuthenticated').children.join('')
+                    ).toEqual('true');
+                })
             );
         });
     });

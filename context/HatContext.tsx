@@ -15,6 +15,7 @@ export interface IHatContext {
     deleteAccount: () => void;
     authenticateWithToken: (token: string) => void;
     hatDomain: string;
+    getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
 }
 
 export const HatContext = createContext<IHatContext>({} as any);
@@ -53,12 +54,17 @@ const HatProvider: FunctionComponent = ({ children }) => {
         setIsHatAuthenticated(hatService.isAuthenticated());
     }, []);
 
+    const getLoginUrl = useCallback((hatDomain: string) => {
+        return hatService.getLoginUrl(hatDomain);
+    }, []);
+
     const value = {
         isAuthenticated,
         authenticateFromStoredToken,
         authenticateWithToken,
         hatDomain,
         deleteAccount,
+        getLoginUrl,
     };
 
     return <HatContext.Provider value={value}>{children}</HatContext.Provider>;
