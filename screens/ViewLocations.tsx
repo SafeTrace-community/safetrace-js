@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     notice: {
         padding: 20,
         fontSize: 16,
+        textAlign: 'center',
     },
     item: {
         flexGrow: 1,
@@ -104,9 +105,8 @@ const ViewLocations: FunctionComponent<Props> = () => {
             <View>
                 {locations && locations.length === 0 && (
                     <Text style={styles.notice} testID="noLogsNotice">
-                        No locations have been synced to your Personal Data
-                        Account yet. Your locations are synced every 15 minutes
-                        so check back shortly.
+                        No location data has been recorded yet, check back
+                        later.
                     </Text>
                 )}
 

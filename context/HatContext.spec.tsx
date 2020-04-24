@@ -1,6 +1,12 @@
 import React, { useContext, FunctionComponent, useEffect } from 'react';
-import { render, cleanup, act, wait } from '@testing-library/react-native';
-import { Text } from 'react-native';
+import {
+    render,
+    cleanup,
+    act,
+    wait,
+    fireEvent,
+} from '@testing-library/react-native';
+import { Text, Button } from 'react-native';
 
 jest.mock('../services/HATService');
 jest.mock('expo-secure-store');
@@ -105,6 +111,46 @@ describe('HatContext provider', () => {
                     ).toEqual('true')
                 );
             });
+        });
+    });
+
+    describe('delete account', () => {
+        test('calls delete account on hatService and updates isAuthenticated from Hatservice', async () => {
+            mockedHatService.isAuthenticated.mockReturnValue(false);
+
+            const TestComponent: FunctionComponent = () => {
+                const { isAuthenticated, deleteAccount } = useContext(
+                    HatContext
+                );
+
+                return (
+                    <>
+                        <Text testID="isAuthenticated">
+                            {isAuthenticated ? 'true' : 'false'}
+                        </Text>
+                        <Button
+                            title="delete account"
+                            testID="deleteAccountBtn"
+                            onPress={() => deleteAccount()}
+                        />
+                    </>
+                );
+            };
+
+            const { getByTestId } = renderComponent(TestComponent);
+            expect(getByTestId('isAuthenticated').children.join('')).toEqual(
+                'false'
+            );
+            const deleteAccountBtn = getByTestId('deleteAccountBtn');
+            mockedHatService.isAuthenticated.mockReturnValue(true);
+
+            await fireEvent.press(deleteAccountBtn);
+
+            expect(mockedHatService.deleteAccount).toBeCalled();
+
+            expect(getByTestId('isAuthenticated').children.join('')).toEqual(
+                'true'
+            );
         });
     });
 });

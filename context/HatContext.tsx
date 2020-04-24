@@ -9,9 +9,10 @@ import * as SecureStore from 'expo-secure-store';
 import { TOKEN_STORAGE_KEY } from '../Constants';
 import hatService from '../services/HATService';
 
-interface IHatContext {
+export interface IHatContext {
     isAuthenticated: boolean;
     authenticateFromStoredToken: () => void;
+    deleteAccount: () => void;
     authenticateWithToken: (token: string) => void;
     hatDomain: string;
 }
@@ -47,11 +48,17 @@ const HatProvider: FunctionComponent = ({ children }) => {
         authenticateFromStoredToken();
     }, []);
 
+    const deleteAccount = useCallback(async () => {
+        await hatService.deleteAccount();
+        setIsHatAuthenticated(hatService.isAuthenticated());
+    }, []);
+
     const value = {
         isAuthenticated,
         authenticateFromStoredToken,
         authenticateWithToken,
         hatDomain,
+        deleteAccount,
     };
 
     return <HatContext.Provider value={value}>{children}</HatContext.Provider>;

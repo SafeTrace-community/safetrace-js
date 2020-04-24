@@ -6,6 +6,7 @@ import Tracking from './screens/Tracking';
 import Landing from './screens/Landing';
 import { HatContext } from './context/HatContext';
 import ViewLocations from './screens/ViewLocations';
+import DeleteAccount from './screens/DeleteAccount';
 
 export type RootStackParamList = {
     // Specifying undefined means that the route doesn't have params
@@ -14,6 +15,7 @@ export type RootStackParamList = {
     ViewLocations: undefined;
     Landing: undefined;
     CreateAccount: undefined;
+    DeleteAccount: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -43,6 +45,14 @@ const Main: FunctionComponent = () => {
                             options={{
                                 headerBackTitle: 'Back',
                                 headerTitle: 'Location logs',
+                            }}
+                        />
+                        <Stack.Screen
+                            name="DeleteAccount"
+                            component={DeleteAccount}
+                            options={{
+                                headerBackTitle: 'Back',
+                                headerTitle: 'Delete Account?',
                             }}
                         />
                     </>

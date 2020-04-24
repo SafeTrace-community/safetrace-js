@@ -21,6 +21,7 @@ interface ILocationData {
 export interface IHATService {
     isAuthenticated(): boolean;
     authenticate(config: any): void;
+    deleteAccount(): void;
     writeLocationData(location: any): Promise<void>;
     requestLocationData(): Promise<ILocationData[]>;
 }
@@ -140,6 +141,13 @@ export class HATService implements IHATService {
                 data.parsedBody.map((dsObject) => dsObject.data)) ||
             []
         );
+    }
+
+    public async deleteAccount() {
+        await locationService.stopLocationTracking();
+        await locationService.deleteLocationStorage();
+        await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
+        await this.hat.auth().signOut();
     }
 }
 
