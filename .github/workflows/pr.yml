@@ -28,7 +28,7 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-version: 3.x
-          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-username: ryanhyslop
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
       - run: yarn install
       - run: expo publish --release-channel=pr-${{ github.event.number }}
@@ -36,4 +36,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: App is ready for review, you can [see it here](https://expo.io/@ryanhyslop/use-expo?release-channel=pr-${{ github.event.number }}).
+          msg: PR published to expo you can review it [here](https://expo.io/@ryanhyslop/safetrace?release-channel=pr-${{ github.event.number }}).
