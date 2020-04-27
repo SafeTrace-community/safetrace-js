@@ -4,7 +4,6 @@ import locationService, { LocationService } from '../services/LocationService';
 import { TASK_BACKGROUND_LOCATION_NAME } from '../Constants';
 import './backgroundLocation';
 
-jest.mock('lodash.throttle');
 jest.mock('expo-task-manager');
 jest.mock('../services/HATService');
 jest.mock('../services/LocationService');
