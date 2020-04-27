@@ -24,7 +24,7 @@ jest.mock('@dataswift/hat-js', () => ({
         return {
             hatData: jest.fn().mockReturnValue({
                 create: jest.fn().mockResolvedValue({ parsedBody: {} }),
-                getAllDefault: jest.fn().mockResolvedValue({ parsedBody: {} }),
+                getAll: jest.fn().mockResolvedValue({ parsedBody: {} }),
             }),
             auth: jest.fn().mockReturnValue({
                 signOut: jest.fn(),
@@ -253,7 +253,7 @@ describe('HatService', () => {
         test('getting the locations', async () => {
             mockHatClient.mock.results[0].value
                 .hatData()
-                .getAllDefault.mockResolvedValueOnce({
+                .getAll.mockResolvedValueOnce({
                     parsedBody: [
                         {
                             endpoint: 'safetrace/locations',
@@ -275,6 +275,13 @@ describe('HatService', () => {
                 });
 
             const locations = await hatService.requestLocationData();
+
+            expect(
+                mockHatClient.mock.results[0].value.hatData().getAll
+            ).toHaveBeenCalledWith('safetrace', 'locations', {
+                orderBy: 'timestamp',
+                ordering: 'descending',
+            });
 
             expect(locations).toEqual([
                 {

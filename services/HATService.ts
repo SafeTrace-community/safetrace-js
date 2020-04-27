@@ -161,7 +161,10 @@ export class HATService implements IHATService {
     public async requestLocationData() {
         const data = await this.hat
             .hatData()
-            .getAllDefault<ILocationData>('safetrace', 'locations');
+            .getAll<ILocationData>('safetrace', 'locations', {
+                orderBy: 'timestamp',
+                ordering: 'descending',
+            });
         return (
             (data.parsedBody &&
                 data.parsedBody.map((dsObject) => dsObject.data)) ||
