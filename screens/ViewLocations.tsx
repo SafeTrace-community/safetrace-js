@@ -88,10 +88,7 @@ const ViewLocations: FunctionComponent<Props> = () => {
     const getLocations = async () => {
         try {
             const locations = await hatService.requestLocationData();
-            const reOrderedLocations = locations.sort(
-                (a, b) => b.timestamp - a.timestamp
-            );
-            setLocations(reOrderedLocations);
+            setLocations(locations);
         } catch (e) {
             console.error('Error fetching locations', e.message);
         }
