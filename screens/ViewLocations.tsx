@@ -51,7 +51,7 @@ const Item: FunctionComponent<{ location: ILocationData }> = ({
 }) => (
     <View style={styles.item} testID="log">
         <Text style={styles.title}>
-            {format(new Date(timestamp), 'd/MM/yy hh:mm:ss')}
+            {format(new Date(timestamp), 'd/MM/yy H:mm:ss')}
         </Text>
 
         <View style={styles.itemInfo}>
