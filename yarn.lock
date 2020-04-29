@@ -932,10 +932,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@dataswift/hat-js@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@dataswift/hat-js/-/hat-js-0.3.0.tgz#3cd3decb3b268624c0f066d5b5dcdf4b78c432bc"
-  integrity sha512-8h8fpScmMzO3Hgm08LlYsFrO2r5GNI+v2XJi1gV/6K6AvYZ2KJTni8nio8q8H5fEDouNsbsuwYDs4l0ktNDyvw==
+"@dataswift/hat-js@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@dataswift/hat-js/-/hat-js-0.3.1.tgz#a4d16bcdb99f5f1909f151e58e2cba86c73efe77"
+  integrity sha512-3QM3/aC0ldNbxcHiXL15a/j0X6nRqdurhjIOsKgT6uQIBhdFSWnOHonO3sqaQYUdqQcBBZjXW5Le5C7uGM6wFg==
   dependencies:
     cross-fetch "^3.0.4"
     jwt-decode "^2.2.0"

@@ -51,7 +51,7 @@ const Item: FunctionComponent<{ location: ILocationData }> = ({
 }) => (
     <View style={styles.item} testID="log">
         <Text style={styles.title}>
-            {format(new Date(timestamp), 'd/MM/yy hh:mm:ss')}
+            {format(new Date(timestamp), 'd/MM/yy H:mm:ss')}
         </Text>
 
         <View style={styles.itemInfo}>
@@ -88,10 +88,7 @@ const ViewLocations: FunctionComponent<Props> = () => {
     const getLocations = async () => {
         try {
             const locations = await hatService.requestLocationData();
-            const reOrderedLocations = locations.sort(
-                (a, b) => b.timestamp - a.timestamp
-            );
-            setLocations(reOrderedLocations);
+            setLocations(locations);
         } catch (e) {
             console.error('Error fetching locations', e.message);
         }
