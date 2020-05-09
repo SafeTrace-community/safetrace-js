@@ -2,10 +2,7 @@
     "expo": {
         "name": "safetrace",
         "slug": "safetrace",
-        "platforms": [
-            "ios",
-            "android"
-        ],
+        "platforms": ["ios", "android"],
         "scheme": "safetrace",
         "owner": "ryanhyslop",
         "version": "1.0.0",
@@ -19,18 +16,13 @@
         "updates": {
             "fallbackToCacheTimeout": 0
         },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
+        "assetBundlePatterns": ["**/*"],
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "io.safetrace.safetrace",
-            "buildNumber": "0.0.3",
+            "buildNumber": "0.0.5",
             "infoPlist": {
-                "UIBackgroundModes": [
-                    "location",
-                    "fetch"
-                ],
+                "UIBackgroundModes": ["location", "fetch"],
                 "NSLocationAlwaysUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
                 "NSLocationUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
                 "NSLocationWhenInUseUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
@@ -39,11 +31,8 @@
         },
         "android": {
             "package": "io.safetrace.safetrace",
-            "versionCode": 4,
-            "permissions": [
-                "ACCESS_COARSE_LOCATION",
-                "ACCESS_FINE_LOCATION"
-            ]
+            "versionCode": 5,
+            "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
         },
         "androidStatusBar": {
             "hidden": false,
