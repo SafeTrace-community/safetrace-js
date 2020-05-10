@@ -1,12 +1,18 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { StyleSheet, Animated, StatusBar, Dimensions } from 'react-native';
+import {
+    StyleSheet,
+    Animated,
+    StatusBar,
+    Dimensions,
+    TouchableOpacity,
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 import { View, Image, Text } from 'react-native';
 import introHeader from '../assets/intro-header.png';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Main';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ToggleAppearance } from '../components/ToggleAppearance';
 
 const styles = StyleSheet.create({
     screen: {
@@ -15,6 +21,28 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#ffffff',
         width: '100%',
+        position: 'relative',
+    },
+    skipIntroWrapper: {
+        position: 'absolute',
+        top: '6%',
+        right: 20,
+        zIndex: 11,
+    },
+    skipIntroButton: {
+        paddingVertical: 7,
+        paddingHorizontal: 25,
+        borderStyle: 'solid',
+        borderColor: '#ffffff',
+        borderRadius: 3,
+        borderWidth: 2,
+    },
+    skipIntroButtonText: {
+        color: '#ffffff',
+        fontFamily: 'Avenir Next',
+        fontWeight: '600',
+        fontSize: 16,
+        lineHeight: 22,
     },
     imageWrapper: {},
     image: {
@@ -100,50 +128,54 @@ type Props = {
 };
 
 const Introduction: FunctionComponent<Props> = ({ navigation }) => {
-    const hintOpacity = new Animated.Value(0);
-    const buttonOpacity = new Animated.Value(0);
-    const windowWidth = Dimensions.get('window').width;
+    const swiperRef = React.createRef<Swiper>();
+    const [showSkipButton, setShowSkipButton] = useState(true);
+    const [showHint, setShowHint] = useState(true);
+    const [showButton, setShowButton] = useState(false);
 
-    const fadeIn = (AnimatedValue: Animated.Value) => {
-        Animated.timing(AnimatedValue, {
-            toValue: 1,
-            duration: 300,
-        }).start();
+    const skipIntro = () => {
+        swiperRef.current!.scrollBy(4);
     };
-
-    const fadeOut = (AnimatedValue: Animated.Value) => {
-        Animated.timing(AnimatedValue, {
-            toValue: 0,
-            duration: 300,
-        }).start();
-    };
-
-    useEffect(() => {
-        fadeIn(hintOpacity);
-    }, []);
 
     return (
         <View style={[styles.screen]}>
-            {/* <View style={styles.imageWrapper}> */}
+            <View style={styles.skipIntroWrapper}>
+                <ToggleAppearance visible={showSkipButton}>
+                    <TouchableOpacity
+                        onPress={skipIntro}
+                        testID="skipIntroButton"
+                    >
+                        <View style={styles.skipIntroButton}>
+                            <Text style={styles.skipIntroButtonText}>
+                                Skip intro
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                </ToggleAppearance>
+            </View>
+
             <Image source={introHeader} style={styles.image} />
-            {/* </View> */}
+
             <View style={styles.contentWrapper}>
                 <View style={styles.infoSlider}>
                     <Swiper
                         loop={false}
                         index={0}
+                        ref={swiperRef}
                         activeDotColor="#167976"
                         onIndexChanged={(index) => {
                             if (index === 0) {
-                                fadeIn(hintOpacity);
+                                setShowSkipButton(true);
+                                setShowHint(true);
                             } else {
-                                fadeOut(hintOpacity);
+                                setShowSkipButton(false);
+                                setShowHint(false);
                             }
 
                             if (index === 4) {
-                                fadeIn(buttonOpacity);
+                                setShowButton(true);
                             } else {
-                                fadeOut(buttonOpacity);
+                                setShowButton(false);
                             }
                         }}
                         testID="swiper"
@@ -208,37 +240,33 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.actions}>
-                    <Animated.View
-                        style={{
-                            opacity: hintOpacity,
-                            width: '100%',
-                            alignItems: 'center',
-                        }}
-                        testID="hint"
-                    >
-                        <Text style={styles.hint}>
-                            Swipe left to learn more
-                        </Text>
-                    </Animated.View>
-
-                    <Animated.View
-                        style={[
-                            { opacity: buttonOpacity },
-                            styles.buttonWrapper,
-                        ]}
-                    >
-                        <TouchableOpacity
-                            onPress={() => {
-                                navigation.navigate('Landing');
+                    <ToggleAppearance visible={showHint}>
+                        <View
+                            style={{
+                                width: '100%',
+                                alignItems: 'center',
                             }}
-                            style={styles.button}
-                            testID="continueButton"
+                            testID="hint"
                         >
-                            <Text style={styles.buttonText}>
-                                Become part of the solution
+                            <Text style={styles.hint}>
+                                Swipe left to learn more
                             </Text>
-                        </TouchableOpacity>
-                    </Animated.View>
+                        </View>
+                    </ToggleAppearance>
+
+                    <View style={styles.buttonWrapper}>
+                        <ToggleAppearance visible={showButton}>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Landing')}
+                                style={styles.button}
+                                testID="continueButton"
+                            >
+                                <Text style={styles.buttonText}>
+                                    Become part of the solution
+                                </Text>
+                            </TouchableOpacity>
+                        </ToggleAppearance>
+                    </View>
                 </View>
 
                 <StatusBar barStyle="light-content" />
