@@ -5,7 +5,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 export const ToggleAppearance: FunctionComponent<{
     visible: boolean;
     children: any;
-}> = ({ visible, children, ...rest }) => {
+}> = ({ visible, children }) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const [isVisible, setIsVisible] = useState(true);
 

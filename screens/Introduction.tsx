@@ -1,11 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import {
-    StyleSheet,
-    Animated,
-    StatusBar,
-    Dimensions,
-    TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { View, Image, Text } from 'react-native';
 import introHeader from '../assets/intro-header.png';
