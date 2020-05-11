@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Sentry from 'sentry-expo';
 import { StatusBar, Platform } from 'react-native';
 import Main from './Main';
 import './tasks/backgroundLocation';
 import HatProvider from './context/HatContext';
+import { loadAsync, FontDisplay, FontResource } from 'expo-font';
 
 Platform.OS === 'android' ? StatusBar.setBackgroundColor('#FFFFFF') : '';
 
@@ -15,6 +16,23 @@ Sentry.init({
 });
 
 export default function App() {
+    useEffect(() => {
+        loadAsync({
+            // Load a font `Montserrat` from a static resource
+            Avenir: require('./assets/fonts/AvenirNext-Regular.ttf'),
+
+            'Avenir-DemiBold': {
+                uri: require('./assets/fonts/AvenirNext-DemiBold.ttf'),
+                fontDisplay: FontDisplay.FALLBACK,
+            } as FontResource,
+
+            'Avenir-Bold': {
+                uri: require('./assets/fonts/AvenirNext-Bold.ttf'),
+                fontDisplay: FontDisplay.FALLBACK,
+            } as FontResource,
+        });
+    });
+
     return (
         <HatProvider>
             <StatusBar barStyle="dark-content" />

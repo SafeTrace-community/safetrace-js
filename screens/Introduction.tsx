@@ -1,5 +1,10 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import {
+    StyleSheet,
+    StatusBar,
+    TouchableOpacity,
+    Platform,
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 import { View, Image, Text } from 'react-native';
 import introHeader from '../assets/intro-header.png';
@@ -19,7 +24,7 @@ const styles = StyleSheet.create({
     },
     skipIntroWrapper: {
         position: 'absolute',
-        top: '6%',
+        top: Platform.OS === 'ios' ? '6%' : '3%',
         right: 20,
         zIndex: 11,
     },
@@ -33,18 +38,18 @@ const styles = StyleSheet.create({
     },
     skipIntroButtonText: {
         color: '#ffffff',
-        fontFamily: 'Avenir Next',
+        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
         fontWeight: '600',
         fontSize: 16,
         lineHeight: 22,
     },
-    imageWrapper: {},
     image: {
         flex: 3,
         width: '100%',
         resizeMode: 'cover',
         marginBottom: 20,
         marginTop: -50,
+        backgroundColor: '#0F4176',
     },
     contentWrapper: {
         flex: 2,
@@ -65,13 +70,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '600',
         marginBottom: 20,
-        fontFamily: 'Avenir Next',
+        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
         color: '#272935',
     },
     text: {
         fontSize: 14,
         lineHeight: 20,
-        fontFamily: 'Avenir Next',
+        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir',
         color: '#272935',
     },
     actions: {
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
     },
     hint: {
         color: '#646465',
-        fontFamily: 'Avenir Next',
+        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir',
     },
 
     button: {
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
         right: 30,
     },
     buttonText: {
-        fontFamily: 'Avenir Next',
+        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
         color: '#ffffff',
         fontSize: 18,
         fontWeight: '600',
@@ -148,7 +153,11 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                 </ToggleAppearance>
             </View>
 
-            <Image source={introHeader} style={styles.image} />
+            <Image
+                source={introHeader}
+                style={styles.image}
+                resizeMode="cover"
+            />
 
             <View style={styles.contentWrapper}>
                 <View style={styles.infoSlider}>
@@ -263,7 +272,9 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                     </View>
                 </View>
 
-                <StatusBar barStyle="light-content" />
+                {Platform.OS === 'ios' && (
+                    <StatusBar barStyle="light-content" />
+                )}
             </View>
         </View>
     );
