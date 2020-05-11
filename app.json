@@ -20,7 +20,7 @@
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "io.safetrace.safetrace",
-            "buildNumber": "0.0.5",
+            "buildNumber": "0.0.6",
             "infoPlist": {
                 "UIBackgroundModes": ["location", "fetch"],
                 "NSLocationAlwaysUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
