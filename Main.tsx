@@ -8,16 +8,18 @@ import { HatContext } from './context/HatContext';
 import ViewLocations from './screens/ViewLocations';
 import DeleteAccount from './screens/DeleteAccount';
 import Login from './screens/Login';
+import Introduction from './screens/Introduction';
 
 export type RootStackParamList = {
-    // Specifying undefined means that the route doesn't have params
+    // Specifying undefined means that the route is there but has no params
     // see: https://reactnavigation.org/docs/typescript/
-    Tracking: undefined;
-    ViewLocations: undefined;
+    Introduction: undefined;
     Landing: undefined;
     CreateAccount: undefined;
-    DeleteAccount: undefined;
     Login: undefined;
+    Tracking: undefined;
+    ViewLocations: undefined;
+    DeleteAccount: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -61,22 +63,27 @@ const Main: FunctionComponent = () => {
                 ) : (
                     <>
                         <Stack.Screen
+                            name="Introduction"
+                            component={Introduction}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
                             name="Landing"
                             component={Landing}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
                             name="CreateAccount"
-                            options={{ headerShown: false }}
                             component={CreateAccount}
+                            options={{ headerShown: false }}
                         />
                         <Stack.Screen
                             name="Login"
+                            component={Login}
                             options={{
                                 headerBackTitle: 'Back',
                                 headerTitle: 'Login',
                             }}
-                            component={Login}
                         />
                     </>
                 )}
