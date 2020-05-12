@@ -6,7 +6,7 @@ const sharedStyles = StyleSheet.create({
         backgroundColor: 'white',
     },
     container: {
-        padding: 20,
+        padding: 30,
     },
 });
 

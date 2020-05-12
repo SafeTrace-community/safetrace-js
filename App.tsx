@@ -21,6 +21,11 @@ export default function App() {
             // Load a font `Montserrat` from a static resource
             Avenir: require('./assets/fonts/AvenirNext-Regular.ttf'),
 
+            'Avenir-Medium': {
+                uri: require('./assets/fonts/AvenirNext-Medium.ttf'),
+                fontDisplay: FontDisplay.FALLBACK,
+            } as FontResource,
+
             'Avenir-DemiBold': {
                 uri: require('./assets/fonts/AvenirNext-DemiBold.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
