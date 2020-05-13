@@ -12,8 +12,15 @@ describe('Landing screen', () => {
     });
 
     test('being able to log in', () => {
-        const { getByTestId } = render(<Landing navigation={{} as any} />);
+        const navigateStub = jest.fn();
+        const { getByTestId } = render(
+            <Landing navigation={{ navigate: navigateStub } as any} />
+        );
         expect(getByTestId('loginButton')).toBeTruthy();
+
+        fireEvent.press(getByTestId('loginButton'));
+
+        expect(navigateStub).toHaveBeenCalledWith('Login');
     });
 
     test('being to learn more about HATs', () => {
