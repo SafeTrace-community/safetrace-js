@@ -97,7 +97,7 @@ const Landing: FunctionComponent<Props> = ({ navigation }) => {
                 <View style={styles.actions}>
                     <View style={styles.loginAction}>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('Landing')}
+                            onPress={() => navigation.navigate('Login')}
                             style={styles.button}
                             testID="loginButton"
                         >
