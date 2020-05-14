@@ -43,3 +43,10 @@ To run the unit tests: `yarn test` or `yarn test:watch`
 -   And there we go 👍
 
 *   iOS currently requires a custom expo client build signed with developer credentials for background location tracking.
+
+# Pushing to Apple Developer accounts
+
+-   Update the version in app.json
+
+-   `expo build:ios` - follow instructions
+-   `expo upload:ios` - follow instructions (you may need to generate an app-specific password. The instructions to do so are provided by the CLI when running the command)
