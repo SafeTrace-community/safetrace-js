@@ -98,16 +98,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#167976',
         borderRadius: 3,
         paddingVertical: 15,
-    },
-    buttonWrapper: {
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 3,
         },
-        shadowOpacity: 0.13,
+        shadowOpacity: 0.23,
         shadowRadius: 3.84,
         elevation: 5,
+    },
+    buttonWrapper: {
         position: 'absolute',
         left: 30,
         right: 30,
