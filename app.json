@@ -1,9 +1,12 @@
 {
     "expo": {
-        "name": "safetrace",
-        "slug": "safetrace",
-        "platforms": ["ios", "android"],
-        "scheme": "safetrace",
+        "name": "sharetrace",
+        "slug": "sharetrace",
+        "platforms": [
+            "ios",
+            "android"
+        ],
+        "scheme": "sharetrace",
         "owner": "ryanhyslop",
         "version": "1.0.0",
         "orientation": "portrait",
@@ -16,23 +19,31 @@
         "updates": {
             "fallbackToCacheTimeout": 0
         },
-        "assetBundlePatterns": ["**/*"],
+        "assetBundlePatterns": [
+            "**/*"
+        ],
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "io.safetrace.safetrace",
+            "bundleIdentifier": "org.sharetrace.sharetrace",
             "buildNumber": "0.0.7",
             "infoPlist": {
-                "UIBackgroundModes": ["location", "fetch"],
-                "NSLocationAlwaysUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
-                "NSLocationUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
-                "NSLocationWhenInUseUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
-                "NSLocationAlwaysAndWhenInUseUsageDescription": "SafeTrace needs to access your location to record your GPS data in a secure Personal Data Account."
+                "UIBackgroundModes": [
+                    "location",
+                    "fetch"
+                ],
+                "NSLocationAlwaysUsageDescription": "ShareTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
+                "NSLocationUsageDescription": "ShareTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
+                "NSLocationWhenInUseUsageDescription": "ShareTrace needs to access your location to record your GPS data in a secure Personal Data Account.",
+                "NSLocationAlwaysAndWhenInUseUsageDescription": "ShareTrace needs to access your location to record your GPS data in a secure Personal Data Account."
             }
         },
         "android": {
-            "package": "io.safetrace.safetrace",
+            "package": "org.sharetrace.sharetrace",
             "versionCode": 5,
-            "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+            "permissions": [
+                "ACCESS_COARSE_LOCATION",
+                "ACCESS_FINE_LOCATION"
+            ]
         },
         "androidStatusBar": {
             "hidden": false,

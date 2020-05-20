@@ -23,7 +23,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import sharedStyles from '../styles/shared';
-import logo from '../assets/safetrace-logo.png';
+import logo from '../assets/sharetrace-logo.png';
 import { HatContext } from '../context/HatContext';
 import Constants from 'expo-constants';
 
@@ -116,7 +116,8 @@ const Login: FunctionComponent<Props> = () => {
                     <View style={styles.logoContainer}>
                         <Image
                             source={logo}
-                            style={{ width: 120, height: 76.8 }}
+                            style={{ width: 177 }}
+                            resizeMode="contain"
                         />
                     </View>
                     <View style={styles.action}>

@@ -29,7 +29,7 @@ describe('Landing screen', () => {
         fireEvent.press(getByTestId('learnMoreLink'));
 
         expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith(
-            'https://www.safetrace.io/'
+            'https://www.sharetrace.org/'
         );
     });
 });

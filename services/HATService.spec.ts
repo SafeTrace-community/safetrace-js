@@ -105,7 +105,7 @@ describe('HatService', () => {
             //@ts-ignore
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
-            ).toBeCalledWith('safetrace', 'locations', storedLocations);
+            ).toBeCalledWith('sharetrace', 'locations', storedLocations);
         });
 
         test('clearing sent locations from saved locations', async () => {
@@ -256,7 +256,7 @@ describe('HatService', () => {
                 .getAll.mockResolvedValueOnce({
                     parsedBody: [
                         {
-                            endpoint: 'safetrace/locations',
+                            endpoint: 'sharetrace/locations',
                             recordId: '0a6edd5e-69b4-499d-97e0-bc374fbe69cf',
                             data: {
                                 coords: {
@@ -278,7 +278,7 @@ describe('HatService', () => {
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().getAll
-            ).toHaveBeenCalledWith('safetrace', 'locations', {
+            ).toHaveBeenCalledWith('sharetrace', 'locations', {
                 orderBy: 'timestamp',
                 ordering: 'descending',
             });

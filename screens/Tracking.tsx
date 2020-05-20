@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import * as Location from 'expo-location';
 import sharedStyles from '../styles/shared';
-import logo from '../assets/safetrace-logo.png';
+import logo from '../assets/sharetrace-logo.png';
 import { HatContext } from '../context/HatContext';
 import locationService from '../services/LocationService';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -134,17 +134,17 @@ const Tracking: React.FunctionComponent<Props> = ({ navigation }) => {
                             </View>
 
                             <Text style={styles.paragraph}>
-                                Your SafeTrace personal data account is logging
+                                Your ShareTrace personal data account is logging
                                 your location privately. It is privately stored
                                 in that account and no one else can see it.
                             </Text>
 
                             <View style={styles.news}>
                                 <Button
-                                    title="📰 SafeTrace news"
+                                    title="📰 ShareTrace news"
                                     onPress={() => {
                                         WebBrowser.openBrowserAsync(
-                                            'https://www.safetrace.io/news'
+                                            'https://www.sharetrace.org/news'
                                         );
                                     }}
                                 />
@@ -152,18 +152,18 @@ const Tracking: React.FunctionComponent<Props> = ({ navigation }) => {
 
                             <View style={styles.footer}>
                                 <Text>
-                                    For more information visit the SafeTrace
+                                    For more information visit the ShareTrace
                                     homepage:
                                 </Text>
                                 <TouchableOpacity
                                     onPress={() =>
                                         WebBrowser.openBrowserAsync(
-                                            'https://www.safetrace.io'
+                                            'https://www.sharetrace.org'
                                         )
                                     }
                                 >
                                     <Text style={styles.paragraph}>
-                                        https://www.safetrace.io
+                                        https://www.sharetrace.org
                                     </Text>
                                 </TouchableOpacity>
                             </View>

@@ -160,10 +160,12 @@ const CreateAccount: React.FunctionComponent<Props> = () => {
                         </Text>
 
                         <TouchableOpacity
-                            onPress={() => openLink('https://safetrace.io')}
+                            onPress={() =>
+                                openLink('https://www.sharetrace.org')
+                            }
                         >
                             <Text style={styles.linkText}>
-                                SafeTrace terms of service
+                                ShareTrace terms of service
                             </Text>
                         </TouchableOpacity>
 

@@ -26,7 +26,7 @@ export interface ILocationService {
 }
 
 export class LocationService implements ILocationService {
-    public static LOCATION_STORAGE_KEY = '@safetrace:locationData';
+    public static LOCATION_STORAGE_KEY = '@sharetrace:locationData';
 
     public async startLocationTracking() {
         const isRegistered = await TaskManager.isTaskRegisteredAsync(

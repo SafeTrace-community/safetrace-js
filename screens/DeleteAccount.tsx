@@ -19,7 +19,7 @@ const DeleteAccount: FunctionComponent = () => {
             <View style={[sharedStyles.container, styles.screen]}>
                 <Text style={styles.summary}>
                     Your locations will no longer be logged in your private
-                    SafeTrace account. Are you sure you want to proceed?
+                    ShareTrace account. Are you sure you want to proceed?
                 </Text>
                 <Button
                     testID="deleteAccount"

@@ -29,7 +29,7 @@ export interface IHATService {
 
 export class HATService implements IHATService {
     public static APPLICATION_ID: string = 'safe-trace-dev';
-    private namespace: string = 'safetrace';
+    private namespace: string = 'sharetrace';
     private hat: HatClient;
     private lastLocationWrite: number | null = null;
     public static LOCATION_WRITE_DELAY: number = 15 * 60000; // 15 minutes
@@ -161,7 +161,7 @@ export class HATService implements IHATService {
     public async requestLocationData() {
         const data = await this.hat
             .hatData()
-            .getAll<ILocationData>('safetrace', 'locations', {
+            .getAll<ILocationData>('sharetrace', 'locations', {
                 orderBy: 'timestamp',
                 ordering: 'descending',
             });

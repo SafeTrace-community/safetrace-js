@@ -133,7 +133,7 @@ const Landing: FunctionComponent<Props> = ({ navigation }) => {
                     <TouchableOpacity
                         onPress={() =>
                             WebBrowser.openBrowserAsync(
-                                'https://www.safetrace.io/'
+                                'https://www.sharetrace.org/'
                             )
                         }
                         testID="learnMoreLink"
