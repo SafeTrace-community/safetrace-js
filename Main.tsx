@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import CreateAccount from './screens/CreateAccount';
+import CreatePDA from './screens/CreatePDA/CreatePDA';
 import Tracking from './screens/Tracking';
 import Landing from './screens/Landing';
 import { HatContext } from './context/HatContext';
@@ -74,8 +74,11 @@ const Main: FunctionComponent = () => {
                         />
                         <Stack.Screen
                             name="CreateAccount"
-                            component={CreateAccount}
-                            options={{ headerShown: false }}
+                            component={CreatePDA}
+                            options={{
+                                headerBackTitle: 'Back',
+                                headerTitle: '',
+                            }}
                         />
                         <Stack.Screen
                             name="Login"

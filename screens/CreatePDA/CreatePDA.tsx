@@ -5,7 +5,6 @@ import {
     TextInput,
     View,
     Text,
-    SafeAreaView,
     TouchableOpacity,
     KeyboardAvoidingView,
     Platform,
@@ -14,19 +13,17 @@ import {
 } from 'react-native';
 import { Linking } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
-import sharedStyles from '../styles/shared';
+import sharedStyles from '../../styles/shared';
 import Constants from 'expo-constants';
-import { HatContext } from '../context/HatContext';
+import { HatContext } from '../../context/HatContext';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../Main';
+import { RootStackParamList } from '../../Main';
 import { RouteProp } from '@react-navigation/native';
 
-interface ICreateAccountProps {
-    handleAccountSuccess(authToken: string): Promise<void>;
-}
-
 const styles = StyleSheet.create({
-    screen: {},
+    screen: {
+        backgroundColor: '#F6F6F6',
+    },
     heading: {
         fontSize: 24,
         paddingTop: 100,
@@ -73,12 +70,16 @@ type Props = {
     route?: RouteProp<RootStackParamList, 'CreateAccount'>;
 };
 
-const CreateAccount: React.FunctionComponent<Props> = () => {
+const openLink = (url: string) => {
+    WebBrowser.openBrowserAsync(url);
+};
+
+const CreatePDA: React.FunctionComponent<Props> = () => {
     const [error, setError] = useState<string | null>(null);
     const [email, setEmail] = useState('');
     const { authenticateWithToken } = useContext(HatContext);
 
-    const handleRedirect = (event: any): void => {
+    const handleRedirect = (event: { url: string }): void => {
         if (Constants.platform!.ios) {
             WebBrowser.dismissBrowser();
         } else {
@@ -110,40 +111,41 @@ const CreateAccount: React.FunctionComponent<Props> = () => {
         Linking.removeEventListener('url', handleRedirect);
     };
 
-    const handleCreateAccount = async () => {
+    const handleCreatePDA = async () => {
         addLinkingListener();
-        const redirect_uri = Linking.makeUrl('/signup-return');
-        const url = `https://hatters.dataswift.io/services/daas/signup?email=${email}&application_id=safe-trace-dev&redirect_uri=${redirect_uri}`;
+        const redirectUri = Linking.makeUrl('/signup-return');
+        const url = `https://hatters.dataswift.io/services/daas/signup?email=${email}&application_id=safe-trace-dev&redirect_uri=${redirectUri}`;
 
         try {
-            const result = await WebBrowser.openBrowserAsync(url);
-            console.log(result);
+            await WebBrowser.openBrowserAsync(url);
         } catch (error) {
+            // QUESTION: Do we want to pass something to Sentry here?
             console.log('ERROR', error);
             removeLinkingListener();
         }
     };
 
-    const openLink = (url: string) => {
-        WebBrowser.openBrowserAsync(url);
-    };
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-            style={sharedStyles.safeArea}
+            style={[sharedStyles.safeArea, styles.screen]}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={[sharedStyles.container, styles.screen]}>
                     <Text style={styles.heading}>Enter your details</Text>
 
-                    {error && <Text style={styles.error}>{error}</Text>}
+                    {error && (
+                        <Text style={styles.error} testID="error">
+                            {error}
+                        </Text>
+                    )}
 
                     <TextInput
                         onChangeText={setEmail}
                         value={email}
                         placeholder="Enter email address"
                         keyboardType="email-address"
+                        testID="emailInput"
                         style={{
                             height: 40,
                             borderColor: 'gray',
@@ -201,11 +203,15 @@ const CreateAccount: React.FunctionComponent<Props> = () => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <Button title="Next" onPress={handleCreateAccount} />
+                    <Button
+                        title="Next"
+                        onPress={handleCreatePDA}
+                        testID="createPDA"
+                    />
                 </View>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
 };
 
-export default CreateAccount;
+export default CreatePDA;
