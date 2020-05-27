@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 import {
     View,
     Image,
@@ -86,6 +86,8 @@ type Props = {
 const Landing: FunctionComponent<Props> = ({ navigation }) => {
     return (
         <SafeAreaView style={sharedStyles.safeArea}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
+
             <View style={[sharedStyles.container, styles.screen]}>
                 <View style={styles.logoContainer}>
                     <Image

@@ -18,7 +18,6 @@ Sentry.init({
 export default function App() {
     useEffect(() => {
         loadAsync({
-            // Load a font `Montserrat` from a static resource
             Avenir: require('./assets/fonts/AvenirNext-Regular.ttf'),
 
             'Avenir-Medium': {
