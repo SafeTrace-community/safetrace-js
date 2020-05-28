@@ -19,6 +19,7 @@ import { RootStackParamList } from '../../Main';
 import { RouteProp } from '@react-navigation/native';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Input } from '../../components/Input';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
     screen: {
@@ -29,16 +30,25 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '500',
         marginBottom: 30,
+        marginTop: 10,
         fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
         color: '#272935',
         textAlign: 'center',
     },
-    error: {
-        color: 'red',
+    formInput: {
+        marginBottom: 15,
+        position: 'relative',
+    },
+    formGlobalError: {
+        color: Colors.red,
+        textAlign: 'center',
+        padding: 3,
+        overflow: 'hidden',
         marginBottom: 10,
     },
-    form: {
-        marginBottom: 35,
+    formError: {
+        color: Colors.red,
+        marginBottom: 5,
     },
     disclaimer: {
         marginBottom: 30,
@@ -51,6 +61,7 @@ const styles = StyleSheet.create({
     },
     linkText: {
         color: '#1F5992',
+        alignSelf: 'flex-start',
     },
     well: {
         padding: 30,
@@ -78,23 +89,45 @@ const openLink = (url: string) => {
     WebBrowser.openBrowserAsync(url);
 };
 
-function formatBackendError(backendError: string): string {
-    switch (backendError) {
-        case 'email_is_not_valid':
-            return 'Please enter a valid email address';
-        case 'email_is_required':
-            return 'Please enter your email address';
-        default:
-            return 'An error occurred, please try again';
-    }
-}
-
 const CreatePDA: React.FunctionComponent<Props> = () => {
     const [error, setError] = useState<string | null>(null);
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [usernameError, setUsernameError] = useState<string | null>(null);
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+
     const { authenticateWithToken } = useContext(HatContext);
 
-    const handleRedirect = (event: { url: string }): void => {
+    const mapBackendError = useCallback((backendError: string): void => {
+        switch (backendError) {
+            case 'email_is_not_valid':
+                setEmailError('Please enter a valid email address');
+                break;
+            case 'email_is_required':
+                setEmailError('Please enter your email address');
+                break;
+            case 'email_already_taken':
+                setEmailError('Email already registered');
+                break;
+            case 'hat_name_is_required':
+                setUsernameError('Please enter a valid username');
+                break;
+            case 'hat_name_is_not_valid':
+                setUsernameError(
+                    'Username must be lowercase, between 4 and 24 characters and start with a letter'
+                );
+                break;
+            case 'hat_name_already_taken':
+                setUsernameError('That username is already taken');
+                break;
+            default:
+                console.error(backendError);
+                setError('An error occurred');
+                break;
+        }
+    }, []);
+
+    const handleRedirect = useCallback((event: { url: string }): void => {
         if (Constants.platform!.ios) {
             WebBrowser.dismissBrowser();
         } else {
@@ -108,10 +141,10 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
         }
 
         if (data.queryParams!.error) {
-            const error = formatBackendError(
+            mapBackendError(
                 data.queryParams!.error_reason || data.queryParams!.error
             );
-            setError(error);
+            removeLinkingListener();
             return;
         }
 
@@ -119,26 +152,41 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
             authenticateWithToken(data.queryParams!.token);
             return;
         }
-    };
+    }, []);
 
-    const addLinkingListener = () => {
+    const addLinkingListener = useCallback(() => {
         Linking.addEventListener('url', handleRedirect);
-    };
+    }, []);
 
-    const removeLinkingListener = () => {
+    const removeLinkingListener = useCallback(() => {
         Linking.removeEventListener('url', handleRedirect);
-    };
+    }, []);
 
-    const validateForm = (userEmail: string): boolean => {
-        if (userEmail.length === 0) {
-            setError('Please enter your email address');
-            return false;
+    const clearErrors = useCallback(() => {
+        setError(null);
+        setEmailError(null);
+        setUsernameError(null);
+    }, []);
+
+    const validateForm = useCallback((): boolean => {
+        clearErrors();
+        let isValid = true;
+
+        if (email.length === 0) {
+            setEmailError('Please enter your email address');
+            isValid = false;
         }
-        return true;
-    };
+
+        if (username.length === 0) {
+            setUsernameError('Please enter a username');
+            isValid = false;
+        }
+
+        return isValid;
+    }, [email, username]);
 
     const handleCreatePDA = async () => {
-        const isValid = validateForm(email);
+        const isValid = validateForm();
 
         if (!isValid) {
             return;
@@ -146,13 +194,11 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
 
         addLinkingListener();
         const redirectUri = Linking.makeUrl('/signup-return');
-        const url = `https://hatters.dataswift.io/services/daas/signup?email=${email}&application_id=safe-trace-dev&redirect_uri=${redirectUri}`;
+        const url = `https://hatters.dataswift.io/services/baas/signup?hat_name=${username}&email=${email}&application_id=safe-trace-dev&redirect_uri=${redirectUri}`;
 
         try {
             await WebBrowser.openBrowserAsync(url);
-        } catch (error) {
-            // QUESTION: Do we want to pass something to Sentry here?
-            console.log('ERROR', error);
+        } catch (err) {
             removeLinkingListener();
         }
     };
@@ -163,94 +209,135 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
             style={[sharedStyles.safeArea, styles.screen]}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View
-                    style={[
-                        sharedStyles.container,
-                        {
-                            justifyContent: 'space-between',
-                        },
-                    ]}
-                >
-                    <Text style={styles.heading}>Create Account</Text>
+                <ScrollView>
+                    <View style={sharedStyles.container}>
+                        <Text style={styles.heading}>Create Account</Text>
 
-                    <View style={styles.form}>
                         {error && (
-                            <Text style={styles.error} testID="error">
+                            <Text style={styles.formGlobalError} testID="error">
                                 {error}
                             </Text>
                         )}
 
-                        <Input
-                            onChangeText={(text) => {
-                                setError(null);
-                                setEmail(text);
-                            }}
-                            value={email}
-                            placeholder="Input email"
-                            keyboardType="email-address"
-                            testID="emailInput"
-                            style={(error && { borderColor: Colors.red }) || {}}
-                        />
-                    </View>
+                        <View style={styles.formInput}>
+                            {emailError && (
+                                <Text
+                                    style={styles.formError}
+                                    testID="emailError"
+                                >
+                                    {emailError}
+                                </Text>
+                            )}
 
-                    <View style={styles.disclaimer}>
-                        <Text style={styles.disclaimerText}>
-                            We use HAT Personal Data Accounts (PDAs) - a state
-                            of the art technology to ensure data security and
-                            data rights. By proceeding, you agree to:
-                        </Text>
+                            <Input
+                                onChangeText={(text) => {
+                                    setEmailError(null);
+                                    setEmail(text);
+                                }}
+                                value={email}
+                                placeholder="Input email"
+                                keyboardType="email-address"
+                                testID="emailInput"
+                                autoCapitalize="none"
+                                style={
+                                    (emailError && {
+                                        borderColor: Colors.red,
+                                    }) ||
+                                    {}
+                                }
+                            />
+                        </View>
 
-                        <TouchableOpacity
-                            onPress={() =>
-                                openLink('https://www.sharetrace.org')
-                            }
-                        >
+                        <View style={[styles.formInput, { marginBottom: 30 }]}>
+                            {usernameError && (
+                                <Text
+                                    style={styles.formError}
+                                    testID="usernameError"
+                                >
+                                    {usernameError}
+                                </Text>
+                            )}
+
+                            <Input
+                                onChangeText={(text) => {
+                                    setUsernameError(null);
+                                    setUsername(text);
+                                }}
+                                value={username}
+                                placeholder="Input username"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                testID="usernameInput"
+                                style={
+                                    (usernameError && {
+                                        borderColor: Colors.red,
+                                    }) ||
+                                    {}
+                                }
+                            />
+                        </View>
+
+                        <View style={styles.disclaimer}>
+                            <Text style={styles.disclaimerText}>
+                                We use HAT Personal Data Accounts (PDAs) - a
+                                state of the art technology to ensure data
+                                security and data rights. By proceeding, you
+                                agree to:
+                            </Text>
+
                             <Text
                                 style={[styles.linkText, { marginBottom: 10 }]}
+                                onPress={() =>
+                                    openLink('https://www.sharetrace.org')
+                                }
                             >
                                 ShareTrace terms of service
                             </Text>
-                        </TouchableOpacity>
+
+                            <Text
+                                style={styles.linkText}
+                                onPress={() =>
+                                    openLink(
+                                        'https://cdn.dataswift.io/legal/dataswift-privacy-policy.pdf'
+                                    )
+                                }
+                            >
+                                HAT Terms of service
+                            </Text>
+                        </View>
+
+                        <View style={styles.well}>
+                            <Text style={styles.wellBody}>
+                                Your HAT PDA enables you to own your data for
+                                reuse and sharing with applications.
+                            </Text>
+                        </View>
+
+                        <View style={styles.actions}>
+                            <PrimaryButton
+                                onPress={handleCreatePDA}
+                                testID="createPDA"
+                            >
+                                Next
+                            </PrimaryButton>
+                        </View>
 
                         <TouchableOpacity
                             onPress={() =>
-                                openLink(
-                                    'https://cdn.dataswift.io/legal/dataswift-privacy-policy.pdf'
-                                )
+                                openLink('https://hubofallthings.com')
                             }
                         >
-                            <Text style={styles.linkText}>
-                                HAT Terms of service
+                            <Text
+                                style={[
+                                    styles.linkText,
+                                    { alignSelf: 'center', marginBottom: 5 },
+                                ]}
+                            >
+                                Learn how HAT protects your data
                             </Text>
                         </TouchableOpacity>
                     </View>
-
-                    <View style={styles.well}>
-                        <Text style={styles.wellBody}>
-                            Your HAT PDA enables you to own your data for reuse
-                            and sharing with applications.
-                        </Text>
-                    </View>
-
-                    <View style={styles.actions}>
-                        <PrimaryButton
-                            onPress={handleCreatePDA}
-                            testID="createPDA"
-                        >
-                            Next
-                        </PrimaryButton>
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={() => openLink('https://www.sharetrace.org')}
-                    >
-                        <Text
-                            style={[styles.linkText, { textAlign: 'center' }]}
-                        >
-                            Learn how HAT PDA's protect your data
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                </ScrollView>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
