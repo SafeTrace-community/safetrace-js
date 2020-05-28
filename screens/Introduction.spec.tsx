@@ -26,7 +26,7 @@ describe('Introduction screen', () => {
 
         fireEvent.press(getByTestId('continueButton'));
 
-        expect(navigateStub).toHaveBeenCalledWith('Landing');
+        expect(navigateStub).toHaveBeenCalledWith('HealthStatus');
     });
 
     test('having a button to skip intro', () => {

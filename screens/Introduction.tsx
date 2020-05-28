@@ -260,7 +260,9 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                     <View style={styles.buttonWrapper}>
                         <ToggleAppearance visible={showButton}>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('Landing')}
+                                onPress={() =>
+                                    navigation.navigate('HealthStatus')
+                                }
                                 style={styles.button}
                                 testID="continueButton"
                             >

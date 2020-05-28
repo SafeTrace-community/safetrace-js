@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, SafeAreaView, Text } from 'react-native';
 import sharedStyles from '../../styles/shared';
 import { StackNavigationProp } from '@react-navigation/stack';
