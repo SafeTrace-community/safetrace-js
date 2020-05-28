@@ -130,14 +130,16 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
 
     useFocusEffect(
         useCallback(() => {
-            //@ts-ignore we need the latest typings
-            const lightStyle = StatusBar.pushStackEntry({
-                barStyle: 'light-content',
-            });
-            return () => {
+            if (Platform.OS === 'ios') {
                 //@ts-ignore we need the latest typings
-                StatusBar.popStackEntry(lightStyle);
-            };
+                const lightStyle = StatusBar.pushStackEntry({
+                    barStyle: 'light-content',
+                });
+                return () => {
+                    //@ts-ignore we need the latest typings
+                    StatusBar.popStackEntry(lightStyle);
+                };
+            }
         }, [])
     );
 
