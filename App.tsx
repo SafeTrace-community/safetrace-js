@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Sentry from 'sentry-expo';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar, Platform, Text } from 'react-native';
 import Main from './Main';
 import './tasks/backgroundLocation';
 import HatProvider from './context/HatContext';
@@ -16,6 +16,7 @@ Sentry.init({
 });
 
 export default function App() {
+    const [loadingFonts, setLoadingFonts] = useState(true);
     useEffect(() => {
         loadAsync({
             Avenir: require('./assets/fonts/AvenirNext-Regular.ttf'),
@@ -34,10 +35,14 @@ export default function App() {
                 uri: require('./assets/fonts/AvenirNext-Bold.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
+        }).then(() => {
+            setLoadingFonts(false);
         });
     });
 
-    return (
+    return loadingFonts ? (
+        <Text>Loading</Text>
+    ) : (
         <HatProvider>
             <StatusBar barStyle="dark-content" />
             <Main />

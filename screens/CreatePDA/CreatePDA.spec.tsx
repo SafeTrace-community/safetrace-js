@@ -3,10 +3,10 @@ import {
     render,
     fireEvent,
     wait,
-    GetByBoundProp,
     getByTestId,
     NativeTestInstance,
     act,
+    queryByTestId,
 } from '@testing-library/react-native';
 import CreatePDA from './CreatePDA';
 import * as WebBrowser from 'expo-web-browser';
@@ -59,6 +59,31 @@ describe('Create PDA', () => {
                 `https://hatters.dataswift.io/services/daas/signup?email=${email}&application_id=safe-trace-dev&redirect_uri=${redirectUri}`
             );
         });
+    });
+
+    test('showing an error if nothing entered in the email input', () => {
+        const { container } = render(<CreatePDA navigation={{} as any} />);
+
+        submitFormWithEmail(container, '');
+
+        expect(getByTestId(container, 'error').props.children).toContain(
+            'Please enter your email address'
+        );
+    });
+
+    test('resetting an error when changing value of email input after error', () => {
+        const { container } = render(<CreatePDA navigation={{} as any} />);
+
+        submitFormWithEmail(container, '');
+
+        expect(getByTestId(container, 'error').props.children).toContain(
+            'Please enter your email address'
+        );
+
+        const emailInput = getByTestId(container, 'emailInput');
+        fireEvent.changeText(emailInput, 'j');
+
+        expect(queryByTestId(container, 'error')).toBeFalsy();
     });
 
     describe('handling a redirect from Dataswift', () => {
@@ -156,7 +181,7 @@ describe('Create PDA', () => {
 
             mockLinking.parse.mockReturnValue({
                 path: 'signup-return',
-                queryParams: { error: 'email_is_required' },
+                queryParams: { error: 'email_is_not_valid' },
             } as any);
 
             act(() => {
@@ -164,7 +189,7 @@ describe('Create PDA', () => {
             });
 
             expect(getByTestId(container, 'error').props.children).toContain(
-                'email_is_required'
+                'Please enter a valid email address'
             );
         });
     });
