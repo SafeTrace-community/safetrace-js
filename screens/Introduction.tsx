@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useCallback } from 'react';
 import {
     StyleSheet,
     StatusBar,
@@ -13,7 +13,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Main';
 import { ToggleAppearance } from '../components/ToggleAppearance';
 import sharedStyles from '../styles/shared';
-
+import { useFocusEffect } from '@react-navigation/native';
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
@@ -127,6 +127,19 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
     const skipIntro = () => {
         swiperRef.current!.scrollBy(4);
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            //@ts-ignore we need the latest typings
+            const lightStyle = StatusBar.pushStackEntry({
+                barStyle: 'light-content',
+            });
+            return () => {
+                //@ts-ignore we need the latest typings
+                StatusBar.popStackEntry(lightStyle);
+            };
+        }, [])
+    );
 
     return (
         <View style={[styles.screen]}>
@@ -265,10 +278,6 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         </ToggleAppearance>
                     </View>
                 </View>
-
-                {Platform.OS === 'ios' && (
-                    <StatusBar barStyle="light-content" />
-                )}
             </View>
         </View>
     );

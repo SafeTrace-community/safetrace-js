@@ -9,7 +9,6 @@ import {
     SafeAreaView,
     Image,
     StyleSheet,
-    Platform,
 } from 'react-native';
 import sharedStyles from '../../styles/shared';
 import healthCheckIcon from '../../assets/health-check-icon.png';
@@ -25,7 +24,7 @@ type Props = {
 
 const styles = StyleSheet.create({
     screen: {
-        backgroundColor: '#F6F7F9',
+        flex: 1,
     },
     panel: {
         backgroundColor: 'white',

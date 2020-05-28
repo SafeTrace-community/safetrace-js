@@ -6,6 +6,8 @@ import {
 } from '@testing-library/react-native';
 import Introduction from './Introduction';
 
+jest.mock('@react-navigation/native');
+
 describe('Introduction screen', () => {
     test('having button to continue to the landing page button', () => {
         const { getByTestId } = render(<Introduction navigation={{} as any} />);
