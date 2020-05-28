@@ -24,10 +24,9 @@ const styles = {
         width: '100%',
     },
     buttonText: {
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
+        fontFamily: 'Avenir-DemiBold',
         color: '#ffffff',
         fontSize: 18,
-        fontWeight: '600',
         alignSelf: 'center',
     } as TextStyle,
 };
