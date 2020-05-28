@@ -8,6 +8,12 @@ const sharedStyles = StyleSheet.create({
     container: {
         padding: 30,
     },
+    text: {
+        fontSize: 14,
+        lineHeight: 18,
+        fontFamily: 'AvenirNext',
+        color: '#272935',
+    },
 });
 
 export default sharedStyles;

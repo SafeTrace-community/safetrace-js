@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Sentry from 'sentry-expo';
 import { StatusBar, Platform } from 'react-native';
 import Main from './Main';
@@ -16,32 +16,32 @@ Sentry.init({
 });
 
 export default function App() {
+    const [fontsLoaded, setFontsLoaded] = useState(false);
     useEffect(() => {
         loadAsync({
-            // Load a font `Montserrat` from a static resource
-            Avenir: require('./assets/fonts/AvenirNext-Regular.ttf'),
+            AvenirNext: require('./assets/fonts/AvenirNext-Regular.ttf'),
 
-            'Avenir-Medium': {
+            'AvenirNext-Medium': {
                 uri: require('./assets/fonts/AvenirNext-Medium.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
 
-            'Avenir-DemiBold': {
+            'AvenirNext-DemiBold': {
                 uri: require('./assets/fonts/AvenirNext-DemiBold.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
 
-            'Avenir-Bold': {
+            'AvenirNext-Bold': {
                 uri: require('./assets/fonts/AvenirNext-Bold.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
-        });
-    });
+        }).then(() => setFontsLoaded(true));
+    }, []);
 
     return (
         <HatProvider>
             <StatusBar barStyle="dark-content" />
-            <Main />
+            {fontsLoaded && <Main />}
         </HatProvider>
     );
 }

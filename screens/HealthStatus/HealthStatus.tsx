@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
 
     progressNavItemLinkText: {
-        fontFamily: 'Avenir-DemiBold',
+        fontFamily: 'AvenirNext-DemiBold',
         color: '#1F5992',
     },
 
@@ -109,7 +109,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                         style={styles.icon}
                     />
 
-                    <Text style={styles.intro}>
+                    <Text style={[sharedStyles.text, styles.intro]}>
                         In order to provide an assessment of your health status,
                         we will need you to complete the 2 steps below.
                     </Text>

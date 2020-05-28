@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Main';
 import { ToggleAppearance } from '../components/ToggleAppearance';
+import sharedStyles from '../styles/shared';
 
 const styles = StyleSheet.create({
     screen: {
@@ -38,8 +39,7 @@ const styles = StyleSheet.create({
     },
     skipIntroButtonText: {
         color: '#ffffff',
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
-        fontWeight: '600',
+        fontFamily: 'AvenirNext-DemiBold',
         fontSize: 16,
         lineHeight: 22,
     },
@@ -68,15 +68,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: '600',
         marginBottom: 20,
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
-        color: '#272935',
-    },
-    text: {
-        fontSize: 14,
-        lineHeight: 20,
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir',
+        fontFamily: 'AvenirNext-DemiBold',
         color: '#272935',
     },
     actions: {
@@ -91,7 +84,7 @@ const styles = StyleSheet.create({
     },
     hint: {
         color: '#646465',
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir',
+        fontFamily: 'AvenirNext',
     },
 
     button: {
@@ -113,10 +106,9 @@ const styles = StyleSheet.create({
         right: 30,
     },
     buttonText: {
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
+        fontFamily: 'AvenirNext-DemiBold',
         color: '#ffffff',
         fontSize: 18,
-        fontWeight: '600',
         alignSelf: 'center',
     },
 });
@@ -188,7 +180,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                                 Contribute anonymously
                             </Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace uses HAT, a Personal Data Account
                                 (PDA), to ensure that your data remains yours
                                 and always under your control. Whenever your
@@ -198,7 +190,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <View style={styles.slide}>
                             <Text style={styles.title}>Protect your data</Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace’s distributed architecture protects
                                 your privacy by eliminating the need to
                                 broadcast even the anonymized user IDs and
@@ -209,7 +201,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <View style={styles.slide}>
                             <Text style={styles.title}>Assess your risk</Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace integrates your personal health data
                                 as well as history related to your recent
                                 patterns of contact to provide a personal risk
@@ -221,7 +213,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                                 Be informed of exposure
                             </Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace is able to connect the dots between
                                 those whom you have come in contact with and
                                 their recent contacts to provide you with
@@ -233,7 +225,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <View style={styles.slide}>
                             <Text style={styles.title}>Safer travels</Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace’s hyperlocal networks allow you to
                                 roam and continue to receive appropriate
                                 guidance even when traveling.
