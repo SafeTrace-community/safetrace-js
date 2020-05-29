@@ -9,17 +9,21 @@ import ViewLocations from './screens/ViewLocations';
 import DeleteAccount from './screens/DeleteAccount';
 import Login from './screens/Login';
 import Introduction from './screens/Introduction';
+import HealthStatusScreen from './screens/HealthStatus/HealthStatus';
+import HealthCheckScreen from './screens/HealthCheck/HealthCheck';
 
 export type RootStackParamList = {
     // Specifying undefined means that the route is there but has no params
     // see: https://reactnavigation.org/docs/typescript/
     Introduction: undefined;
-    Landing: undefined;
+    GetStartedWithHat: undefined;
     CreateAccount: undefined;
     Login: undefined;
     Tracking: undefined;
     ViewLocations: undefined;
     DeleteAccount: undefined;
+    HealthStatus: undefined;
+    HealthCheck: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -39,25 +43,13 @@ const Main: FunctionComponent = () => {
                 {isAuthenticated ? (
                     <>
                         <Stack.Screen
-                            name="Tracking"
-                            component={Tracking}
+                            name="HealthStatus"
+                            component={HealthStatusScreen}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="ViewLocations"
-                            component={ViewLocations}
-                            options={{
-                                headerBackTitle: 'Back',
-                                headerTitle: 'Location logs',
-                            }}
-                        />
-                        <Stack.Screen
-                            name="DeleteAccount"
-                            component={DeleteAccount}
-                            options={{
-                                headerBackTitle: 'Back',
-                                headerTitle: 'Delete Account?',
-                            }}
+                            name="HealthCheck"
+                            component={HealthCheckScreen}
                         />
                     </>
                 ) : (
@@ -68,14 +60,25 @@ const Main: FunctionComponent = () => {
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="Landing"
-                            component={Landing}
+                            name="HealthStatus"
+                            component={HealthStatusScreen}
                             options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="GetStartedWithHat"
+                            component={Landing}
+                            options={{
+                                headerBackTitle: 'Back',
+                                headerTitle: '',
+                            }}
                         />
                         <Stack.Screen
                             name="CreateAccount"
                             component={CreateAccount}
-                            options={{ headerShown: false }}
+                            options={{
+                                headerBackTitle: 'Back',
+                                headerTitle: '',
+                            }}
                         />
                         <Stack.Screen
                             name="Login"
