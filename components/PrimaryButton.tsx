@@ -4,6 +4,7 @@ import {
     Platform,
     Text,
     TextStyle,
+    TouchableOpacityProps,
 } from 'react-native';
 import React from 'react';
 import { FunctionComponent } from 'react';
@@ -31,18 +32,20 @@ const styles = {
     } as TextStyle,
 };
 
-type Props = {
-    testID: string;
+interface Props extends TouchableOpacityProps {
+    testID?: string;
     onPress: (e: GestureResponderEvent) => void;
-};
+}
 
 export const PrimaryButton: FunctionComponent<Props> = ({
     onPress,
     testID,
     children,
+    ...props
 }) => {
     return (
         <TouchableOpacity
+            {...props}
             onPress={onPress}
             style={styles.button}
             testID={testID}

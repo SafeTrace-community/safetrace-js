@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { View, Text, SafeAreaView } from 'react-native';
 import sharedStyles from '../styles/shared';
-import hatService from '../services/HATService';
+import pdaService from '../services/PDAService';
 import { ILocationData } from '../services/LocationService';
 import { RootStackParamList } from '../Main';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -87,7 +87,7 @@ const ViewLocations: FunctionComponent<Props> = () => {
 
     const getLocations = async () => {
         try {
-            const locations = await hatService.requestLocationData();
+            const locations = await pdaService.requestLocationData();
             setLocations(locations);
         } catch (e) {
             console.error('Error fetching locations', e.message);

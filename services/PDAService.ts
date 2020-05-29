@@ -18,16 +18,17 @@ interface ILocationData {
     timestamp: number;
 }
 
-export interface IHATService {
+export interface IPDAService {
     isAuthenticated(): boolean;
     authenticate(config: any): void;
     deleteAccount(): void;
     getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
     writeLocationData(location: any): Promise<void>;
+    writeHealthCheck(healthCheck: st.HealthCheck): Promise<void>;
     requestLocationData(): Promise<ILocationData[]>;
 }
 
-export class HATService implements IHATService {
+export class PDAService implements IPDAService {
     public static APPLICATION_ID: string = 'safe-trace-dev';
     private namespace: string = 'sharetrace';
     private hat: HatClient;
@@ -35,7 +36,7 @@ export class HATService implements IHATService {
     public static LOCATION_WRITE_DELAY: number = 15 * 60000; // 15 minutes
 
     constructor() {
-        this.hat = new HatClient(HATService.baseConfig) as HatClient;
+        this.hat = new HatClient(PDAService.baseConfig) as HatClient;
     }
 
     private static baseConfig: HatClientConfig = {
@@ -62,7 +63,7 @@ export class HATService implements IHATService {
             .auth()
             .generateHatLoginUrl(
                 hatDomain,
-                HATService.APPLICATION_ID,
+                PDAService.APPLICATION_ID,
                 redirect,
                 fallback
             );
@@ -84,7 +85,7 @@ export class HATService implements IHATService {
 
     public async authenticate(storageToken: string): Promise<void> {
         const config = {
-            ...HATService.baseConfig,
+            ...PDAService.baseConfig,
             token: storageToken,
         };
 
@@ -109,7 +110,7 @@ export class HATService implements IHATService {
 
         if (
             Date.now() - this.lastLocationWrite >=
-            HATService.LOCATION_WRITE_DELAY
+            PDAService.LOCATION_WRITE_DELAY
         ) {
             await this.writeLocationData();
         } else {
@@ -158,6 +159,19 @@ export class HATService implements IHATService {
         }
     }
 
+    public async writeHealthCheck(healthCheck: st.HealthCheck) {
+        try {
+            await this.hat!.hatData().create(
+                this.namespace,
+                'healthchecks',
+                healthCheck
+            );
+        } catch (err) {
+            Sentry.captureException(err);
+            throw err;
+        }
+    }
+
     public async requestLocationData() {
         const data = await this.hat
             .hatData()
@@ -180,6 +194,6 @@ export class HATService implements IHATService {
     }
 }
 
-const hatService = new HATService();
+const pdaService = new PDAService();
 
-export default hatService;
+export default pdaService;

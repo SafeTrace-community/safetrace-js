@@ -5,3 +5,9 @@ declare module '*.svg' {
     const content: React.FC<SvgProps>;
     export default content;
 }
+
+declare namespace st {
+    export type HealthCheck = {
+        symptoms: string[] | null;
+    };
+}

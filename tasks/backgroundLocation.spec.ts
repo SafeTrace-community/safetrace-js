@@ -1,5 +1,5 @@
 import * as TaskManager from 'expo-task-manager';
-import hatService, { HATService } from '../services/HATService';
+import pdaService, { PDAService } from '../services/PDAService';
 import locationService, { LocationService } from '../services/LocationService';
 import { TASK_BACKGROUND_LOCATION_NAME } from '../Constants';
 import './backgroundLocation';
@@ -8,7 +8,7 @@ jest.mock('expo-task-manager');
 jest.mock('../services/HATService');
 jest.mock('../services/LocationService');
 
-const mockedHatService = hatService as jest.Mocked<HATService>;
+const mockedHatService = pdaService as jest.Mocked<PDAService>;
 const mockLocationService = locationService as jest.Mocked<LocationService>;
 
 describe('Background location task', () => {

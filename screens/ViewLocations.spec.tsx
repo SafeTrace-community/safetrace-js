@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, wait, act, within } from '@testing-library/react-native';
 import ViewLocations from './ViewLocations';
-import hatService, { HATService } from '../services/HATService';
+import pdaService, { PDAService } from '../services/PDAService';
 import { ILocationData } from '../services/LocationService';
 
 jest.mock('../services/HATService');
 
-const mockedHatService = hatService as jest.Mocked<HATService>;
+const mockedHatService = pdaService as jest.Mocked<PDAService>;
 
 describe('Location logs screen', () => {
     afterEach(() => {

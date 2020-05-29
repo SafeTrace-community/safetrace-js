@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { TOKEN_STORAGE_KEY } from '../Constants';
-import hatService from '../services/HATService';
+import pdaService from '../services/PDAService';
 
 export interface IHatContext {
     isAuthenticated: boolean;
@@ -22,20 +22,20 @@ export const HatContext = createContext<IHatContext>({} as any);
 
 const HatProvider: FunctionComponent = ({ children }) => {
     const [isAuthenticated, setIsHatAuthenticated] = useState(
-        hatService.isAuthenticated()
+        pdaService.isAuthenticated()
     );
 
-    const [hatDomain, setHatDomain] = useState(hatService.getHatDomain());
+    const [hatDomain, setHatDomain] = useState(pdaService.getHatDomain());
 
     useEffect(() => {
-        setHatDomain(hatService.getHatDomain());
+        setHatDomain(pdaService.getHatDomain());
     }, [isAuthenticated]);
 
     const authenticateFromStoredToken = useCallback(async () => {
         const token = await SecureStore.getItemAsync(TOKEN_STORAGE_KEY);
         if (token) {
-            await hatService.authenticate(token);
-            setIsHatAuthenticated(hatService.isAuthenticated());
+            await pdaService.authenticate(token);
+            setIsHatAuthenticated(pdaService.isAuthenticated());
         }
     }, []);
 
@@ -50,12 +50,12 @@ const HatProvider: FunctionComponent = ({ children }) => {
     }, []);
 
     const deleteAccount = useCallback(async () => {
-        await hatService.deleteAccount();
-        setIsHatAuthenticated(hatService.isAuthenticated());
+        await pdaService.deleteAccount();
+        setIsHatAuthenticated(pdaService.isAuthenticated());
     }, []);
 
     const getLoginUrl = useCallback((hatDomain: string) => {
-        return hatService.getLoginUrl(hatDomain);
+        return pdaService.getLoginUrl(hatDomain);
     }, []);
 
     const value = {

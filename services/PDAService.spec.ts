@@ -1,4 +1,4 @@
-import hatService, { HATService } from './HATService';
+import pdaService, { PDAService } from './PDAService';
 import { HatClient } from '@dataswift/hat-js';
 import locationService, {
     LocationService,
@@ -38,10 +38,11 @@ jest.mock('@dataswift/hat-js', () => ({
 const mockLocationService = locationService as jest.Mocked<LocationService>;
 const mockHatClient: jest.Mock<HatClient> = HatClient as any;
 
-describe('HatService', () => {
+describe('PDAService', () => {
     beforeEach(() => {
         mockLocationService.getLocations.mockClear();
         mockLocationService.overwriteExistingLocations.mockClear();
+        mockHatClient.mock.results[0].value.hatData().create.mockReset();
     });
 
     describe('getting login url', () => {
@@ -49,7 +50,7 @@ describe('HatService', () => {
             mockHatClient.mock.results[0].value
                 .auth()
                 .isDomainRegistered.mockResolvedValue(false);
-            const [error] = await hatService.getLoginUrl('invalid-hat-url.net');
+            const [error] = await pdaService.getLoginUrl('invalid-hat-url.net');
             expect(error).toEqual('The HAT url supplied is not valid');
         });
 
@@ -61,13 +62,13 @@ describe('HatService', () => {
             const mockedRedirectLink = '';
             const mockedFallbackLink = '';
 
-            await hatService.getLoginUrl('mypdhat.hubat.net');
+            await pdaService.getLoginUrl('mypdhat.hubat.net');
 
             expect(
                 mockHatClient.mock.results[0].value.auth().generateHatLoginUrl
             ).toBeCalledWith(
                 hatDomain,
-                HATService.APPLICATION_ID,
+                PDAService.APPLICATION_ID,
                 mockedRedirectLink,
                 mockedFallbackLink
             );
@@ -83,7 +84,7 @@ describe('HatService', () => {
                 .auth()
                 .generateHatLoginUrl.mockReturnValue(urlReturned);
 
-            const [error, url] = await hatService.getLoginUrl(
+            const [error, url] = await pdaService.getLoginUrl(
                 'mypdhat.hubat.net'
             );
 
@@ -99,10 +100,10 @@ describe('HatService', () => {
             ];
 
             mockLocationService.getLocations.mockResolvedValue(storedLocations);
-            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+            pdaService.isAuthenticated = jest.fn().mockReturnValue(true);
 
-            await hatService.writeLocationData();
-            //@ts-ignore
+            await pdaService.writeLocationData();
+
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
             ).toBeCalledWith('sharetrace', 'locations', storedLocations);
@@ -113,11 +114,15 @@ describe('HatService', () => {
                 { coords: { lng: 1, lat: 3 }, timestamp: 12345 },
             ];
 
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .create.mockResolvedValue({ parsedBody: {} });
+
             mockLocationService.getLocations.mockResolvedValue(storedLocations);
 
-            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+            pdaService.isAuthenticated = jest.fn().mockReturnValue(true);
 
-            await hatService.writeLocationData();
+            await pdaService.writeLocationData();
             expect(
                 mockLocationService.overwriteExistingLocations
             ).toBeCalledWith([]);
@@ -157,7 +162,7 @@ describe('HatService', () => {
                 storedLocations
             );
 
-            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+            pdaService.isAuthenticated = jest.fn().mockReturnValue(true);
 
             mockHatClient.mock.results[0].value
                 .hatData()
@@ -169,7 +174,7 @@ describe('HatService', () => {
                     )
                 );
 
-            hatService.writeLocationData().then(() => {
+            pdaService.writeLocationData().then(() => {
                 try {
                     expect(
                         mockLocationService.overwriteExistingLocations
@@ -197,20 +202,20 @@ describe('HatService', () => {
                 storedLocations
             );
 
-            hatService.isAuthenticated = jest.fn().mockReturnValue(true);
+            pdaService.isAuthenticated = jest.fn().mockReturnValue(true);
 
             mockHatClient.mock.results[0].value
                 .hatData()
                 .create.mockRejectedValue({});
 
-            await hatService.writeLocationData();
+            await pdaService.writeLocationData();
 
             expect(
                 mockLocationService.overwriteExistingLocations
             ).not.toHaveBeenCalled();
         });
 
-        describe('throttling writes to HAT location data', () => {
+        describe('throttling writes to PDA location data', () => {
             beforeEach(() => {
                 const now = Date.now();
                 Date.now = jest.fn().mockReturnValue(now);
@@ -222,26 +227,26 @@ describe('HatService', () => {
 
             test('only writing after a period of time set on the static LOCATION_WRITE_DELAY has passed', async () => {
                 const writeLocationSpy = jest.spyOn(
-                    hatService,
+                    pdaService,
                     'writeLocationData'
                 );
 
-                await hatService.throttleWriteLocationData();
+                await pdaService.throttleWriteLocationData();
 
                 expect(writeLocationSpy).not.toBeCalled();
 
                 //@ts-ignore
                 Date.now.mockReturnValue(Date.now() + 1000);
 
-                await hatService.throttleWriteLocationData();
+                await pdaService.throttleWriteLocationData();
                 expect(writeLocationSpy).not.toBeCalled();
 
                 //@ts-ignore
                 Date.now.mockReturnValue(
-                    Date.now() + (HATService.LOCATION_WRITE_DELAY - 1000)
+                    Date.now() + (PDAService.LOCATION_WRITE_DELAY - 1000)
                 ); // -1000 to account for the first test increment above
 
-                await hatService.throttleWriteLocationData();
+                await pdaService.throttleWriteLocationData();
                 expect(writeLocationSpy).toBeCalled();
 
                 writeLocationSpy.mockRestore();
@@ -249,7 +254,7 @@ describe('HatService', () => {
         });
     });
 
-    describe('getting locations from the HAT', () => {
+    describe('getting locations from the PDA', () => {
         test('getting the locations', async () => {
             mockHatClient.mock.results[0].value
                 .hatData()
@@ -274,7 +279,7 @@ describe('HatService', () => {
                     ],
                 });
 
-            const locations = await hatService.requestLocationData();
+            const locations = await pdaService.requestLocationData();
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().getAll
@@ -302,27 +307,62 @@ describe('HatService', () => {
 
     describe('deleting an account', () => {
         test('removing the token from storage', async () => {
-            await hatService.deleteAccount();
+            await pdaService.deleteAccount();
             expect(SecureStore.deleteItemAsync).toBeCalledWith(
                 TOKEN_STORAGE_KEY
             );
         });
 
         test('signing out of the HAT via SDK', async () => {
-            await hatService.deleteAccount();
+            await pdaService.deleteAccount();
             expect(
                 mockHatClient.mock.results[0].value.auth().signOut
             ).toBeCalled();
         });
 
         test('calling stopLocationTracking on the Location Service', async () => {
-            await hatService.deleteAccount();
+            await pdaService.deleteAccount();
             expect(locationService.stopLocationTracking).toBeCalled();
         });
 
         test('clearing any stored locations in the cache', async () => {
-            await hatService.deleteAccount();
+            await pdaService.deleteAccount();
             expect(mockLocationService.deleteLocationStorage).toBeCalledWith();
+        });
+    });
+
+    describe('writing HealthCheck data to a PDA', () => {
+        test('saving HealthCheck', async () => {
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .create.mockResolvedValue({});
+
+            const healthCheck: st.HealthCheck = {
+                symptoms: ['Skipped meals', 'Fatigue'],
+            };
+
+            await pdaService.writeHealthCheck(healthCheck);
+
+            expect(
+                mockHatClient.mock.results[0].value.hatData().create
+            ).toBeCalledWith('sharetrace', 'healthchecks', healthCheck);
+        });
+
+        test('handle error when saving HealthCheck', async () => {
+            const error = { error: 'something_went_wrong' };
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .create.mockRejectedValue(error);
+
+            const healthCheck: st.HealthCheck = {
+                symptoms: ['Skipped meals', 'Fatigue'],
+            };
+
+            try {
+                await pdaService.writeHealthCheck(healthCheck);
+            } catch (err) {
+                expect(err).toEqual(error);
+            }
         });
     });
 });

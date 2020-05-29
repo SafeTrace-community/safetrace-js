@@ -1,9 +1,9 @@
 import * as TaskManager from 'expo-task-manager';
-import HATService from '../services/HATService';
+import HATService from '../services/PDAService';
 
 import locationService from '../services/LocationService';
 import { TASK_BACKGROUND_LOCATION_NAME } from '../Constants';
-import hatService from '../services/HATService';
+import pdaService from '../services/PDAService';
 
 TaskManager.defineTask(
     TASK_BACKGROUND_LOCATION_NAME,
@@ -19,7 +19,7 @@ TaskManager.defineTask(
 
         if (HATService.isAuthenticated()) {
             await locationService.addLocations(locations);
-            await hatService.throttleWriteLocationData();
+            await pdaService.throttleWriteLocationData();
         } else {
             console.warn('not logging to dataswift currently');
         }

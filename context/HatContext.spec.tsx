@@ -13,8 +13,8 @@ jest.mock('expo-secure-store');
 import * as SecureStore from 'expo-secure-store';
 
 import HatProvider, { HatContext } from './HatContext';
-import hatService, { HATService } from '../services/HATService';
-const mockedHatService = hatService as jest.Mocked<HATService>;
+import pdaService, { PDAService } from '../services/PDAService';
+const mockedHatService = pdaService as jest.Mocked<PDAService>;
 
 describe('HatContext provider', () => {
     beforeEach(cleanup);
@@ -102,7 +102,7 @@ describe('HatContext provider', () => {
 
             await act(async () => {
                 await wait(() =>
-                    expect(hatService.authenticate).toBeCalledWith(TOKEN)
+                    expect(pdaService.authenticate).toBeCalledWith(TOKEN)
                 );
 
                 await wait(() =>
