@@ -5,10 +5,10 @@ import { TASK_BACKGROUND_LOCATION_NAME } from '../Constants';
 import './backgroundLocation';
 
 jest.mock('expo-task-manager');
-jest.mock('../services/HATService');
+jest.mock('../services/PDAService');
 jest.mock('../services/LocationService');
 
-const mockedHatService = pdaService as jest.Mocked<PDAService>;
+const mockedPdaService = pdaService as jest.Mocked<PDAService>;
 const mockLocationService = locationService as jest.Mocked<LocationService>;
 
 describe('Background location task', () => {
@@ -30,7 +30,7 @@ describe('Background location task', () => {
         const event = { data: { locations: [{}] }, error: null };
         const taskFn = defineTaskMock.mock.calls[0][1];
 
-        mockedHatService.isAuthenticated.mockReturnValue(true);
+        mockedPdaService.isAuthenticated.mockReturnValue(true);
         taskFn(event);
 
         jest.runAllTimers();
@@ -42,9 +42,9 @@ describe('Background location task', () => {
         const event = { data: { locations: [{}] }, error: null };
         const taskFn = defineTaskMock.mock.calls[0][1];
 
-        mockedHatService.isAuthenticated.mockReturnValue(true);
+        mockedPdaService.isAuthenticated.mockReturnValue(true);
         taskFn(event);
 
-        expect(mockedHatService.throttleWriteLocationData).toHaveBeenCalled();
+        expect(mockedPdaService.throttleWriteLocationData).toHaveBeenCalled();
     });
 });

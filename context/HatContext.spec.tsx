@@ -8,13 +8,13 @@ import {
 } from '@testing-library/react-native';
 import { Text, Button } from 'react-native';
 
-jest.mock('../services/HATService');
+jest.mock('../services/PDAService');
 jest.mock('expo-secure-store');
 import * as SecureStore from 'expo-secure-store';
 
 import HatProvider, { HatContext } from './HatContext';
 import pdaService, { PDAService } from '../services/PDAService';
-const mockedHatService = pdaService as jest.Mocked<PDAService>;
+const mockPdaService = pdaService as jest.Mocked<PDAService>;
 
 describe('HatContext provider', () => {
     beforeEach(cleanup);
@@ -28,8 +28,8 @@ describe('HatContext provider', () => {
     }
 
     describe('is authenticated', () => {
-        test('default value is whatever the HatService.isAuthenticated returns (true)', () => {
-            mockedHatService.isAuthenticated.mockReturnValue(true);
+        test('default value is whatever the PDAService.isAuthenticated returns (true)', () => {
+            mockPdaService.isAuthenticated.mockReturnValue(true);
 
             const TestComponent: FunctionComponent = () => {
                 const { isAuthenticated } = useContext(HatContext);
@@ -47,8 +47,8 @@ describe('HatContext provider', () => {
             );
         });
 
-        test('default value is whatever the HatService.isAuthenticated returns (false)', () => {
-            mockedHatService.isAuthenticated.mockReturnValue(false);
+        test('default value is whatever the PDAService.isAuthenticated returns (false)', () => {
+            mockPdaService.isAuthenticated.mockReturnValue(false);
 
             const TestComponent: FunctionComponent = () => {
                 const { isAuthenticated } = useContext(HatContext);
@@ -73,7 +73,7 @@ describe('HatContext provider', () => {
 
             //@ts-ignore
             SecureStore.getItemAsync.mockResolvedValue(TOKEN);
-            mockedHatService.authenticate.mockResolvedValue();
+            mockPdaService.authenticate.mockResolvedValue();
 
             const TestComponent: FunctionComponent = () => {
                 const {
@@ -98,7 +98,7 @@ describe('HatContext provider', () => {
                 'false'
             );
 
-            mockedHatService.isAuthenticated.mockReturnValue(true);
+            mockPdaService.isAuthenticated.mockReturnValue(true);
 
             await act(async () => {
                 await wait(() =>
@@ -115,8 +115,8 @@ describe('HatContext provider', () => {
     });
 
     describe('delete account', () => {
-        test('calls delete account on hatService and updates isAuthenticated from Hatservice', async () => {
-            mockedHatService.isAuthenticated.mockReturnValue(false);
+        test('calls delete account on PDAService and updates isAuthenticated from PDAservice', async () => {
+            mockPdaService.isAuthenticated.mockReturnValue(false);
 
             const TestComponent: FunctionComponent = () => {
                 const { isAuthenticated, deleteAccount } = useContext(
@@ -142,13 +142,13 @@ describe('HatContext provider', () => {
                 'false'
             );
             const deleteAccountBtn = getByTestId('deleteAccountBtn');
-            mockedHatService.isAuthenticated.mockReturnValue(true);
+            mockPdaService.isAuthenticated.mockReturnValue(true);
 
             fireEvent.press(deleteAccountBtn);
 
             await act(async () =>
                 wait(() => {
-                    expect(mockedHatService.deleteAccount).toBeCalled();
+                    expect(mockPdaService.deleteAccount).toBeCalled();
 
                     expect(
                         getByTestId('isAuthenticated').children.join('')

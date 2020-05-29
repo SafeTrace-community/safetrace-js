@@ -1,5 +1,5 @@
 import * as TaskManager from 'expo-task-manager';
-import HATService from '../services/PDAService';
+import PDAService from '../services/PDAService';
 
 import locationService from '../services/LocationService';
 import { TASK_BACKGROUND_LOCATION_NAME } from '../Constants';
@@ -17,7 +17,7 @@ TaskManager.defineTask(
 
         console.log('Received new background locations', locations);
 
-        if (HATService.isAuthenticated()) {
+        if (PDAService.isAuthenticated()) {
             await locationService.addLocations(locations);
             await pdaService.throttleWriteLocationData();
         } else {

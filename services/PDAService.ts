@@ -114,7 +114,7 @@ export class PDAService implements IPDAService {
         ) {
             await this.writeLocationData();
         } else {
-            console.log('HATService: Skipping write location data');
+            console.log('PDAService: Skipping write location data');
         }
     }
 

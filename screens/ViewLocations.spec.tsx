@@ -4,19 +4,19 @@ import ViewLocations from './ViewLocations';
 import pdaService, { PDAService } from '../services/PDAService';
 import { ILocationData } from '../services/LocationService';
 
-jest.mock('../services/HATService');
+jest.mock('../services/PDAService');
 
-const mockedHatService = pdaService as jest.Mocked<PDAService>;
+const mockedPdaService = pdaService as jest.Mocked<PDAService>;
 
 describe('Location logs screen', () => {
     afterEach(() => {
-        mockedHatService.requestLocationData.mockReset();
+        mockedPdaService.requestLocationData.mockReset();
     });
 
     test('Display a holding message when no locations are stored in the HAT', async () => {
         const locations: ILocationData[] = [];
 
-        mockedHatService.requestLocationData.mockResolvedValueOnce(locations);
+        mockedPdaService.requestLocationData.mockResolvedValueOnce(locations);
 
         const { getByTestId } = render(
             <ViewLocations navigation={{} as any} />
@@ -43,7 +43,7 @@ describe('Location logs screen', () => {
             },
         ];
 
-        mockedHatService.requestLocationData.mockResolvedValueOnce(locations);
+        mockedPdaService.requestLocationData.mockResolvedValueOnce(locations);
 
         const { getAllByTestId } = render(
             <ViewLocations navigation={{} as any} />
@@ -68,7 +68,7 @@ describe('Location logs screen', () => {
 
     test('pulling to refresh', async () => {
         const locations: ILocationData[] = [];
-        mockedHatService.requestLocationData.mockResolvedValue(locations);
+        mockedPdaService.requestLocationData.mockResolvedValue(locations);
 
         const { getByTestId } = render(
             <ViewLocations navigation={{} as any} />
@@ -80,13 +80,13 @@ describe('Location logs screen', () => {
             const logList = getByTestId('logList');
             const onRefresh = logList.props.onRefresh;
 
-            expect(mockedHatService.requestLocationData).toHaveBeenCalledTimes(
+            expect(mockedPdaService.requestLocationData).toHaveBeenCalledTimes(
                 1
             );
 
             onRefresh();
 
-            expect(mockedHatService.requestLocationData).toHaveBeenCalledTimes(
+            expect(mockedPdaService.requestLocationData).toHaveBeenCalledTimes(
                 2
             );
         });
@@ -99,7 +99,7 @@ describe('Location logs screen', () => {
             },
         ];
 
-        mockedHatService.requestLocationData.mockResolvedValueOnce(
+        mockedPdaService.requestLocationData.mockResolvedValueOnce(
             locations as any
         );
 
