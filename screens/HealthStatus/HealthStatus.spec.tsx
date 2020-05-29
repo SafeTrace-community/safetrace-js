@@ -14,7 +14,7 @@ describe('Health status screen', () => {
 
         fireEvent.press(getByTestId('createPersonalDataAccount'));
 
-        expect(navigationStub.navigate).toBeCalledWith('GetStartedWithHat');
+        expect(navigationStub.navigate).toBeCalledWith('GetStartedWithPDA');
     });
 
     test('disabled link to providing preliminary health check if not signed into a HAT', () => {

@@ -20,6 +20,7 @@ import { RouteProp } from '@react-navigation/native';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Input } from '../../components/Input';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Link } from '../../components/Link';
 
 const styles = StyleSheet.create({
     screen: {
@@ -28,10 +29,9 @@ const styles = StyleSheet.create({
     },
     heading: {
         fontSize: 24,
-        fontWeight: '500',
         marginBottom: 30,
         marginTop: 10,
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
+        fontFamily: 'AvenirNext-Medium',
         color: '#272935',
         textAlign: 'center',
     },
@@ -71,9 +71,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     wellBody: {
-        color: '#272935',
-        fontSize: 14,
-        lineHeight: 20,
+        fontFamily: 'AvenirNext-Medium',
     },
     actions: {
         marginBottom: 30,
@@ -278,24 +276,28 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
                         </View>
 
                         <View style={styles.disclaimer}>
-                            <Text style={styles.disclaimerText}>
+                            <Text
+                                style={[
+                                    sharedStyles.text,
+                                    styles.disclaimerText,
+                                ]}
+                            >
                                 We use HAT Personal Data Accounts (PDAs) - a
                                 state of the art technology to ensure data
                                 security and data rights. By proceeding, you
                                 agree to:
                             </Text>
 
-                            <Text
-                                style={[styles.linkText, { marginBottom: 10 }]}
+                            <Link
+                                style={{ marginBottom: 10 }}
                                 onPress={() =>
                                     openLink('https://www.sharetrace.org')
                                 }
                             >
                                 ShareTrace terms of service
-                            </Text>
+                            </Link>
 
-                            <Text
-                                style={styles.linkText}
+                            <Link
                                 onPress={() =>
                                     openLink(
                                         'https://cdn.dataswift.io/legal/dataswift-privacy-policy.pdf'
@@ -303,11 +305,11 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
                                 }
                             >
                                 HAT Terms of service
-                            </Text>
+                            </Link>
                         </View>
 
                         <View style={styles.well}>
-                            <Text style={styles.wellBody}>
+                            <Text style={[sharedStyles.text, styles.wellBody]}>
                                 Your HAT PDA enables you to own your data for
                                 reuse and sharing with applications.
                             </Text>
@@ -321,21 +323,6 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
                                 Next
                             </PrimaryButton>
                         </View>
-
-                        <TouchableOpacity
-                            onPress={() =>
-                                openLink('https://hubofallthings.com')
-                            }
-                        >
-                            <Text
-                                style={[
-                                    styles.linkText,
-                                    { alignSelf: 'center', marginBottom: 5 },
-                                ]}
-                            >
-                                Learn how HAT protects your data
-                            </Text>
-                        </TouchableOpacity>
                     </View>
                 </ScrollView>
             </TouchableWithoutFeedback>

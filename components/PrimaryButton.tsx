@@ -24,7 +24,7 @@ const styles = {
         width: '100%',
     },
     buttonText: {
-        fontFamily: 'Avenir-DemiBold',
+        fontFamily: 'AvenirNext-DemiBold',
         color: '#ffffff',
         fontSize: 18,
         alignSelf: 'center',

@@ -2,12 +2,9 @@ import React, { FunctionComponent, useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePDA from './screens/CreatePDA/CreatePDA';
-import Tracking from './screens/Tracking';
-import Landing from './screens/Landing';
+import GetStartedWithPDA from './screens/GetStartedWithPDA/GetStartedWithPDA';
 import { HatContext } from './context/HatContext';
-import ViewLocations from './screens/ViewLocations';
-import DeleteAccount from './screens/DeleteAccount';
-import Login from './screens/Login';
+import Login from './screens/Login/Login';
 import Introduction from './screens/Introduction';
 import HealthStatusScreen from './screens/HealthStatus/HealthStatus';
 import HealthCheckScreen from './screens/HealthCheck/HealthCheck';
@@ -16,7 +13,7 @@ export type RootStackParamList = {
     // Specifying undefined means that the route is there but has no params
     // see: https://reactnavigation.org/docs/typescript/
     Introduction: undefined;
-    GetStartedWithHat: undefined;
+    GetStartedWithPDA: undefined;
     CreateAccount: undefined;
     Login: undefined;
     Tracking: undefined;
@@ -65,8 +62,8 @@ const Main: FunctionComponent = () => {
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="GetStartedWithHat"
-                            component={Landing}
+                            name="GetStartedWithPDA"
+                            component={GetStartedWithPDA}
                             options={{
                                 headerBackTitle: 'Back',
                                 headerTitle: '',
@@ -85,7 +82,7 @@ const Main: FunctionComponent = () => {
                             component={Login}
                             options={{
                                 headerBackTitle: 'Back',
-                                headerTitle: 'Login',
+                                headerTitle: 'Login with PDA',
                             }}
                         />
                     </>

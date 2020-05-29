@@ -7,21 +7,26 @@ import {
     SafeAreaView,
     TouchableOpacity,
 } from 'react-native';
-import logo from '../assets/sharetrace-logo.png';
-import sharedStyles from '../styles/shared';
+import logo from '../../assets/sharetrace-logo.png';
+import sharedStyles from '../../styles/shared';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../Main';
+import { RootStackParamList } from '../../Main';
 import * as WebBrowser from 'expo-web-browser';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import { Link } from '../../components/Link';
 
 const styles = StyleSheet.create({
+    safeArea: {
+        backgroundColor: 'white',
+    },
     screen: {
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
     },
     logoContainer: {
-        flex: 3,
+        flex: 2,
         justifyContent: 'center',
     },
     actions: {
@@ -30,7 +35,8 @@ const styles = StyleSheet.create({
     },
     loginAction: {
         flexDirection: 'row',
-        marginBottom: 20,
+        justifyContent: 'center',
+        marginBottom: 30,
     },
     createAccountAction: {
         marginBottom: 25,
@@ -64,7 +70,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     text: {
-        fontFamily: 'AvenirNext-DemiBold',
+        fontFamily: 'AvenirNext-Medium',
         fontSize: 14,
         lineHeight: 19,
         textAlign: 'center',
@@ -78,12 +84,12 @@ const styles = StyleSheet.create({
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
-    route?: RouteProp<RootStackParamList, 'Landing'>;
+    route?: RouteProp<RootStackParamList, 'GetStartedWithPDA'>;
 };
 
-const Landing: FunctionComponent<Props> = ({ navigation }) => {
+const GetStartedWithPDA: FunctionComponent<Props> = ({ navigation }) => {
     return (
-        <SafeAreaView style={sharedStyles.safeArea}>
+        <SafeAreaView style={[sharedStyles.safeArea, styles.safeArea]}>
             {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
 
             <View style={[sharedStyles.container, styles.screen]}>
@@ -95,42 +101,34 @@ const Landing: FunctionComponent<Props> = ({ navigation }) => {
                     />
                 </View>
                 <View style={styles.actions}>
-                    <View style={styles.loginAction}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Login')}
-                            style={styles.button}
-                            testID="loginButton"
-                        >
-                            <Text style={styles.buttonText}>
-                                Log In with HAT
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
                     <View style={styles.createAccountAction}>
-                        <TouchableOpacity
+                        <PrimaryButton
                             onPress={() => navigation.navigate('CreateAccount')}
-                            style={styles.secondaryButton}
                             testID="createAccountButton"
                         >
-                            <Text
-                                style={[
-                                    styles.buttonText,
-                                    { color: '#167976' },
-                                ]}
-                            >
-                                Get Started with HAT
-                            </Text>
-                        </TouchableOpacity>
+                            Get Started with PDA
+                        </PrimaryButton>
+                    </View>
+
+                    <View style={styles.loginAction}>
+                        <Link
+                            onPress={() => navigation.navigate('Login')}
+                            testID="loginButton"
+                        >
+                            Already have a PDA? Login here
+                        </Link>
                     </View>
 
                     <Text style={styles.text}>
-                        We use HAT to secure your data and to provide you with
-                        more accurate risk scores
+                        When you sign up to ShareTrace, your data will be stored
+                        in a Personal Data Account (PDA). PDAs use a new
+                        technology called HAT Microserver to enable you to own
+                        and control your data in the cloud. For more
+                        information, see https://hubofallthings.com
                     </Text>
                 </View>
-                <View style={{ position: 'absolute', bottom: 10 }}>
-                    <TouchableOpacity
+                <View style={{ position: 'absolute', bottom: 5 }}>
+                    <Link
                         onPress={() =>
                             WebBrowser.openBrowserAsync(
                                 'https://www.sharetrace.org/'
@@ -138,14 +136,12 @@ const Landing: FunctionComponent<Props> = ({ navigation }) => {
                         }
                         testID="learnMoreLink"
                     >
-                        <Text style={styles.learnMoreLink}>
-                            Learn more about us!
-                        </Text>
-                    </TouchableOpacity>
+                        Learn more about us!
+                    </Link>
                 </View>
             </View>
         </SafeAreaView>
     );
 };
 
-export default Landing;
+export default GetStartedWithPDA;

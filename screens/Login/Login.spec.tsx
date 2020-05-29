@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, wait, fireEvent, act } from '@testing-library/react-native';
 import Login from './Login';
-import { IHatContext, HatContext } from '../context/HatContext';
+import { IHatContext, HatContext } from '../../context/HatContext';
 import * as WebBrowser from 'expo-web-browser';
 
 jest.mock('expo', () => {

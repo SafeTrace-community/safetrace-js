@@ -1,4 +1,4 @@
-import { RootStackParamList } from '../Main';
+import { RootStackParamList } from '../../Main';
 import * as WebBrowser from 'expo-web-browser';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Linking } from 'expo';
@@ -22,10 +22,11 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
 } from 'react-native';
-import sharedStyles from '../styles/shared';
-import logo from '../assets/sharetrace-logo.png';
-import { HatContext } from '../context/HatContext';
+import sharedStyles from '../../styles/shared';
+import { HatContext } from '../../context/HatContext';
 import Constants from 'expo-constants';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import { Input } from '../../components/Input';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -36,10 +37,6 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'space-between',
-    },
-    logoContainer: {
-        alignItems: 'center',
-        flex: 1,
     },
     action: {
         flex: 1,
@@ -98,10 +95,8 @@ const Login: FunctionComponent<Props> = () => {
         }
 
         try {
-            const result = await WebBrowser.openBrowserAsync(url!);
-            console.log(result);
+            await WebBrowser.openBrowserAsync(url!);
         } catch (error) {
-            console.log('ERROR', error);
             removeLinkingListener();
         }
     }, []);
@@ -113,39 +108,36 @@ const Login: FunctionComponent<Props> = () => {
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={[sharedStyles.container, styles.screen]}>
-                    <View style={styles.logoContainer}>
-                        <Image
-                            source={logo}
-                            style={{ width: 177 }}
-                            resizeMode="contain"
-                        />
-                    </View>
                     <View style={styles.action}>
                         {error && (
                             <Text style={styles.error} testID="loginError">
                                 {error}
                             </Text>
                         )}
-                        <Text>Enter your hat domain:</Text>
-                        <TextInput
+                        <Text
+                            style={{
+                                marginBottom: 10,
+                            }}
+                        >
+                            Enter your PDA domain:
+                        </Text>
+                        <Input
                             onChangeText={setHatDomain}
                             testID="inputHatDomain"
                             value={hatDomain}
-                            placeholder="ie. myhatusername.hubofallthings.net"
+                            placeholder="ie. mypdausername.hubofallthings.net"
                             style={{
-                                height: 40,
-                                borderColor: 'gray',
-                                borderBottomWidth: 1,
-                                marginBottom: 30,
+                                marginBottom: 20,
                             }}
                         />
-                        <Button
-                            title="Login"
+                        <PrimaryButton
                             testID="loginButton"
                             onPress={() => {
                                 redirectToLogin(hatDomain);
                             }}
-                        />
+                        >
+                            Login
+                        </PrimaryButton>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
