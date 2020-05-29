@@ -127,7 +127,7 @@ const GetStartedWithPDA: FunctionComponent<Props> = ({ navigation }) => {
                         information, see https://hubofallthings.com
                     </Text>
                 </View>
-                <View style={{ position: 'absolute', bottom: 5 }}>
+                <View style={{ position: 'absolute', bottom: 10 }}>
                     <Link
                         onPress={() =>
                             WebBrowser.openBrowserAsync(
