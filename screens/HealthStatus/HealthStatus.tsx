@@ -118,7 +118,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                         <View style={[styles.progressNavItem]}>
                             <TouchableOpacity
                                 onPress={() =>
-                                    navigation.navigate('GetStartedWithHat')
+                                    navigation.navigate('GetStartedWithPDA')
                                 }
                                 testID="createPersonalDataAccount"
                                 disabled={isAuthenticated}

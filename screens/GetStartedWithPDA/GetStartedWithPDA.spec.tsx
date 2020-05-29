@@ -1,20 +1,22 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import Landing from './Landing';
+import GetStartedWithPDA from './GetStartedWithPDA';
 import * as WebBrowser from 'expo-web-browser';
 
 jest.mock('expo-web-browser');
 
 describe('Landing screen', () => {
     test('having create account button', () => {
-        const { getByTestId } = render(<Landing navigation={{} as any} />);
+        const { getByTestId } = render(
+            <GetStartedWithPDA navigation={{} as any} />
+        );
         expect(getByTestId('createAccountButton')).toBeTruthy();
     });
 
     test('being able to log in', () => {
         const navigateStub = jest.fn();
         const { getByTestId } = render(
-            <Landing navigation={{ navigate: navigateStub } as any} />
+            <GetStartedWithPDA navigation={{ navigate: navigateStub } as any} />
         );
         expect(getByTestId('loginButton')).toBeTruthy();
 
@@ -24,7 +26,9 @@ describe('Landing screen', () => {
     });
 
     test('being to learn more about HATs', () => {
-        const { getByTestId } = render(<Landing navigation={{} as any} />);
+        const { getByTestId } = render(
+            <GetStartedWithPDA navigation={{} as any} />
+        );
 
         fireEvent.press(getByTestId('learnMoreLink'));
 
