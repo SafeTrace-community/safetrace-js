@@ -36,7 +36,7 @@ jobs:
             - uses: expo/expo-github-action@v5
               with:
                   expo-version: 3.x
-                  expo-username: ryanhyslop
+                  expo-username: wemakewaves
                   expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
                   expo-cache: true
             - run: yarn install

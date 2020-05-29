@@ -7,7 +7,7 @@
             "android"
         ],
         "scheme": "sharetrace",
-        "owner": "ryanhyslop",
+        "owner": "wemakewaves",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
@@ -61,6 +61,22 @@
                         "authToken": "5193ef65505f43898efbbd13ed3cad477f6f1121da314c5db60b5908d6cd03c7"
                     }
                 }
+            ]
+        },
+        "packagerOpts": {
+            "config": "metro.config.js",
+            "sourceExts": [
+                "expo.ts",
+                "expo.tsx",
+                "expo.js",
+                "expo.jsx",
+                "ts",
+                "tsx",
+                "js",
+                "jsx",
+                "json",
+                "wasm",
+                "svg"
             ]
         }
     }

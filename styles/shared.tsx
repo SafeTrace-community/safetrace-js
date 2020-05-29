@@ -9,10 +9,16 @@ export const Colors = {
 const sharedStyles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#F6F7F9',
     },
     container: {
         padding: 30,
+    },
+    text: {
+        fontSize: 14,
+        lineHeight: 18,
+        fontFamily: 'AvenirNext',
+        color: '#272935',
     },
 });
 

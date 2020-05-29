@@ -31,6 +31,7 @@
         "react-native-reanimated": "~1.7.0",
         "react-native-safe-area-context": "0.7.3",
         "react-native-screens": "~2.2.0",
+        "react-native-svg": "11.0.1",
         "react-native-swiper": "^1.6.0",
         "react-native-web": "~0.11.7",
         "sentry-expo": "^2.0.3"
@@ -43,6 +44,7 @@
         "@types/react-native": "~0.61.17",
         "babel-preset-expo": "~8.1.0",
         "jest-expo": "^37.0.0",
+        "react-native-svg-transformer": "^0.14.3",
         "typescript": "~3.8.3"
     },
     "private": true

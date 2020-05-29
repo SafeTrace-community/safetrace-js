@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useCallback } from 'react';
 import {
     StyleSheet,
     StatusBar,
@@ -12,7 +12,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Main';
 import { ToggleAppearance } from '../components/ToggleAppearance';
-
+import sharedStyles from '../styles/shared';
+import { useFocusEffect } from '@react-navigation/native';
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
@@ -38,8 +39,7 @@ const styles = StyleSheet.create({
     },
     skipIntroButtonText: {
         color: '#ffffff',
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
-        fontWeight: '600',
+        fontFamily: 'AvenirNext-DemiBold',
         fontSize: 16,
         lineHeight: 22,
     },
@@ -68,15 +68,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: '600',
         marginBottom: 20,
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
-        color: '#272935',
-    },
-    text: {
-        fontSize: 14,
-        lineHeight: 20,
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir',
+        fontFamily: 'AvenirNext-DemiBold',
         color: '#272935',
     },
     actions: {
@@ -91,7 +84,7 @@ const styles = StyleSheet.create({
     },
     hint: {
         color: '#646465',
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir',
+        fontFamily: 'AvenirNext',
     },
 
     button: {
@@ -113,10 +106,9 @@ const styles = StyleSheet.create({
         right: 30,
     },
     buttonText: {
-        fontFamily: Platform.OS === 'ios' ? 'Avenir Next' : 'Avenir-DemiBold',
+        fontFamily: 'AvenirNext-DemiBold',
         color: '#ffffff',
         fontSize: 18,
-        fontWeight: '600',
         alignSelf: 'center',
     },
 });
@@ -135,6 +127,21 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
     const skipIntro = () => {
         swiperRef.current!.scrollBy(4);
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            if (Platform.OS === 'ios') {
+                //@ts-ignore we need the latest typings
+                const lightStyle = StatusBar.pushStackEntry({
+                    barStyle: 'light-content',
+                });
+                return () => {
+                    //@ts-ignore we need the latest typings
+                    StatusBar.popStackEntry(lightStyle);
+                };
+            }
+        }, [])
+    );
 
     return (
         <View style={[styles.screen]}>
@@ -188,7 +195,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                                 Contribute anonymously
                             </Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace uses HAT, a Personal Data Account
                                 (PDA), to ensure that your data remains yours
                                 and always under your control. Whenever your
@@ -198,7 +205,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <View style={styles.slide}>
                             <Text style={styles.title}>Protect your data</Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace’s distributed architecture protects
                                 your privacy by eliminating the need to
                                 broadcast even the anonymized user IDs and
@@ -209,7 +216,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <View style={styles.slide}>
                             <Text style={styles.title}>Assess your risk</Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace integrates your personal health data
                                 as well as history related to your recent
                                 patterns of contact to provide a personal risk
@@ -221,7 +228,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                                 Be informed of exposure
                             </Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace is able to connect the dots between
                                 those whom you have come in contact with and
                                 their recent contacts to provide you with
@@ -233,7 +240,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <View style={styles.slide}>
                             <Text style={styles.title}>Safer travels</Text>
 
-                            <Text style={styles.text}>
+                            <Text style={sharedStyles.text}>
                                 ShareTrace’s hyperlocal networks allow you to
                                 roam and continue to receive appropriate
                                 guidance even when traveling.
@@ -260,7 +267,9 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                     <View style={styles.buttonWrapper}>
                         <ToggleAppearance visible={showButton}>
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('Landing')}
+                                onPress={() =>
+                                    navigation.navigate('HealthStatus')
+                                }
                                 style={styles.button}
                                 testID="continueButton"
                             >
@@ -271,10 +280,6 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         </ToggleAppearance>
                     </View>
                 </View>
-
-                {Platform.OS === 'ios' && (
-                    <StatusBar barStyle="light-content" />
-                )}
             </View>
         </View>
     );

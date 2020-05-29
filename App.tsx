@@ -16,36 +16,32 @@ Sentry.init({
 });
 
 export default function App() {
-    const [loadingFonts, setLoadingFonts] = useState(true);
+    const [fontsLoaded, setFontsLoaded] = useState(false);
     useEffect(() => {
         loadAsync({
-            Avenir: require('./assets/fonts/AvenirNext-Regular.ttf'),
+            AvenirNext: require('./assets/fonts/AvenirNext-Regular.ttf'),
 
-            'Avenir-Medium': {
+            'AvenirNext-Medium': {
                 uri: require('./assets/fonts/AvenirNext-Medium.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
 
-            'Avenir-DemiBold': {
+            'AvenirNext-DemiBold': {
                 uri: require('./assets/fonts/AvenirNext-DemiBold.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
 
-            'Avenir-Bold': {
+            'AvenirNext-Bold': {
                 uri: require('./assets/fonts/AvenirNext-Bold.ttf'),
                 fontDisplay: FontDisplay.FALLBACK,
             } as FontResource,
-        }).then(() => {
-            setLoadingFonts(false);
-        });
-    });
+        }).then(() => setFontsLoaded(true));
+    }, []);
 
-    return loadingFonts ? (
-        <Text>Loading</Text>
-    ) : (
+    return (
         <HatProvider>
             <StatusBar barStyle="dark-content" />
-            <Main />
+            {fontsLoaded && <Main />}
         </HatProvider>
     );
 }
