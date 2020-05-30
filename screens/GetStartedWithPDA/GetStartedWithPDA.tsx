@@ -103,11 +103,10 @@ const GetStartedWithPDA: FunctionComponent<Props> = ({ navigation }) => {
                 <View style={styles.actions}>
                     <View style={styles.createAccountAction}>
                         <PrimaryButton
+                            text="Get Started with PDA"
                             onPress={() => navigation.navigate('CreateAccount')}
                             testID="createAccountButton"
-                        >
-                            Get Started with PDA
-                        </PrimaryButton>
+                        />
                     </View>
 
                     <View style={styles.loginAction}>

@@ -1,7 +1,14 @@
 import React from 'react';
 import HealthCheckScreen from './HealthCheck';
-import { render, fireEvent, act, wait } from '@testing-library/react-native';
+import {
+    render,
+    fireEvent,
+    act,
+    wait,
+    getByTestId,
+} from '@testing-library/react-native';
 import pdaService, { PDAService } from '../../services/PDAService';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 jest.mock('../../services/PDAService');
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -38,7 +45,9 @@ describe('Health Check Symptoms', () => {
         const symptom = getByLabelText('Loss of smell or taste');
         fireEvent.press(symptom);
 
-        expect(symptom.props.style.borderColor).toEqual('#167976');
+        expect(
+            getByTestId(symptom, 'checkbox').props.style[1].borderColor
+        ).toEqual('#167976');
     });
 
     test('deselecting a symptom', () => {
@@ -48,10 +57,12 @@ describe('Health Check Symptoms', () => {
 
         const symptom = getByLabelText('Loss of smell or taste');
         fireEvent.press(symptom);
-        expect(symptom.props.style.borderColor).toEqual('#167976');
+        expect(
+            getByTestId(symptom, 'checkbox').props.style[1].borderColor
+        ).toEqual('#167976');
 
         fireEvent.press(symptom);
-        expect(symptom.props.style.borderColor).toEqual('transparent');
+        expect(getByTestId(symptom, 'checkbox').props.style[1]).toBeFalsy();
     });
 
     describe('submitting health check', () => {
@@ -79,7 +90,9 @@ describe('Health Check Symptoms', () => {
             });
 
             const { getByLabelText, getByTestId } = render(
-                <HealthCheckScreen navigation={{} as any} />
+                <HealthCheckScreen
+                    navigation={{ navigate: jest.fn() } as any}
+                />
             );
 
             mockPdaService.writeHealthCheck.mockReturnValue(healthCheckPromise);
@@ -134,7 +147,9 @@ describe('Health Check Symptoms', () => {
 
         test('saving symptoms to the PDA', () => {
             const { getByLabelText, getByTestId } = render(
-                <HealthCheckScreen navigation={{} as any} />
+                <HealthCheckScreen
+                    navigation={{ navigate: jest.fn() } as any}
+                />
             );
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
@@ -147,31 +162,40 @@ describe('Health Check Symptoms', () => {
             });
         });
 
-        // TODO: Where do we navigate to when we've successfully saved the health check
-        // test('navigating to the success route on successful response', () => {
-        //     const navigateStub = jest.fn();
-        //     const { getByLabelText, getByTestId } = render(
-        //         <HealthCheckScreen
-        //             navigation={{ navigate: navigateStub } as any}
-        //         />
-        //     );
+        test('navigating to the success route on successful response', async () => {
+            const navigateStub = jest.fn();
+            const { getByLabelText, getByTestId } = render(
+                <HealthCheckScreen
+                    navigation={{ navigate: navigateStub } as any}
+                />
+            );
 
-        //     mockPdaService.writeHealthCheck.mockResolvedValue();
+            mockPdaService.writeHealthCheck.mockResolvedValue();
 
-        //     fireEvent.press(getByLabelText('Loss of smell or taste'));
-        //     fireEvent.press(getByLabelText('Fatigue'));
+            fireEvent.press(getByLabelText('Loss of smell or taste'));
+            fireEvent.press(getByLabelText('Fatigue'));
 
-        //     fireEvent.press(getByTestId('nextButton'));
+            fireEvent.press(getByTestId('nextButton'));
 
-        //     expect(navigateStub).toHaveBeenCalledWith('HealthCheckSuccess');
-        // });
+            await act(async () => {
+                await wait(() =>
+                    expect(navigateStub).toHaveBeenCalledWith(
+                        'HealthCheckSuccess'
+                    )
+                );
+            });
+        });
 
         test('showing an error if the request to writeHealthCheck fails', async () => {
             const { getByLabelText, getByTestId } = render(
-                <HealthCheckScreen navigation={{} as any} />
+                <HealthCheckScreen
+                    navigation={{ navigate: jest.fn() } as any}
+                />
             );
 
-            mockPdaService.writeHealthCheck.mockRejectedValue({});
+            mockPdaService.writeHealthCheck.mockRejectedValue(
+                'HTTP_RESPONSE_ERROR'
+            );
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
             fireEvent.press(getByLabelText('Fatigue'));

@@ -317,11 +317,10 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
 
                         <View style={styles.actions}>
                             <PrimaryButton
+                                text="Next"
                                 onPress={handleCreatePDA}
                                 testID="createPDA"
-                            >
-                                Next
-                            </PrimaryButton>
+                            />
                         </View>
                     </View>
                 </ScrollView>

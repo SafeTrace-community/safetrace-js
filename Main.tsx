@@ -47,6 +47,10 @@ const Main: FunctionComponent = () => {
                         <Stack.Screen
                             name="HealthCheck"
                             component={HealthCheckScreen}
+                            options={{
+                                headerBackTitle: 'Back',
+                                headerTitle: '',
+                            }}
                         />
                     </>
                 ) : (

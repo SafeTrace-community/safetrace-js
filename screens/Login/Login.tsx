@@ -132,12 +132,11 @@ const Login: FunctionComponent<Props> = () => {
                         />
                         <PrimaryButton
                             testID="loginButton"
+                            text="Login"
                             onPress={() => {
                                 redirectToLogin(hatDomain);
                             }}
-                        >
-                            Login
-                        </PrimaryButton>
+                        />
                     </View>
                 </View>
             </TouchableWithoutFeedback>

@@ -11,7 +11,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import sharedStyles from '../../styles/shared';
-import healthCheckIcon from '../../assets/health-check-icon.png';
+import healthCheckIcon from '../../assets/icons/health-check-icon.png';
 import ProgressNavigationUncheckedIcon from '../../assets/progress-navigation-unchecked.svg';
 import NavigationCaretIcon from '../../assets/navigation-caret.svg';
 import ProgressNavigationCheckedIcon from '../../assets/progress-navigation-checked.svg';

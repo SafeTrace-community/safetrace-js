@@ -4,6 +4,8 @@ export const Colors = {
     red: '#DA1F1F',
     amber: '#FFBE0D',
     green: '#00BD47',
+
+    primary: '#167976',
 };
 
 const sharedStyles = StyleSheet.create({
