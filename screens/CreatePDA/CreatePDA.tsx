@@ -3,7 +3,6 @@ import {
     StyleSheet,
     View,
     Text,
-    TouchableOpacity,
     KeyboardAvoidingView,
     Platform,
     TouchableWithoutFeedback,
@@ -291,7 +290,9 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
                             <Link
                                 style={{ marginBottom: 10 }}
                                 onPress={() =>
-                                    openLink('https://www.sharetrace.org')
+                                    openLink(
+                                        'https://www.sharetrace.org/privacy'
+                                    )
                                 }
                             >
                                 ShareTrace terms of service

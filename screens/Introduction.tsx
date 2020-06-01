@@ -192,29 +192,8 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                     >
                         <View style={styles.slide}>
                             <Text style={styles.title}>
-                                Contribute anonymously
+                                Be informed of your risk
                             </Text>
-
-                            <Text style={sharedStyles.text}>
-                                ShareTrace uses HAT, a Personal Data Account
-                                (PDA), to ensure that your data remains yours
-                                and always under your control. Whenever your
-                                data leaves your PDA it is anonymized.
-                            </Text>
-                        </View>
-                        <View style={styles.slide}>
-                            <Text style={styles.title}>Protect your data</Text>
-
-                            <Text style={sharedStyles.text}>
-                                ShareTrace’s distributed architecture protects
-                                your privacy by eliminating the need to
-                                broadcast even the anonymized user IDs and
-                                related information which could otherwise be
-                                used to identify you.
-                            </Text>
-                        </View>
-                        <View style={styles.slide}>
-                            <Text style={styles.title}>Assess your risk</Text>
 
                             <Text style={sharedStyles.text}>
                                 ShareTrace integrates your personal health data
@@ -244,6 +223,31 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                                 ShareTrace’s hyperlocal networks allow you to
                                 roam and continue to receive appropriate
                                 guidance even when traveling.
+                            </Text>
+                        </View>
+
+                        <View style={styles.slide}>
+                            <Text style={styles.title}>Protect your data</Text>
+
+                            <Text style={sharedStyles.text}>
+                                ShareTrace’s distributed architecture protects
+                                your privacy by eliminating the need to
+                                broadcast even the anonymized user IDs and
+                                related information which could otherwise be
+                                used to identify you.
+                            </Text>
+                        </View>
+
+                        <View style={styles.slide}>
+                            <Text style={styles.title}>
+                                Contribute anonymously
+                            </Text>
+
+                            <Text style={sharedStyles.text}>
+                                ShareTrace uses Personal Data Accounts (PDA), to
+                                ensure that your data remains yours and always
+                                under your control. Whenever your data leaves
+                                your PDA it is anonymized.
                             </Text>
                         </View>
                     </Swiper>
