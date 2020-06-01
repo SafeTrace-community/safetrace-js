@@ -10,7 +10,7 @@ import {
 import pdaService, { PDAService } from '../../services/PDAService';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import HealthCheckScreen from './HealthCheck';
+import HealthSurveyScreen from './HealthSurvey';
 
 jest.mock('../../services/PDAService');
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');

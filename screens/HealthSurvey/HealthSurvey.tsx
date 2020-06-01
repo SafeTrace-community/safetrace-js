@@ -11,26 +11,26 @@ import sharedStyles, { Colors } from '../../styles/shared';
 import pdaService from '../../services/PDAService';
 import PreExistingConditions from './PreExistingConditions';
 
-export type HealthCheckStackParamList = {
+export type HealthSurveyStackParamList = {
     // Specifying undefined means that the route is there but has no params
     // see: https://reactnavigation.org/docs/typescript/
     Symptoms: undefined;
     PreExistingConditions: undefined;
 };
 
-const Stack = createStackNavigator<HealthCheckStackParamList>();
+const Stack = createStackNavigator<HealthSurveyStackParamList>();
 
-export type HealthCheckNavigationProp = CompositeNavigationProp<
+export type HealthSurveyNavigationProp = CompositeNavigationProp<
     StackNavigationProp<RootStackParamList>,
-    StackNavigationProp<HealthCheckStackParamList>
+    StackNavigationProp<HealthSurveyStackParamList>
 >;
 
 type Props = {
-    navigation: HealthCheckNavigationProp;
-    route?: RouteProp<RootStackParamList, 'HealthCheck'>;
+    navigation: HealthSurveyNavigationProp;
+    route?: RouteProp<RootStackParamList, 'HealthSurvey'>;
 };
 
-export const healthCheckStyles = StyleSheet.create({
+export const healthSurveyStyles = StyleSheet.create({
     title: {
         fontSize: 20,
         lineHeight: 24,
@@ -121,7 +121,7 @@ const toggleSelection = (collection: string[], selection: string): string[] => {
     return newCollection;
 };
 
-const HealthCheckScreen: React.FunctionComponent<Props> = ({ navigation }) => {
+const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     const [error, setError] = useState<string | null>(null);
     const [declaredSymptoms, setDeclaredSymptoms] = useState<string[]>([]);
     const [
@@ -130,17 +130,17 @@ const HealthCheckScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     ] = useState<string[]>([]);
     const [submitting, setSubmitting] = useState(false);
 
-    const submitHealthCheck = useCallback(async () => {
+    const submitHealthSurvey = useCallback(async () => {
         setError(null);
         setSubmitting(true);
 
         try {
-            await pdaService.writeHealthCheck({
+            await pdaService.writeHealthSurvey({
                 symptoms: declaredSymptoms,
                 preExistingConditions: declaredPreExistingConditions,
             });
 
-            navigation.navigate('HealthCheckSuccess');
+            navigation.navigate('HealthSurveySuccess');
         } catch (err) {
             console.error(err);
             setError('An error occurred saving your health check');
@@ -151,28 +151,6 @@ const HealthCheckScreen: React.FunctionComponent<Props> = ({ navigation }) => {
 
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Symptoms" options={{ headerShown: false }}>
-                {(props) => (
-                    <SymptomsScreen
-                        {...props}
-                        isSelected={(symptom) =>
-                            isSelected(declaredSymptoms, symptom)
-                        }
-                        handleSelection={(symptom) => {
-                            const newSymptoms = toggleSelection(
-                                declaredSymptoms,
-                                symptom
-                            );
-                            setDeclaredSymptoms(newSymptoms);
-                        }}
-                        error={error}
-                        submitting={submitting}
-                        handleNext={() =>
-                            props.navigation.navigate('PreExistingConditions')
-                        }
-                    />
-                )}
-            </Stack.Screen>
             <Stack.Screen
                 name="PreExistingConditions"
                 options={{ headerShown: false }}
@@ -194,7 +172,27 @@ const HealthCheckScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                         }}
                         error={error}
                         submitting={submitting}
-                        handleNext={submitHealthCheck}
+                        handleNext={() => props.navigation.navigate('Symptoms')}
+                    />
+                )}
+            </Stack.Screen>
+            <Stack.Screen name="Symptoms" options={{ headerShown: false }}>
+                {(props) => (
+                    <SymptomsScreen
+                        {...props}
+                        isSelected={(symptom) =>
+                            isSelected(declaredSymptoms, symptom)
+                        }
+                        handleSelection={(symptom) => {
+                            const newSymptoms = toggleSelection(
+                                declaredSymptoms,
+                                symptom
+                            );
+                            setDeclaredSymptoms(newSymptoms);
+                        }}
+                        error={error}
+                        submitting={submitting}
+                        handleNext={submitHealthSurvey}
                     />
                 )}
             </Stack.Screen>
@@ -202,4 +200,4 @@ const HealthCheckScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     );
 };
 
-export default HealthCheckScreen;
+export default HealthSurveyScreen;

@@ -7,7 +7,7 @@ declare module '*.svg' {
 }
 
 declare namespace st {
-    export type HealthCheck = {
+    export type HealthStatus = {
         symptoms: string[] | null;
         preExistingConditions: string[] | null;
     };

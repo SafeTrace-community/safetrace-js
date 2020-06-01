@@ -11,7 +11,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import sharedStyles from '../../styles/shared';
-import healthCheckIcon from '../../assets/icons/health-check-icon.png';
+import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
 import ProgressNavigationUncheckedIcon from '../../assets/progress-navigation-unchecked.svg';
 import NavigationCaretIcon from '../../assets/navigation-caret.svg';
 import ProgressNavigationCheckedIcon from '../../assets/progress-navigation-checked.svg';
@@ -103,7 +103,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
             <View style={[sharedStyles.container, styles.screen]}>
                 <View style={styles.panel}>
                     <Image
-                        source={healthCheckIcon}
+                        source={healthSurveyIcon}
                         resizeMode="cover"
                         style={styles.icon}
                     />
@@ -169,9 +169,9 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                         >
                             <TouchableOpacity
                                 onPress={() =>
-                                    navigation.navigate('HealthCheck')
+                                    navigation.navigate('HealthSurvey')
                                 }
-                                testID="provideProvisionalHealthCheck"
+                                testID="provideProvisionalHealthSurvey"
                                 disabled={!isAuthenticated}
                                 style={[styles.progressNavItemLink]}
                             >
@@ -186,7 +186,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                                     <Text
                                         style={styles.progressNavItemLinkText}
                                     >
-                                        Provide preliminary health check
+                                        Provide preliminary health status survey
                                     </Text>
                                 </View>
                                 {isAuthenticated && (

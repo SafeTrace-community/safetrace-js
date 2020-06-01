@@ -24,7 +24,7 @@ export interface IPDAService {
     deleteAccount(): void;
     getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
     writeLocationData(location: any): Promise<void>;
-    writeHealthCheck(healthCheck: st.HealthCheck): Promise<void>;
+    writeHealthSurvey(healthSurvey: st.HealthStatus): Promise<void>;
     requestLocationData(): Promise<ILocationData[]>;
 }
 
@@ -159,12 +159,12 @@ export class PDAService implements IPDAService {
         }
     }
 
-    public async writeHealthCheck(healthCheck: st.HealthCheck) {
+    public async writeHealthSurvey(healthSurvey: st.HealthStatus) {
         try {
             await this.hat!.hatData().create(
                 this.namespace,
-                'healthchecks',
-                healthCheck
+                'healthsurveys',
+                healthSurvey
             );
         } catch (err) {
             Sentry.captureException(err);

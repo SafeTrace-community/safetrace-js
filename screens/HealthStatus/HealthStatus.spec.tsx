@@ -24,11 +24,11 @@ describe('Health status screen', () => {
         const { getByTestId } = render(
             <HealthStatusScreen navigation={navigationStub as any} />
         );
-        expect(getByTestId('provideProvisionalHealthCheck')).toBeTruthy();
+        expect(getByTestId('provideProvisionalHealthSurvey')).toBeTruthy();
 
-        fireEvent.press(getByTestId('provideProvisionalHealthCheck'));
+        fireEvent.press(getByTestId('provideProvisionalHealthSurvey'));
 
-        expect(navigationStub.navigate).not.toBeCalledWith('HealthCheck');
+        expect(navigationStub.navigate).not.toBeCalledWith('HealthSurvey');
     });
 
     test('showing creating a PDA step complete once signed into a HAT', () => {
@@ -58,10 +58,10 @@ describe('Health status screen', () => {
             </HatContext.Provider>
         );
 
-        expect(getByTestId('provideProvisionalHealthCheck')).toBeTruthy();
+        expect(getByTestId('provideProvisionalHealthSurvey')).toBeTruthy();
 
-        fireEvent.press(getByTestId('provideProvisionalHealthCheck'));
+        fireEvent.press(getByTestId('provideProvisionalHealthSurvey'));
 
-        expect(navigationStub.navigate).toBeCalledWith('HealthCheck');
+        expect(navigationStub.navigate).toBeCalledWith('HealthSurvey');
     });
 });

@@ -7,7 +7,7 @@ import { HatContext } from './context/HatContext';
 import Login from './screens/Login/Login';
 import Introduction from './screens/Introduction';
 import HealthStatusScreen from './screens/HealthStatus/HealthStatus';
-import HealthCheckScreen from './screens/HealthCheck/HealthCheck';
+import HealthSurveyScreen from './screens/HealthSurvey/HealthSurvey';
 
 export type RootStackParamList = {
     // Specifying undefined means that the route is there but has no params
@@ -20,7 +20,7 @@ export type RootStackParamList = {
     ViewLocations: undefined;
     DeleteAccount: undefined;
     HealthStatus: undefined;
-    HealthCheck: undefined;
+    HealthSurvey: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -45,8 +45,8 @@ const Main: FunctionComponent = () => {
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="HealthCheck"
-                            component={HealthCheckScreen}
+                            name="HealthSurvey"
+                            component={HealthSurveyScreen}
                             options={{
                                 headerShown: false,
                             }}

@@ -331,35 +331,35 @@ describe('PDAService', () => {
         });
     });
 
-    describe('writing HealthCheck data to a PDA', () => {
-        test('saving HealthCheck', async () => {
+    describe('writing HealthSurvey data to a PDA', () => {
+        test('saving HealthSurvey', async () => {
             mockHatClient.mock.results[0].value
                 .hatData()
                 .create.mockResolvedValue({});
 
-            const healthCheck: st.HealthCheck = {
+            const healthSurvey: st.HealthStatus = {
                 symptoms: ['Skipped meals', 'Fatigue'],
             };
 
-            await pdaService.writeHealthCheck(healthCheck);
+            await pdaService.writeHealthSurvey(healthSurvey);
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
-            ).toBeCalledWith('safetrace', 'healthchecks', healthCheck);
+            ).toBeCalledWith('safetrace', 'healthsurveys', healthSurvey);
         });
 
-        test('handle error when saving HealthCheck', async () => {
+        test('handle error when saving HealthSurvey', async () => {
             const error = { error: 'something_went_wrong' };
             mockHatClient.mock.results[0].value
                 .hatData()
                 .create.mockRejectedValue(error);
 
-            const healthCheck: st.HealthCheck = {
+            const healthSurvey: st.HealthStatus = {
                 symptoms: ['Skipped meals', 'Fatigue'],
             };
 
             try {
-                await pdaService.writeHealthCheck(healthCheck);
+                await pdaService.writeHealthSurvey(healthSurvey);
             } catch (err) {
                 expect(err).toEqual(error);
             }

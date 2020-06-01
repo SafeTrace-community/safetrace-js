@@ -1,21 +1,21 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import sharedStyles from '../../styles/shared';
+import {
+    HealthSurveyStackParamList,
+    healthSurveyStyles as styles,
+    HealthSurveyNavigationProp,
+} from './HealthSurvey';
 import { RouteProp } from '@react-navigation/native';
-import { PrimaryButton } from '../../components/PrimaryButton';
+import sharedStyles from '../../styles/shared';
 import { ScrollView } from 'react-native-gesture-handler';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { PrimaryButton } from '../../components/PrimaryButton';
 import CheckIcon from '../../assets/icons/check.svg';
 import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
-import {
-    HealthCheckStackParamList,
-    healthCheckStyles as styles,
-    HealthCheckNavigationProp,
-} from './HealthCheck';
 import Back from '../../components/Back';
 
 type Props = {
-    navigation: HealthCheckNavigationProp;
-    route?: RouteProp<HealthCheckStackParamList, 'Symptoms'>;
+    navigation: HealthSurveyNavigationProp;
+    route?: RouteProp<HealthSurveyStackParamList, 'PreExistingConditions'>;
     handleSelection: (selection: string) => void;
     isSelected: (selection: string) => boolean;
     submitting: boolean;
@@ -23,25 +23,35 @@ type Props = {
     handleNext: () => void;
 };
 
-const symptoms = [
-    'Loss of smell or taste',
-    'Skipped meals',
-    'Fatigue',
-    'Fever',
-    'Persistent cough',
+const preExistingConditions = [
+    'Asthma or chronic lung conditions',
+    'Pregnancy',
+    'Diabetes',
+    'Kidney failure',
+    'Cirrhosis of the liver',
+    'Weakened immune system',
+    'Congestive heart failure',
+    'Extreme obesity',
 ];
 
-const SymptomsScreen: React.FunctionComponent<Props> = ({
+const PreExistingConditions: React.FunctionComponent<Props> = ({
     navigation,
     handleSelection,
     isSelected,
-    handleNext,
     submitting,
+    error,
+    handleNext,
 }) => {
     return (
         <SafeAreaView style={[sharedStyles.safeArea]}>
             <ScrollView style={[sharedStyles.container]}>
-                <Text style={styles.title}>COVID-19 Symptom Checker</Text>
+                <Text style={styles.title}>Health Status</Text>
+
+                {error && (
+                    <Text testID="error" style={styles.error}>
+                        {error}
+                    </Text>
+                )}
 
                 <Text style={[sharedStyles.text, styles.small]}>
                     Answer the following questions to learn how your health
@@ -50,7 +60,7 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
 
                 <View style={styles.progress}>
                     <View style={styles.progressBar}>
-                        <View style={styles.progressBarFill}></View>
+                        <View style={[styles.progressBarFill]}></View>
                     </View>
                     <Text
                         style={[sharedStyles.text, { alignSelf: 'flex-end' }]}
@@ -60,49 +70,53 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
                 </View>
 
                 <Text style={styles.question}>
-                    Have you experienced any of the symptoms listed below?
+                    Do you have any of the following pre-existing health
+                    conditions?
                 </Text>
 
                 <Text style={sharedStyles.text}>
-                    Check any symptoms you have recently experienced. Click the
-                    "Next" button to proceed.
+                    If not, click "Next" button to proceed.
                 </Text>
 
                 <View style={{ paddingVertical: 20 }}>
-                    {symptoms.map((symptom, index) => (
+                    {preExistingConditions.map((condition, index) => (
                         <TouchableOpacity
                             key={index}
                             accessible={true}
-                            accessibilityLabel={symptom}
-                            onPress={() => handleSelection(symptom)}
+                            accessibilityLabel={condition}
+                            onPress={() => handleSelection(condition)}
                         >
                             <View
                                 style={[
                                     styles.check,
-                                    isSelected(symptom) && styles.selected,
+                                    isSelected(condition) && styles.selected,
                                 ]}
                                 testID="checkbox"
                             >
                                 <View
                                     style={[
                                         styles.checkBox,
-                                        isSelected(symptom) &&
+                                        isSelected(condition) &&
                                             styles.selectedCheckbox,
                                     ]}
                                 >
                                     <CheckIcon />
                                 </View>
-                                <Text style={styles.checkText}>{symptom}</Text>
+                                <Text style={styles.checkText}>
+                                    {condition}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     ))}
                 </View>
+
                 <View style={styles.actions}>
-                    <Back onPress={() => navigation.navigate('HealthStatus')} />
+                    <Back onPress={() => navigation.navigate('Symptoms')} />
+
                     <PrimaryButton
                         onPress={handleNext}
                         text="Next"
-                        testID="symptomsNext"
+                        testID="preExistingConditionsNext"
                         disabled={submitting}
                         style={{
                             alignSelf: 'flex-end',
@@ -122,4 +136,4 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
     );
 };
 
-export default SymptomsScreen;
+export default PreExistingConditions;

@@ -1,21 +1,21 @@
 import React from 'react';
-import {
-    HealthCheckStackParamList,
-    healthCheckStyles as styles,
-    HealthCheckNavigationProp,
-} from './HealthCheck';
-import { RouteProp } from '@react-navigation/native';
-import sharedStyles from '../../styles/shared';
-import { ScrollView } from 'react-native-gesture-handler';
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import sharedStyles from '../../styles/shared';
+import { RouteProp } from '@react-navigation/native';
 import { PrimaryButton } from '../../components/PrimaryButton';
+import { ScrollView } from 'react-native-gesture-handler';
 import CheckIcon from '../../assets/icons/check.svg';
 import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
+import {
+    HealthSurveyStackParamList,
+    healthSurveyStyles as styles,
+    HealthSurveyNavigationProp,
+} from './HealthSurvey';
 import Back from '../../components/Back';
 
 type Props = {
-    navigation: HealthCheckNavigationProp;
-    route?: RouteProp<HealthCheckStackParamList, 'PreExistingConditions'>;
+    navigation: HealthSurveyNavigationProp;
+    route?: RouteProp<HealthSurveyStackParamList, 'Symptoms'>;
     handleSelection: (selection: string) => void;
     isSelected: (selection: string) => boolean;
     submitting: boolean;
@@ -23,35 +23,25 @@ type Props = {
     handleNext: () => void;
 };
 
-const preExistingConditions = [
-    'Asthma or chronic lung conditions',
-    'Pregnancy',
-    'Diabetes',
-    'Kidney failure',
-    'Cirrhosis of the liver',
-    'Weakened immune system',
-    'Congestive heart failure',
-    'Extreme obesity',
+const symptoms = [
+    'Loss of smell or taste',
+    'Skipped meals',
+    'Fatigue',
+    'Fever',
+    'Persistent cough',
 ];
 
-const PreExistingConditions: React.FunctionComponent<Props> = ({
+const SymptomsScreen: React.FunctionComponent<Props> = ({
     navigation,
     handleSelection,
     isSelected,
-    submitting,
-    error,
     handleNext,
+    submitting,
 }) => {
     return (
         <SafeAreaView style={[sharedStyles.safeArea]}>
             <ScrollView style={[sharedStyles.container]}>
-                <Text style={styles.title}>COVID-19 Symptom Checker</Text>
-
-                {error && (
-                    <Text testID="error" style={styles.error}>
-                        {error}
-                    </Text>
-                )}
+                <Text style={styles.title}>Health Status</Text>
 
                 <Text style={[sharedStyles.text, styles.small]}>
                     Answer the following questions to learn how your health
@@ -72,53 +62,49 @@ const PreExistingConditions: React.FunctionComponent<Props> = ({
                 </View>
 
                 <Text style={styles.question}>
-                    Have you experienced any of the pre-existing health
-                    conditions?
+                    Have you experienced any of the symptoms listed below?
                 </Text>
 
                 <Text style={sharedStyles.text}>
-                    If not, click "Next" button to proceed.
+                    Check any symptoms you have recently experienced. Click the
+                    "Next" button to proceed.
                 </Text>
 
                 <View style={{ paddingVertical: 20 }}>
-                    {preExistingConditions.map((condition, index) => (
+                    {symptoms.map((symptom, index) => (
                         <TouchableOpacity
                             key={index}
                             accessible={true}
-                            accessibilityLabel={condition}
-                            onPress={() => handleSelection(condition)}
+                            accessibilityLabel={symptom}
+                            onPress={() => handleSelection(symptom)}
                         >
                             <View
                                 style={[
                                     styles.check,
-                                    isSelected(condition) && styles.selected,
+                                    isSelected(symptom) && styles.selected,
                                 ]}
                                 testID="checkbox"
                             >
                                 <View
                                     style={[
                                         styles.checkBox,
-                                        isSelected(condition) &&
+                                        isSelected(symptom) &&
                                             styles.selectedCheckbox,
                                     ]}
                                 >
                                     <CheckIcon />
                                 </View>
-                                <Text style={styles.checkText}>
-                                    {condition}
-                                </Text>
+                                <Text style={styles.checkText}>{symptom}</Text>
                             </View>
                         </TouchableOpacity>
                     ))}
                 </View>
-
                 <View style={styles.actions}>
-                    <Back onPress={() => navigation.navigate('Symptoms')} />
-
+                    <Back onPress={() => navigation.navigate('HealthStatus')} />
                     <PrimaryButton
                         onPress={handleNext}
                         text="Next"
-                        testID="preExistingConditionsNext"
+                        testID="symptomsNext"
                         disabled={submitting}
                         style={{
                             alignSelf: 'flex-end',
@@ -138,4 +124,4 @@ const PreExistingConditions: React.FunctionComponent<Props> = ({
     );
 };
 
-export default PreExistingConditions;
+export default SymptomsScreen;

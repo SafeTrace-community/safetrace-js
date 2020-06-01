@@ -1,18 +1,9 @@
 import React from 'react';
-import SymptomsScreen from './Symptoms';
-import {
-    render,
-    fireEvent,
-    act,
-    wait,
-    getByTestId,
-    waitForElement,
-    getByText,
-} from '@testing-library/react-native';
+
+import { render, fireEvent, act, wait } from '@testing-library/react-native';
 import pdaService, { PDAService } from '../../services/PDAService';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import HealthCheckScreen from './HealthCheck';
+import HealthSurveyScreen from './HealthSurvey';
 
 jest.mock('../../services/PDAService');
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -21,91 +12,94 @@ const mockPdaService: jest.Mocked<PDAService> = pdaService as any;
 
 describe('Health Check Symptoms', () => {
     beforeEach(() => {
-        mockPdaService.writeHealthCheck.mockReset();
+        mockPdaService.writeHealthSurvey.mockReset();
     });
 
     describe('submitting health check', () => {
         test('disabling the button on submission', () => {
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <HealthCheckScreen navigation={{} as any} />
+                    <HealthSurveyScreen navigation={{} as any} />
                 </NavigationContainer>
             );
 
-            mockPdaService.writeHealthCheck.mockReturnValue(
+            mockPdaService.writeHealthSurvey.mockReturnValue(
                 new Promise(() => {})
             );
+            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
+            fireEvent.press(getByTestId('symptomsNext'));
 
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
-
-            expect(pdaService.writeHealthCheck).toHaveBeenCalledTimes(1);
+            expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(1);
         });
 
         test('re-enabling the button on submission', async () => {
-            let resolveHealthCheck: Function;
-            const healthCheckPromise = new Promise<void>((resolve) => {
-                resolveHealthCheck = resolve;
+            let resolveHealthSurvey: Function;
+            const healthSurveyPromise = new Promise<void>((resolve) => {
+                resolveHealthSurvey = resolve;
             });
 
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <HealthCheckScreen
+                    <HealthSurveyScreen
                         navigation={{ navigate: jest.fn() } as any}
                     />
                 </NavigationContainer>
             );
 
-            mockPdaService.writeHealthCheck.mockReturnValue(healthCheckPromise);
+            mockPdaService.writeHealthSurvey.mockReturnValue(
+                healthSurveyPromise
+            );
+
+            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
+            fireEvent.press(getByTestId('symptomsNext'));
 
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
-
-            expect(pdaService.writeHealthCheck).toHaveBeenCalledTimes(1);
+            expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(1);
 
             await act(async () => {
-                resolveHealthCheck();
+                resolveHealthSurvey();
 
-                await healthCheckPromise;
+                await healthSurveyPromise;
 
-                fireEvent.press(getByTestId('preExistingConditionsNext'));
-                expect(pdaService.writeHealthCheck).toHaveBeenCalledTimes(2);
+                fireEvent.press(getByTestId('symptomsNext'));
+                expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(2);
             });
         });
 
         test('re-enabling the button on submission with error', async () => {
-            let rejectHealthCheck: Function;
-            const healthCheckPromise = new Promise<void>((_, reject) => {
-                rejectHealthCheck = reject;
+            let rejectHealthSurvey: Function;
+            const healthSurveyPromise = new Promise<void>((_, reject) => {
+                rejectHealthSurvey = reject;
             });
 
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <HealthCheckScreen navigation={{} as any} />
+                    <HealthSurveyScreen navigation={{} as any} />
                 </NavigationContainer>
             );
 
-            mockPdaService.writeHealthCheck.mockReturnValue(healthCheckPromise);
+            mockPdaService.writeHealthSurvey.mockReturnValue(
+                healthSurveyPromise
+            );
+
+            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Fatigue'));
-
             fireEvent.press(getByTestId('symptomsNext'));
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             await act(async () => {
                 try {
-                    rejectHealthCheck();
+                    rejectHealthSurvey();
 
-                    await healthCheckPromise;
+                    await healthSurveyPromise;
                 } catch (err) {
-                    fireEvent.press(getByTestId('preExistingConditionsNext'));
-                    expect(pdaService.writeHealthCheck).toHaveBeenCalledTimes(
+                    fireEvent.press(getByTestId('symptomsNext'));
+                    expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(
                         2
                     );
                 }
@@ -113,9 +107,9 @@ describe('Health Check Symptoms', () => {
         });
 
         test('saving symptoms and pre-existing conditions to the PDA', () => {
-            const { getByLabelText, getByTestId, findByText, debug } = render(
+            const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <HealthCheckScreen
+                    <HealthSurveyScreen
                         navigation={{ navigate: jest.fn() } as any}
                     />
                 </NavigationContainer>
@@ -124,18 +118,18 @@ describe('Health Check Symptoms', () => {
             const selectedSymptoms = ['Loss of smell or taste', 'Fatigue'];
             const selectedPreExistingConditions = ['Pregnancy', 'Diabetes'];
 
-            selectedSymptoms.forEach((symptom) =>
-                fireEvent.press(getByLabelText(symptom))
-            );
-            fireEvent.press(getByTestId('symptomsNext'));
-
             selectedPreExistingConditions.forEach((condition) =>
                 fireEvent.press(getByLabelText(condition))
             );
 
             fireEvent.press(getByTestId('preExistingConditionsNext'));
 
-            expect(pdaService.writeHealthCheck).toHaveBeenCalledWith({
+            selectedSymptoms.forEach((symptom) =>
+                fireEvent.press(getByLabelText(symptom))
+            );
+            fireEvent.press(getByTestId('symptomsNext'));
+
+            expect(pdaService.writeHealthSurvey).toHaveBeenCalledWith({
                 symptoms: selectedSymptoms,
                 preExistingConditions: selectedPreExistingConditions,
             });
@@ -145,49 +139,48 @@ describe('Health Check Symptoms', () => {
             const navigateStub = jest.fn();
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <HealthCheckScreen
+                    <HealthSurveyScreen
                         navigation={{ navigate: navigateStub } as any}
                     />
                 </NavigationContainer>
             );
 
-            mockPdaService.writeHealthCheck.mockResolvedValue();
+            mockPdaService.writeHealthSurvey.mockResolvedValue();
+
+            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
             fireEvent.press(getByLabelText('Fatigue'));
-
             fireEvent.press(getByTestId('symptomsNext'));
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             await act(async () => {
                 await wait(() =>
                     expect(navigateStub).toHaveBeenCalledWith(
-                        'HealthCheckSuccess'
+                        'HealthSurveySuccess'
                     )
                 );
             });
         });
 
-        test('showing an error if the request to writeHealthCheck fails', async () => {
+        test('showing an error if the request to writeHealthSurvey fails', async () => {
             const { getByLabelText, getByTestId, findByTestId } = render(
                 <NavigationContainer>
-                    <HealthCheckScreen
+                    <HealthSurveyScreen
                         navigation={{ navigate: jest.fn() } as any}
                     />
                 </NavigationContainer>
             );
 
-            mockPdaService.writeHealthCheck.mockRejectedValue(
+            mockPdaService.writeHealthSurvey.mockRejectedValue(
                 'HTTP_RESPONSE_ERROR'
             );
+            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
             fireEvent.press(getByLabelText('Fatigue'));
 
-            fireEvent.press(getByTestId('symptomsNext'));
-
             await act(async () => {
-                fireEvent.press(getByTestId('preExistingConditionsNext'));
+                fireEvent.press(getByTestId('symptomsNext'));
 
                 const error = await findByTestId('error');
 
