@@ -30,7 +30,7 @@ export interface IPDAService {
 
 export class PDAService implements IPDAService {
     public static APPLICATION_ID: string = 'safe-trace-dev';
-    private namespace: string = 'sharetrace';
+    private namespace: string = 'safetrace';
     private hat: HatClient;
     private lastLocationWrite: number | null = null;
     public static LOCATION_WRITE_DELAY: number = 15 * 60000; // 15 minutes

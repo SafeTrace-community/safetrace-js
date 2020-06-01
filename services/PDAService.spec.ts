@@ -106,7 +106,7 @@ describe('PDAService', () => {
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
-            ).toBeCalledWith('sharetrace', 'locations', storedLocations);
+            ).toBeCalledWith('safetrace', 'locations', storedLocations);
         });
 
         test('clearing sent locations from saved locations', async () => {
@@ -345,7 +345,7 @@ describe('PDAService', () => {
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
-            ).toBeCalledWith('sharetrace', 'healthchecks', healthCheck);
+            ).toBeCalledWith('safetrace', 'healthchecks', healthCheck);
         });
 
         test('handle error when saving HealthCheck', async () => {

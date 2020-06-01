@@ -9,5 +9,6 @@ declare module '*.svg' {
 declare namespace st {
     export type HealthCheck = {
         symptoms: string[] | null;
+        preExistingConditions: string[] | null;
     };
 }
