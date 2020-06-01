@@ -48,8 +48,7 @@ const Main: FunctionComponent = () => {
                             name="HealthCheck"
                             component={HealthCheckScreen}
                             options={{
-                                headerBackTitle: 'Back',
-                                headerTitle: '',
+                                headerShown: false,
                             }}
                         />
                     </>

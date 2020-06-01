@@ -1,21 +1,20 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import sharedStyles, { Colors } from '../../styles/shared';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../Main';
+import React from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import sharedStyles from '../../styles/shared';
 import { RouteProp } from '@react-navigation/native';
 import { PrimaryButton } from '../../components/PrimaryButton';
-import pdaService from '../../services/PDAService';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckIcon from '../../assets/icons/check.svg';
 import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
 import {
     HealthCheckStackParamList,
     healthCheckStyles as styles,
+    HealthCheckNavigationProp,
 } from './HealthCheck';
+import Back from '../../components/Back';
 
 type Props = {
-    navigation: StackNavigationProp<HealthCheckStackParamList>;
+    navigation: HealthCheckNavigationProp;
     route?: RouteProp<HealthCheckStackParamList, 'Symptoms'>;
     handleSelection: (selection: string) => void;
     isSelected: (selection: string) => boolean;
@@ -38,11 +37,10 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
     isSelected,
     handleNext,
     submitting,
-    error,
 }) => {
     return (
-        <ScrollView style={[sharedStyles.safeArea]}>
-            <View style={[sharedStyles.container]}>
+        <SafeAreaView style={[sharedStyles.safeArea]}>
+            <ScrollView style={[sharedStyles.container]}>
                 <Text style={styles.title}>COVID-19 Symptom Checker</Text>
 
                 <Text style={[sharedStyles.text, styles.small]}>
@@ -99,26 +97,28 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
                         </TouchableOpacity>
                     ))}
                 </View>
-
-                <PrimaryButton
-                    onPress={handleNext}
-                    text="Next"
-                    testID="symptomsNext"
-                    disabled={submitting}
-                    style={{
-                        alignSelf: 'flex-end',
-                        width: 'auto',
-                        paddingVertical: 8,
-                    }}
-                    textStyle={{
-                        fontSize: 16,
-                        lineHeight: 20,
-                    }}
-                >
-                    <ChevronRightIcon style={{ marginLeft: 10 }} />
-                </PrimaryButton>
-            </View>
-        </ScrollView>
+                <View style={styles.actions}>
+                    <Back onPress={() => navigation.navigate('HealthStatus')} />
+                    <PrimaryButton
+                        onPress={handleNext}
+                        text="Next"
+                        testID="symptomsNext"
+                        disabled={submitting}
+                        style={{
+                            alignSelf: 'flex-end',
+                            width: 'auto',
+                            paddingVertical: 8,
+                        }}
+                        textStyle={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                        }}
+                    >
+                        <ChevronRightIcon style={{ marginLeft: 10 }} />
+                    </PrimaryButton>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 

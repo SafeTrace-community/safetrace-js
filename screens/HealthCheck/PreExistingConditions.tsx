@@ -2,18 +2,19 @@ import React from 'react';
 import {
     HealthCheckStackParamList,
     healthCheckStyles as styles,
+    HealthCheckNavigationProp,
 } from './HealthCheck';
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import sharedStyles from '../../styles/shared';
 import { ScrollView } from 'react-native-gesture-handler';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import CheckIcon from '../../assets/icons/check.svg';
 import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
+import Back from '../../components/Back';
 
 type Props = {
-    navigation: StackNavigationProp<HealthCheckStackParamList>;
+    navigation: HealthCheckNavigationProp;
     route?: RouteProp<HealthCheckStackParamList, 'PreExistingConditions'>;
     handleSelection: (selection: string) => void;
     isSelected: (selection: string) => boolean;
@@ -42,8 +43,8 @@ const PreExistingConditions: React.FunctionComponent<Props> = ({
     handleNext,
 }) => {
     return (
-        <ScrollView style={[sharedStyles.safeArea]}>
-            <View style={[sharedStyles.container]}>
+        <SafeAreaView style={[sharedStyles.safeArea]}>
+            <ScrollView style={[sharedStyles.container]}>
                 <Text style={styles.title}>COVID-19 Symptom Checker</Text>
 
                 {error && (
@@ -59,7 +60,9 @@ const PreExistingConditions: React.FunctionComponent<Props> = ({
 
                 <View style={styles.progress}>
                     <View style={styles.progressBar}>
-                        <View style={styles.progressBarFill}></View>
+                        <View
+                            style={[styles.progressBarFill, { width: '100%' }]}
+                        ></View>
                     </View>
                     <Text
                         style={[sharedStyles.text, { alignSelf: 'flex-end' }]}
@@ -109,25 +112,29 @@ const PreExistingConditions: React.FunctionComponent<Props> = ({
                     ))}
                 </View>
 
-                <PrimaryButton
-                    onPress={handleNext}
-                    text="Next"
-                    testID="preExistingConditionsNext"
-                    disabled={submitting}
-                    style={{
-                        alignSelf: 'flex-end',
-                        width: 'auto',
-                        paddingVertical: 8,
-                    }}
-                    textStyle={{
-                        fontSize: 16,
-                        lineHeight: 20,
-                    }}
-                >
-                    <ChevronRightIcon style={{ marginLeft: 10 }} />
-                </PrimaryButton>
-            </View>
-        </ScrollView>
+                <View style={styles.actions}>
+                    <Back onPress={() => navigation.navigate('Symptoms')} />
+
+                    <PrimaryButton
+                        onPress={handleNext}
+                        text="Next"
+                        testID="preExistingConditionsNext"
+                        disabled={submitting}
+                        style={{
+                            alignSelf: 'flex-end',
+                            width: 'auto',
+                            paddingVertical: 8,
+                        }}
+                        textStyle={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                        }}
+                    >
+                        <ChevronRightIcon style={{ marginLeft: 10 }} />
+                    </PrimaryButton>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 

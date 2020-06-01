@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/stack';
 import SymptomsScreen from './Symptoms';
 import { RootStackParamList } from '../../Main';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, CompositeNavigationProp } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import sharedStyles, { Colors } from '../../styles/shared';
 import pdaService from '../../services/PDAService';
@@ -20,8 +20,13 @@ export type HealthCheckStackParamList = {
 
 const Stack = createStackNavigator<HealthCheckStackParamList>();
 
+export type HealthCheckNavigationProp = CompositeNavigationProp<
+    StackNavigationProp<RootStackParamList>,
+    StackNavigationProp<HealthCheckStackParamList>
+>;
+
 type Props = {
-    navigation: StackNavigationProp<RootStackParamList>;
+    navigation: HealthCheckNavigationProp;
     route?: RouteProp<RootStackParamList, 'HealthCheck'>;
 };
 
@@ -92,6 +97,12 @@ export const healthCheckStyles = StyleSheet.create({
     selected: {
         borderColor: '#167976',
         borderWidth: 1,
+    },
+    actions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 50,
     },
 });
 
