@@ -111,7 +111,7 @@ const PreExistingConditions: React.FunctionComponent<Props> = ({
                 </View>
 
                 <View style={styles.actions}>
-                    <Back onPress={() => navigation.navigate('Symptoms')} />
+                    <Back onPress={() => navigation.navigate('HealthStatus')} />
 
                     <PrimaryButton
                         onPress={handleNext}

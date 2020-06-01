@@ -100,7 +100,11 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
                     ))}
                 </View>
                 <View style={styles.actions}>
-                    <Back onPress={() => navigation.navigate('HealthStatus')} />
+                    <Back
+                        onPress={() =>
+                            navigation.navigate('PreExistingConditions')
+                        }
+                    />
                     <PrimaryButton
                         onPress={handleNext}
                         text="Next"
