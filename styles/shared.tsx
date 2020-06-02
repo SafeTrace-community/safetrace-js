@@ -19,7 +19,7 @@ const sharedStyles = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        lineHeight: 18,
+        lineHeight: 20,
         fontFamily: 'AvenirNext',
         color: Colors.dark,
     },
