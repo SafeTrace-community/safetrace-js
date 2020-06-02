@@ -4,6 +4,9 @@ export const Colors = {
     red: '#DA1F1F',
     amber: '#FFBE0D',
     green: '#00BD47',
+
+    dark: '#272935',
+    primary: '#167976',
 };
 
 const sharedStyles = StyleSheet.create({
@@ -16,9 +19,9 @@ const sharedStyles = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        lineHeight: 18,
+        lineHeight: 20,
         fontFamily: 'AvenirNext',
-        color: '#272935',
+        color: Colors.dark,
     },
 });
 

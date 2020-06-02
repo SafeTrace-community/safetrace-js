@@ -1,67 +1,203 @@
 import React from 'react';
 import HealthStatusScreen from './HealthStatus';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, act } from '@testing-library/react-native';
 import { IHatContext, HatContext } from '../../context/HatContext';
+import MockedNavigator from '../testUtils/MockedNavigator';
+
 describe('Health status screen', () => {
-    test('providing link to creating a hat', () => {
-        const navigationStub = {
-            navigate: jest.fn(),
+    test('not requesting data if not authorized', () => {
+        const context: Partial<IHatContext> = {
+            isAuthenticated: false,
+            getHealthSurveys: jest.fn(),
+            healthSurveys: [],
         };
-        const { getByTestId } = render(
-            <HealthStatusScreen navigation={navigationStub as any} />
-        );
-        expect(getByTestId('createPersonalDataAccount')).toBeTruthy();
 
-        fireEvent.press(getByTestId('createPersonalDataAccount'));
+        const { findByTestId } = renderHealthStatusScreen({
+            context,
+        });
 
-        expect(navigationStub.navigate).toBeCalledWith('GetStartedWithPDA');
+        expect(context.getHealthSurveys).not.toBeCalled();
     });
 
-    test('disabled link to providing preliminary health check if not signed into a HAT', () => {
-        const navigationStub = {
-            navigate: jest.fn(),
+    test('showing loading indictor while it loads any health survey data', async () => {
+        const context: Partial<IHatContext> = {
+            isAuthenticated: true,
+            getHealthSurveys: jest.fn().mockReturnValue(
+                new Promise<any>(() => {})
+            ),
+            healthSurveys: [],
         };
-        const { getByTestId } = render(
-            <HealthStatusScreen navigation={navigationStub as any} />
-        );
-        expect(getByTestId('provideProvisionalHealthCheck')).toBeTruthy();
 
-        fireEvent.press(getByTestId('provideProvisionalHealthCheck'));
+        const { findByTestId } = renderHealthStatusScreen({
+            context,
+        });
 
-        expect(navigationStub.navigate).not.toBeCalledWith('HealthCheck');
+        const screenLoading = await findByTestId('screenLoading');
+        expect(screenLoading).toBeTruthy();
     });
 
-    test('showing creating a PDA step complete once signed into a HAT', () => {
+    test('providing link to creating a hat', async () => {
         const navigationStub = {
             navigate: jest.fn(),
         };
-        const mockHatContext = { isAuthenticated: true } as IHatContext;
 
-        const { getByTestId } = render(
-            <HatContext.Provider value={mockHatContext}>
-                <HealthStatusScreen navigation={navigationStub as any} />
-            </HatContext.Provider>
-        );
+        const { findByTestId } = renderHealthStatusScreen({
+            props: { navigation: navigationStub },
+        });
 
-        expect(getByTestId('createPersonalDataAccountComplete')).toBeTruthy();
+        await act(async () => {
+            const createPDAAction = await findByTestId(
+                'createPersonalDataAccount'
+            );
+
+            expect(createPDAAction).toBeTruthy();
+
+            fireEvent.press(createPDAAction);
+
+            expect(navigationStub.navigate).toBeCalledWith('GetStartedWithPDA');
+        });
     });
 
-    test('enabling link to providing preliminary health check if signed into HAT', () => {
+    test('disabled link to providing preliminary health check if not signed into a HAT', async () => {
         const navigationStub = {
             navigate: jest.fn(),
         };
-        const mockHatContext = { isAuthenticated: true } as IHatContext;
 
-        const { getByTestId } = render(
-            <HatContext.Provider value={mockHatContext}>
-                <HealthStatusScreen navigation={navigationStub as any} />
-            </HatContext.Provider>
-        );
+        const { findByTestId } = renderHealthStatusScreen({
+            props: { navigation: navigationStub },
+        });
 
-        expect(getByTestId('provideProvisionalHealthCheck')).toBeTruthy();
+        await act(async () => {
+            const providePreliminaryHealthSurvey = await findByTestId(
+                'providePreliminaryHealthSurvey'
+            );
 
-        fireEvent.press(getByTestId('provideProvisionalHealthCheck'));
+            expect(providePreliminaryHealthSurvey).toBeTruthy();
 
-        expect(navigationStub.navigate).toBeCalledWith('HealthCheck');
+            fireEvent.press(providePreliminaryHealthSurvey);
+
+            expect(navigationStub.navigate).not.toBeCalledWith('HealthSurvey');
+        });
+    });
+
+    test('showing creating a PDA step complete once signed into a HAT', async () => {
+        const context = { isAuthenticated: true } as IHatContext;
+
+        const { findByTestId } = renderHealthStatusScreen({
+            context,
+        });
+
+        await act(async () => {
+            const createPersonalDataAccountCompleted = await findByTestId(
+                'createPersonalDataAccountCompleted'
+            );
+
+            expect(createPersonalDataAccountCompleted).toBeTruthy();
+        });
+    });
+
+    test('enabling link to providing preliminary health check if signed into HAT', async () => {
+        const props = {
+            navigation: {
+                navigate: jest.fn(),
+            },
+        };
+
+        const context = { isAuthenticated: true } as IHatContext;
+
+        const { findByTestId } = renderHealthStatusScreen({
+            props,
+            context,
+        });
+
+        await act(async () => {
+            const providePreliminaryHealthSurvey = await findByTestId(
+                'providePreliminaryHealthSurvey'
+            );
+            await expect(providePreliminaryHealthSurvey).toBeTruthy();
+
+            fireEvent.press(providePreliminaryHealthSurvey);
+
+            expect(props.navigation.navigate).toBeCalledWith('HealthSurvey');
+        });
+    });
+
+    describe('Preliminary health status survey completed', () => {
+        test('checking if any health surveys have been completed on entering screen', () => {
+            const context = {
+                isAuthenticated: true,
+                getHealthSurveys: jest.fn(),
+            };
+
+            renderHealthStatusScreen({
+                context,
+            });
+
+            expect(context.getHealthSurveys).toBeCalledTimes(1);
+        });
+
+        test('showing the preliminary health status survey as incomplete if 0 health surveys are in the PDA', async () => {
+            const context = {
+                isAuthenticated: true,
+                healthSurveys: [],
+            };
+
+            const { findByTestId } = renderHealthStatusScreen({
+                context,
+            });
+
+            await act(async () => {
+                const providePreliminaryHealthSurveyNotCompleted = await findByTestId(
+                    'providePreliminaryHealthSurveyNotCompleted'
+                );
+
+                expect(providePreliminaryHealthSurveyNotCompleted).toBeTruthy();
+            });
+        });
+
+        test('showing the preliminary health status survey as complete if health surveys are in the PDA', async () => {
+            const context = {
+                isAuthenticated: true,
+                healthSurveys: [
+                    { symptoms: ['fatigue'], timestamp: 1591105955 },
+                ],
+            };
+
+            const { findByTestId } = renderHealthStatusScreen({
+                context,
+            });
+
+            await act(async () => {
+                const providePreliminaryHealthSurveyCompleted = await findByTestId(
+                    'providePreliminaryHealthSurveyCompleted'
+                );
+
+                expect(providePreliminaryHealthSurveyCompleted).toBeTruthy();
+            });
+        });
     });
 });
+
+// Utils
+
+function renderHealthStatusScreen({
+    props = {},
+    context = {},
+}: {
+    props?: any;
+    context?: Partial<IHatContext>;
+}) {
+    const mockContext = {
+        getHealthSurveys: jest.fn().mockResolvedValue([]) as any,
+        healthSurveys: [],
+        ...context,
+    } as IHatContext;
+    return render(
+        <HatContext.Provider value={mockContext}>
+            <MockedNavigator
+                ComponentForScreen={HealthStatusScreen}
+                propOverrides={props}
+            />
+        </HatContext.Provider>
+    );
+}

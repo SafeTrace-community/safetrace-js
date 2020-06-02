@@ -30,7 +30,7 @@ import { Input } from '../../components/Input';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
-    route?: RouteProp<RootStackParamList, 'ViewLocations'>;
+    route?: RouteProp<RootStackParamList, 'Login'>;
 };
 
 const styles = StyleSheet.create({
@@ -125,6 +125,7 @@ const Login: FunctionComponent<Props> = () => {
                             onChangeText={setHatDomain}
                             testID="inputHatDomain"
                             value={hatDomain}
+                            autoCapitalize="none"
                             placeholder="ie. mypdausername.hubofallthings.net"
                             style={{
                                 marginBottom: 20,
@@ -132,12 +133,11 @@ const Login: FunctionComponent<Props> = () => {
                         />
                         <PrimaryButton
                             testID="loginButton"
+                            text="Login"
                             onPress={() => {
                                 redirectToLogin(hatDomain);
                             }}
-                        >
-                            Login
-                        </PrimaryButton>
+                        />
                     </View>
                 </View>
             </TouchableWithoutFeedback>
