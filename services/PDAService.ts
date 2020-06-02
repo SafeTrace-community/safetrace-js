@@ -187,7 +187,12 @@ export class PDAService implements IPDAService {
     }
 
     public async deleteAccount() {
-        await locationService.stopLocationTracking();
+        try {
+            await locationService.stopLocationTracking();
+        } catch (err) {
+            console.log(err);
+        }
+
         await locationService.deleteLocationStorage();
         await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
         await this.hat.auth().signOut();

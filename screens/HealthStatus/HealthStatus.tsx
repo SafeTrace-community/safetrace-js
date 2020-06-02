@@ -9,6 +9,7 @@ import {
     SafeAreaView,
     Image,
     StyleSheet,
+    Button,
 } from 'react-native';
 import sharedStyles from '../../styles/shared';
 import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
@@ -97,7 +98,13 @@ const styles = StyleSheet.create({
 });
 
 const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
-    const { isAuthenticated } = useContext(HatContext);
+    const { isAuthenticated, deleteAccount } = useContext(HatContext);
+
+    const TEMP_logout = async () => {
+        await deleteAccount();
+        navigation.navigate('Introduction');
+    };
+
     return (
         <SafeAreaView style={sharedStyles.safeArea}>
             <View style={[sharedStyles.container, styles.screen]}>
@@ -198,6 +205,12 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                </View>
+                <View style={{ marginTop: 'auto' }}>
+                    <Button
+                        onPress={() => TEMP_logout()}
+                        title="Logout / Reset"
+                    />
                 </View>
             </View>
         </SafeAreaView>
