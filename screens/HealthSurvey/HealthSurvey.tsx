@@ -1,36 +1,24 @@
 import React, { useState, useCallback } from 'react';
-import {
-    createStackNavigator,
-    StackNavigationProp,
-} from '@react-navigation/stack';
-import SymptomsScreen from './Symptoms';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Main';
-import { RouteProp, CompositeNavigationProp } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
+import {
+    StyleSheet,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    View,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
 import sharedStyles, { Colors } from '../../styles/shared';
 import pdaService from '../../services/PDAService';
-import PreExistingConditions from './PreExistingConditions';
+import CheckIcon from '../../assets/icons/check.svg';
+import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
+import Back from '../../components/Back';
+import { PrimaryButton } from '../../components/PrimaryButton';
 
-export type HealthSurveyStackParamList = {
-    // Specifying undefined means that the route is there but has no params
-    // see: https://reactnavigation.org/docs/typescript/
-    Symptoms: undefined;
-    PreExistingConditions: undefined;
-};
-
-const Stack = createStackNavigator<HealthSurveyStackParamList>();
-
-export type HealthSurveyNavigationProp = CompositeNavigationProp<
-    StackNavigationProp<RootStackParamList>,
-    StackNavigationProp<HealthSurveyStackParamList>
->;
-
-type Props = {
-    navigation: HealthSurveyNavigationProp;
-    route?: RouteProp<RootStackParamList, 'HealthSurvey'>;
-};
-
-export const healthSurveyStyles = StyleSheet.create({
+export const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         lineHeight: 24,
@@ -38,7 +26,6 @@ export const healthSurveyStyles = StyleSheet.create({
         marginBottom: 10,
     },
     small: {
-        ...sharedStyles.text,
         fontSize: 12,
         lineHeight: 16,
         marginBottom: 20,
@@ -106,6 +93,11 @@ export const healthSurveyStyles = StyleSheet.create({
     },
 });
 
+type Props = {
+    navigation: StackNavigationProp<RootStackParamList>;
+    route?: RouteProp<RootStackParamList, 'HealthSurvey'>;
+};
+
 const isSelected = (collection: string[], selection: string): boolean =>
     collection.some((ds) => ds === selection);
 
@@ -121,13 +113,17 @@ const toggleSelection = (collection: string[], selection: string): string[] => {
     return newCollection;
 };
 
+const symptoms = [
+    'Loss of smell or taste',
+    'Skipped meals',
+    'Fatigue',
+    'Fever',
+    'Persistent cough',
+];
+
 const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     const [error, setError] = useState<string | null>(null);
     const [declaredSymptoms, setDeclaredSymptoms] = useState<string[]>([]);
-    const [
-        declaredPreExistingConditions,
-        setDeclaredPreExistingConditions,
-    ] = useState<string[]>([]);
     const [submitting, setSubmitting] = useState(false);
 
     const submitHealthSurvey = useCallback(async () => {
@@ -137,7 +133,7 @@ const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
         try {
             await pdaService.writeHealthSurvey({
                 symptoms: declaredSymptoms,
-                preExistingConditions: declaredPreExistingConditions,
+                timestamp: Date.now(),
             });
 
             navigation.navigate('HealthStatus');
@@ -147,56 +143,107 @@ const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
         }
 
         setSubmitting(false);
-    }, [declaredSymptoms, declaredPreExistingConditions]);
+    }, [declaredSymptoms]);
 
     return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="PreExistingConditions"
-                options={{ headerShown: false }}
-            >
-                {(props) => (
-                    <PreExistingConditions
-                        {...props}
-                        isSelected={(condition) =>
-                            isSelected(declaredPreExistingConditions, condition)
-                        }
-                        handleSelection={(condition) => {
-                            const newPreExistingConditions = toggleSelection(
-                                declaredPreExistingConditions,
-                                condition
-                            );
-                            setDeclaredPreExistingConditions(
-                                newPreExistingConditions
-                            );
-                        }}
-                        error={error}
-                        submitting={submitting}
-                        handleNext={() => props.navigation.navigate('Symptoms')}
-                    />
+        <SafeAreaView style={[sharedStyles.safeArea]}>
+            <ScrollView style={[sharedStyles.container]}>
+                <Text style={styles.title}>Health Status</Text>
+
+                <Text style={[sharedStyles.text, styles.small]}>
+                    Answer the following questions to learn how your health
+                    status impacts your Covid-19 status.
+                </Text>
+
+                <Text style={styles.question}>
+                    Have you experienced any of the symptoms listed below?
+                </Text>
+
+                <Text style={sharedStyles.text}>
+                    Check any symptoms you have recently experienced. Click the
+                    "Next" button to proceed.
+                </Text>
+
+                <View style={{ paddingVertical: 20 }}>
+                    {symptoms.map((symptom, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            accessible={true}
+                            accessibilityLabel={symptom}
+                            onPress={() => {
+                                const newSymptoms = toggleSelection(
+                                    declaredSymptoms,
+                                    symptom
+                                );
+                                setDeclaredSymptoms(newSymptoms);
+                            }}
+                        >
+                            <View
+                                style={[
+                                    styles.check,
+                                    isSelected(declaredSymptoms, symptom) &&
+                                        styles.selected,
+                                ]}
+                                testID="checkbox"
+                            >
+                                <View
+                                    style={[
+                                        styles.checkBox,
+                                        isSelected(declaredSymptoms, symptom) &&
+                                            styles.selectedCheckbox,
+                                    ]}
+                                >
+                                    <CheckIcon />
+                                </View>
+                                <Text style={styles.checkText}>{symptom}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+
+                {error && (
+                    <Text testID="error" style={styles.error}>
+                        {error}
+                    </Text>
                 )}
-            </Stack.Screen>
-            <Stack.Screen name="Symptoms" options={{ headerShown: false }}>
-                {(props) => (
-                    <SymptomsScreen
-                        {...props}
-                        isSelected={(symptom) =>
-                            isSelected(declaredSymptoms, symptom)
-                        }
-                        handleSelection={(symptom) => {
-                            const newSymptoms = toggleSelection(
-                                declaredSymptoms,
-                                symptom
-                            );
-                            setDeclaredSymptoms(newSymptoms);
+
+                <View style={styles.actions}>
+                    <Back
+                        onPress={() => {
+                            !submitting && navigation.navigate('HealthStatus');
                         }}
-                        error={error}
-                        submitting={submitting}
-                        handleNext={submitHealthSurvey}
                     />
-                )}
-            </Stack.Screen>
-        </Stack.Navigator>
+                    <PrimaryButton
+                        onPress={submitHealthSurvey}
+                        text={submitting ? 'Submitting' : 'Next'}
+                        testID="symptomsNext"
+                        disabled={submitting}
+                        style={[
+                            {
+                                alignSelf: 'flex-end',
+                                width: 'auto',
+                                paddingVertical: 8,
+                            },
+                            submitting && { opacity: 0.8 },
+                        ]}
+                        textStyle={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                        }}
+                    >
+                        {!submitting && (
+                            <ChevronRightIcon style={{ marginLeft: 10 }} />
+                        )}
+                        {submitting && (
+                            <ActivityIndicator
+                                color="white"
+                                style={{ marginLeft: 10 }}
+                            />
+                        )}
+                    </PrimaryButton>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 

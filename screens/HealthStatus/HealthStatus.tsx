@@ -70,12 +70,10 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
         setLoading(true);
 
         const getScreenData = async () => {
-            if (healthSurveys.length === 0) {
+            if (isAuthenticated) {
                 await getHealthSurveys();
-                setLoading(false);
-            } else {
-                setLoading(false);
             }
+            setLoading(false);
         };
 
         try {
@@ -83,7 +81,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
         } catch (error) {
             Sentry.captureException(error);
         }
-    }, [healthSurveys]);
+    }, [isAuthenticated]);
 
     useFocusEffect(onScreenEntry);
 

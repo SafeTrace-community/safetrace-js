@@ -5,9 +5,26 @@ import { IHatContext, HatContext } from '../../context/HatContext';
 import MockedNavigator from '../testUtils/MockedNavigator';
 
 describe('Health status screen', () => {
+    test('not requesting data if not authorized', () => {
+        const context: Partial<IHatContext> = {
+            isAuthenticated: false,
+            getHealthSurveys: jest.fn(),
+            healthSurveys: [],
+        };
+
+        const { findByTestId } = renderHealthStatusScreen({
+            context,
+        });
+
+        expect(context.getHealthSurveys).not.toBeCalled();
+    });
+
     test('showing loading indictor while it loads any health survey data', async () => {
-        const context = {
-            getHealthSurveys: new Promise<any>(() => {}) as any,
+        const context: Partial<IHatContext> = {
+            isAuthenticated: true,
+            getHealthSurveys: jest.fn().mockReturnValue(
+                new Promise<any>(() => {})
+            ),
             healthSurveys: [],
         };
 
@@ -108,6 +125,7 @@ describe('Health status screen', () => {
     describe('Preliminary health status survey completed', () => {
         test('checking if any health surveys have been completed on entering screen', () => {
             const context = {
+                isAuthenticated: true,
                 getHealthSurveys: jest.fn(),
             };
 
@@ -120,6 +138,7 @@ describe('Health status screen', () => {
 
         test('showing the preliminary health status survey as incomplete if 0 health surveys are in the PDA', async () => {
             const context = {
+                isAuthenticated: true,
                 healthSurveys: [],
             };
 
@@ -138,8 +157,9 @@ describe('Health status screen', () => {
 
         test('showing the preliminary health status survey as complete if health surveys are in the PDA', async () => {
             const context = {
+                isAuthenticated: true,
                 healthSurveys: [
-                    { symptoms: ['fatigue'], preExistingConditions: [] },
+                    { symptoms: ['fatigue'], timestamp: 1591105955 },
                 ],
             };
 
@@ -154,21 +174,6 @@ describe('Health status screen', () => {
 
                 expect(providePreliminaryHealthSurveyCompleted).toBeTruthy();
             });
-        });
-
-        test('not calling the PDA if we already have the health surveys (i.e returning to the view)', () => {
-            const context = {
-                healthSurveys: [
-                    { symptoms: ['fatigue'], preExistingConditions: [] },
-                ],
-                getHealthSurveys: jest.fn(),
-            };
-
-            renderHealthStatusScreen({
-                context,
-            });
-
-            expect(context.getHealthSurveys).not.toBeCalled();
         });
     });
 });

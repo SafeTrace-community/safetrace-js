@@ -158,8 +158,8 @@ describe('HatContext provider', () => {
 
     describe('getting health surveys', () => {
         test('setting health surveys in context via getHealthSurveys', async () => {
-            const healthSurveys: st.HealthStatus[] = [
-                { symptoms: ['fatigue'], preExistingConditions: ['pregnancy'] },
+            const healthSurveys: st.HealthSurvey[] = [
+                { symptoms: ['fatigue'], timestamp: Date.now() },
             ];
 
             mockPdaService.getHealthSurveys.mockResolvedValue(healthSurveys);

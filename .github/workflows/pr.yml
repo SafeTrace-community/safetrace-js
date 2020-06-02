@@ -2,38 +2,41 @@ name: PR Review
 on: [pull_request]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-    # This workflow contains a single job called "build"
-    test:
-        # The type of runner that the job will run on
-        runs-on: ubuntu-latest
+  # This workflow contains a single job called "build"
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
 
-        # Steps represent a sequence of tasks that will be executed as part of the job
-        steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-            - uses: actions/checkout@v2
-            - name: Dependencies
-              run: yarn install
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Dependencies
+        run: yarn install
 
-            - name: Test
-              run: yarn test
+      - name: Type check
+        run: yarn tsc
 
-    publish:
-        name: Install and publish
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v1
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 12.x
-            - uses: expo/expo-github-action@v5
-              with:
-                  expo-version: 3.x
-                  expo-username: wemakewaves
-                  expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
-            - run: yarn install
-            - run: expo publish --release-channel=pr-${{ github.event.number }}
-            - uses: unsplash/comment-on-pr@master
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  msg: PR published to expo you can review it [here](https://expo.io/@wemakewaves/sharetrace?release-channel=pr-${{ github.event.number }}).
+      - name: Test
+        run: yarn test
+
+  publish:
+    name: Install and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-username: wemakewaves
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+      - run: yarn install
+      - run: expo publish --release-channel=pr-${{ github.event.number }}
+      - uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: PR published to expo you can review it [here](https://expo.io/@wemakewaves/sharetrace?release-channel=pr-${{ github.event.number }}).

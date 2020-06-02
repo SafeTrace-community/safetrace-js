@@ -107,9 +107,9 @@ describe('PDAService', () => {
                 .hatData()
                 .create.mockResolvedValue({});
 
-            const healthSurvey: st.HealthStatus = {
+            const healthSurvey: st.HealthSurvey = {
                 symptoms: ['Skipped meals', 'Fatigue'],
-                preExistingConditions: [],
+                timestamp: 1591105955,
             };
 
             await pdaService.writeHealthSurvey(healthSurvey);
@@ -125,9 +125,9 @@ describe('PDAService', () => {
                 .hatData()
                 .create.mockRejectedValue(error);
 
-            const healthSurvey: st.HealthStatus = {
+            const healthSurvey: st.HealthSurvey = {
                 symptoms: ['Skipped meals', 'Fatigue'],
-                preExistingConditions: [],
+                timestamp: 1591105955,
             };
 
             try {
@@ -138,7 +138,7 @@ describe('PDAService', () => {
         });
 
         test('getting HeathSurveys', async () => {
-            const heathSurveys = [{ symptoms: [], preExistingConditions: [] }];
+            const heathSurveys = [{ symptoms: [], timestamp: '1591105955' }];
 
             mockHatClient.mock.results[0].value
                 .hatData()

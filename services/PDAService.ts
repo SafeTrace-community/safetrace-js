@@ -10,7 +10,7 @@ export interface IPDAService {
     authenticate(config: any): void;
     logout(): void;
     getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
-    writeHealthSurvey(healthSurvey: st.HealthStatus): Promise<void>;
+    writeHealthSurvey(healthSurvey: st.HealthSurvey): Promise<void>;
 }
 
 export class PDAService implements IPDAService {
@@ -75,7 +75,7 @@ export class PDAService implements IPDAService {
         this.hat = (await new HatClient(config)) as HatClient;
     }
 
-    public async writeHealthSurvey(healthSurvey: st.HealthStatus) {
+    public async writeHealthSurvey(healthSurvey: st.HealthSurvey) {
         try {
             await this.hat!.hatData().create(
                 this.namespace,
@@ -88,10 +88,10 @@ export class PDAService implements IPDAService {
         }
     }
 
-    public async getHealthSurveys(): Promise<st.HealthStatus[]> {
+    public async getHealthSurveys(): Promise<st.HealthSurvey[]> {
         try {
             const pdaResponse = await this.hat!.hatData().getAll<
-                st.HealthStatus
+                st.HealthSurvey
             >(this.namespace, 'healthsurveys', {
                 limit: '1',
             });

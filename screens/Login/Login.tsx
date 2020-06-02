@@ -30,7 +30,7 @@ import { Input } from '../../components/Input';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
-    route?: RouteProp<RootStackParamList, 'ViewLocations'>;
+    route?: RouteProp<RootStackParamList, 'Login'>;
 };
 
 const styles = StyleSheet.create({

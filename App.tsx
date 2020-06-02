@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import * as Sentry from 'sentry-expo';
 import { StatusBar, Platform, Text } from 'react-native';
 import Main from './Main';
-import './tasks/backgroundLocation';
 import HatProvider from './context/HatContext';
 import { loadAsync, FontDisplay, FontResource } from 'expo-font';
 

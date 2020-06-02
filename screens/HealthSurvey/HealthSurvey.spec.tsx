@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { render, fireEvent, act, wait } from '@testing-library/react-native';
+import {
+    render,
+    fireEvent,
+    act,
+    wait,
+    getByTestId,
+} from '@testing-library/react-native';
 import pdaService, { PDAService } from '../../services/PDAService';
 import { NavigationContainer } from '@react-navigation/native';
 import HealthSurveyScreen from './HealthSurvey';
@@ -12,7 +18,52 @@ const mockPdaService: jest.Mocked<PDAService> = pdaService as any;
 
 describe('Health Check Symptoms', () => {
     beforeEach(() => {
+        const now = Date.now();
+        Date.now = jest.fn().mockReturnValue(now);
         mockPdaService.writeHealthSurvey.mockReset();
+    });
+
+    afterEach(() => {
+        //@ts-ignore
+        Date.now.mockRestore();
+    });
+
+    test('view symptoms', () => {
+        const { getByLabelText } = render(
+            <NavigationContainer>
+                <HealthSurveyScreen navigation={{} as any} />
+            </NavigationContainer>
+        );
+
+        const symptoms = [
+            'Loss of smell or taste',
+            'Skipped meals',
+            'Fatigue',
+            'Fever',
+            'Persistent cough',
+        ];
+
+        symptoms.forEach((symptom) =>
+            expect(getByLabelText(symptom)).toBeTruthy()
+        );
+    });
+
+    test('when a symptom is selected', () => {
+        const selectedSymptom = 'Fatigue';
+
+        const { getByLabelText } = render(
+            <NavigationContainer>
+                <HealthSurveyScreen navigation={{} as any} />
+            </NavigationContainer>
+        );
+
+        const symptom = getByLabelText(selectedSymptom);
+
+        fireEvent.press(symptom);
+
+        expect(
+            getByTestId(symptom, 'checkbox').props.style[1].borderColor
+        ).toEqual('#167976');
     });
 
     describe('submitting health check', () => {
@@ -26,7 +77,6 @@ describe('Health Check Symptoms', () => {
             mockPdaService.writeHealthSurvey.mockReturnValue(
                 new Promise(() => {})
             );
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
@@ -52,8 +102,6 @@ describe('Health Check Symptoms', () => {
             mockPdaService.writeHealthSurvey.mockReturnValue(
                 healthSurveyPromise
             );
-
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
@@ -87,8 +135,6 @@ describe('Health Check Symptoms', () => {
                 healthSurveyPromise
             );
 
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
-
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
 
@@ -106,7 +152,7 @@ describe('Health Check Symptoms', () => {
             });
         });
 
-        test('saving symptoms and pre-existing conditions to the PDA', () => {
+        test('saving symptoms to the PDA', () => {
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
                     <HealthSurveyScreen
@@ -116,13 +162,6 @@ describe('Health Check Symptoms', () => {
             );
 
             const selectedSymptoms = ['Loss of smell or taste', 'Fatigue'];
-            const selectedPreExistingConditions = ['Pregnancy', 'Diabetes'];
-
-            selectedPreExistingConditions.forEach((condition) =>
-                fireEvent.press(getByLabelText(condition))
-            );
-
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             selectedSymptoms.forEach((symptom) =>
                 fireEvent.press(getByLabelText(symptom))
@@ -131,7 +170,7 @@ describe('Health Check Symptoms', () => {
 
             expect(pdaService.writeHealthSurvey).toHaveBeenCalledWith({
                 symptoms: selectedSymptoms,
-                preExistingConditions: selectedPreExistingConditions,
+                timestamp: Date.now(),
             });
         });
 
@@ -146,8 +185,6 @@ describe('Health Check Symptoms', () => {
             );
 
             mockPdaService.writeHealthSurvey.mockResolvedValue();
-
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
             fireEvent.press(getByLabelText('Fatigue'));
@@ -172,7 +209,6 @@ describe('Health Check Symptoms', () => {
             mockPdaService.writeHealthSurvey.mockRejectedValue(
                 'HTTP_RESPONSE_ERROR'
             );
-            fireEvent.press(getByTestId('preExistingConditionsNext'));
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
             fireEvent.press(getByLabelText('Fatigue'));
