@@ -5,6 +5,7 @@ export const Colors = {
     amber: '#FFBE0D',
     green: '#00BD47',
 
+    dark: '#272935',
     primary: '#167976',
 };
 
@@ -20,7 +21,7 @@ const sharedStyles = StyleSheet.create({
         fontSize: 14,
         lineHeight: 18,
         fontFamily: 'AvenirNext',
-        color: '#272935',
+        color: Colors.dark,
     },
 });
 

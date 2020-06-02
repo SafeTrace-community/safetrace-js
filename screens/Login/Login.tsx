@@ -125,6 +125,7 @@ const Login: FunctionComponent<Props> = () => {
                             onChangeText={setHatDomain}
                             testID="inputHatDomain"
                             value={hatDomain}
+                            autoCapitalize="none"
                             placeholder="ie. mypdausername.hubofallthings.net"
                             style={{
                                 marginBottom: 20,

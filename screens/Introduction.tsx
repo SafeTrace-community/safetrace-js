@@ -12,7 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Main';
 import { ToggleAppearance } from '../components/ToggleAppearance';
-import sharedStyles from '../styles/shared';
+import sharedStyles, { Colors } from '../styles/shared';
 import { useFocusEffect } from '@react-navigation/native';
 const styles = StyleSheet.create({
     screen: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 20,
         fontFamily: 'AvenirNext-DemiBold',
-        color: '#272935',
+        color: Colors.dark,
     },
     actions: {
         height: 100,

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         marginTop: 10,
         fontFamily: 'AvenirNext-Medium',
-        color: '#272935',
+        color: Colors.dark,
         textAlign: 'center',
     },
     formInput: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     disclaimerText: {
-        color: '#272935',
+        color: Colors.dark,
         fontSize: 14,
         lineHeight: 20,
         marginBottom: 20,

@@ -155,9 +155,7 @@ describe('Health Check Symptoms', () => {
 
             await act(async () => {
                 await wait(() =>
-                    expect(navigateStub).toHaveBeenCalledWith(
-                        'HealthSurveySuccess'
-                    )
+                    expect(navigateStub).toHaveBeenCalledWith('HealthStatus')
                 );
             });
         });

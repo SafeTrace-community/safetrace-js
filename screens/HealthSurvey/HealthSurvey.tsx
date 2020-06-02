@@ -140,7 +140,7 @@ const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                 preExistingConditions: declaredPreExistingConditions,
             });
 
-            navigation.navigate('HealthSurveySuccess');
+            navigation.navigate('HealthStatus');
         } catch (err) {
             console.error(err);
             setError('An error occurred saving your health check');
