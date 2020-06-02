@@ -16,9 +16,6 @@ export type RootStackParamList = {
     GetStartedWithPDA: undefined;
     CreateAccount: undefined;
     Login: undefined;
-    Tracking: undefined;
-    ViewLocations: undefined;
-    DeleteAccount: undefined;
     HealthStatus: undefined;
     HealthSurvey: undefined;
 };

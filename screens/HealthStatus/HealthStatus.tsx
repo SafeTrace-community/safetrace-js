@@ -98,10 +98,10 @@ const styles = StyleSheet.create({
 });
 
 const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
-    const { isAuthenticated, deleteAccount } = useContext(HatContext);
+    const { isAuthenticated, logout } = useContext(HatContext);
 
     const TEMP_logout = async () => {
-        await deleteAccount();
+        await logout();
         navigation.navigate('Introduction');
     };
 

@@ -114,14 +114,12 @@ describe('HatContext provider', () => {
         });
     });
 
-    describe('delete account', () => {
-        test('calls delete account on PDAService and updates isAuthenticated from PDAservice', async () => {
+    describe('log out of PDA', () => {
+        test('calls logout PDAService and updates isAuthenticated from PDAservice', async () => {
             mockPdaService.isAuthenticated.mockReturnValue(false);
 
             const TestComponent: FunctionComponent = () => {
-                const { isAuthenticated, deleteAccount } = useContext(
-                    HatContext
-                );
+                const { isAuthenticated, logout } = useContext(HatContext);
 
                 return (
                     <>
@@ -130,8 +128,8 @@ describe('HatContext provider', () => {
                         </Text>
                         <Button
                             title="delete account"
-                            testID="deleteAccountBtn"
-                            onPress={() => deleteAccount()}
+                            testID="logoutButton"
+                            onPress={() => logout()}
                         />
                     </>
                 );
@@ -141,14 +139,14 @@ describe('HatContext provider', () => {
             expect(getByTestId('isAuthenticated').children.join('')).toEqual(
                 'false'
             );
-            const deleteAccountBtn = getByTestId('deleteAccountBtn');
+            const logoutButton = getByTestId('logoutButton');
             mockPdaService.isAuthenticated.mockReturnValue(true);
 
-            fireEvent.press(deleteAccountBtn);
+            fireEvent.press(logoutButton);
 
             await act(async () =>
                 wait(() => {
-                    expect(mockPdaService.deleteAccount).toBeCalled();
+                    expect(mockPdaService.logout).toBeCalled();
 
                     expect(
                         getByTestId('isAuthenticated').children.join('')

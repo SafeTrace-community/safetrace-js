@@ -12,7 +12,7 @@ import pdaService from '../services/PDAService';
 export interface IHatContext {
     isAuthenticated: boolean;
     authenticateFromStoredToken: () => void;
-    deleteAccount: () => void;
+    logout: () => void;
     authenticateWithToken: (token: string) => void;
     hatDomain: string;
     getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
@@ -49,8 +49,8 @@ const HatProvider: FunctionComponent = ({ children }) => {
         authenticateFromStoredToken();
     }, []);
 
-    const deleteAccount = useCallback(async () => {
-        await pdaService.deleteAccount();
+    const logout = useCallback(async () => {
+        await pdaService.logout();
         setIsHatAuthenticated(pdaService.isAuthenticated());
     }, []);
 
@@ -63,7 +63,7 @@ const HatProvider: FunctionComponent = ({ children }) => {
         authenticateFromStoredToken,
         authenticateWithToken,
         hatDomain,
-        deleteAccount,
+        logout,
         getLoginUrl,
     };
 
