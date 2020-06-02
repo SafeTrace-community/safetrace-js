@@ -155,4 +155,50 @@ describe('HatContext provider', () => {
             );
         });
     });
+
+    describe('getting health surveys', () => {
+        test('setting health surveys in context via getHealthSurveys', async () => {
+            const healthSurveys: st.HealthStatus[] = [
+                { symptoms: ['fatigue'], preExistingConditions: ['pregnancy'] },
+            ];
+
+            mockPdaService.getHealthSurveys.mockResolvedValue(healthSurveys);
+
+            const TestComponent: FunctionComponent = () => {
+                const { getHealthSurveys, healthSurveys } = useContext(
+                    HatContext
+                );
+
+                return (
+                    <>
+                        <Text testID="healthSurveys">
+                            {JSON.stringify(healthSurveys)}
+                        </Text>
+                        <Button
+                            title="getHealthSurveys"
+                            testID="getHealthSurveys"
+                            onPress={() => getHealthSurveys()}
+                        />
+                    </>
+                );
+            };
+
+            const { getByTestId } = renderComponent(TestComponent);
+            expect(getByTestId('healthSurveys').children.join('')).toEqual(
+                JSON.stringify([])
+            );
+
+            fireEvent.press(getByTestId('getHealthSurveys'));
+
+            await act(async () =>
+                wait(() => {
+                    expect(mockPdaService.getHealthSurveys).toBeCalled();
+
+                    expect(
+                        getByTestId('healthSurveys').children.join('')
+                    ).toEqual(JSON.stringify(healthSurveys));
+                })
+            );
+        });
+    });
 });

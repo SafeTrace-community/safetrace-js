@@ -88,6 +88,24 @@ export class PDAService implements IPDAService {
         }
     }
 
+    public async getHealthSurveys(): Promise<st.HealthStatus[]> {
+        try {
+            const pdaResponse = await this.hat!.hatData().getAll<
+                st.HealthStatus
+            >(this.namespace, 'healthsurveys', {
+                limit: '1',
+            });
+            if (!pdaResponse.parsedBody) {
+                throw new Error('No response for getHealthSurveys');
+            }
+
+            return pdaResponse.parsedBody.map((record) => record.data);
+        } catch (err) {
+            Sentry.captureException(err);
+            throw err;
+        }
+    }
+
     public async logout() {
         await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
         await this.hat.auth().signOut();

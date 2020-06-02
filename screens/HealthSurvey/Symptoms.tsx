@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    SafeAreaView,
+    ActivityIndicator,
+} from 'react-native';
 import sharedStyles from '../../styles/shared';
 import { RouteProp } from '@react-navigation/native';
 import { PrimaryButton } from '../../components/PrimaryButton';
@@ -101,26 +107,38 @@ const SymptomsScreen: React.FunctionComponent<Props> = ({
                 </View>
                 <View style={styles.actions}>
                     <Back
-                        onPress={() =>
-                            navigation.navigate('PreExistingConditions')
-                        }
+                        onPress={() => {
+                            !submitting &&
+                                navigation.navigate('PreExistingConditions');
+                        }}
                     />
                     <PrimaryButton
                         onPress={handleNext}
-                        text="Next"
+                        text={submitting ? 'Submitting' : 'Next'}
                         testID="symptomsNext"
                         disabled={submitting}
-                        style={{
-                            alignSelf: 'flex-end',
-                            width: 'auto',
-                            paddingVertical: 8,
-                        }}
+                        style={[
+                            {
+                                alignSelf: 'flex-end',
+                                width: 'auto',
+                                paddingVertical: 8,
+                            },
+                            submitting && { opacity: 0.8 },
+                        ]}
                         textStyle={{
                             fontSize: 16,
                             lineHeight: 20,
                         }}
                     >
-                        <ChevronRightIcon style={{ marginLeft: 10 }} />
+                        {!submitting && (
+                            <ChevronRightIcon style={{ marginLeft: 10 }} />
+                        )}
+                        {submitting && (
+                            <ActivityIndicator
+                                color="white"
+                                style={{ marginLeft: 10 }}
+                            />
+                        )}
                     </PrimaryButton>
                 </View>
             </ScrollView>

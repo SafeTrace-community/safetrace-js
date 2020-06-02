@@ -16,6 +16,8 @@ export interface IHatContext {
     authenticateWithToken: (token: string) => void;
     hatDomain: string;
     getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
+    healthSurveys: st.HealthStatus[];
+    getHealthSurveys: () => Promise<st.HealthStatus[]>;
 }
 
 export const HatContext = createContext<IHatContext>({} as any);
@@ -26,6 +28,8 @@ const HatProvider: FunctionComponent = ({ children }) => {
     );
 
     const [hatDomain, setHatDomain] = useState(pdaService.getHatDomain());
+
+    const [healthSurveys, setHealthSurveys] = useState<st.HealthStatus[]>([]);
 
     useEffect(() => {
         setHatDomain(pdaService.getHatDomain());
@@ -58,6 +62,11 @@ const HatProvider: FunctionComponent = ({ children }) => {
         return pdaService.getLoginUrl(hatDomain);
     }, []);
 
+    const getHealthSurveys = useCallback(async () => {
+        const healthSurveys = await pdaService.getHealthSurveys();
+        setHealthSurveys(healthSurveys);
+    }, []);
+
     const value = {
         isAuthenticated,
         authenticateFromStoredToken,
@@ -65,6 +74,8 @@ const HatProvider: FunctionComponent = ({ children }) => {
         hatDomain,
         logout,
         getLoginUrl,
+        getHealthSurveys,
+        healthSurveys,
     };
 
     return <HatContext.Provider value={value}>{children}</HatContext.Provider>;

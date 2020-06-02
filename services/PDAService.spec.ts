@@ -109,6 +109,7 @@ describe('PDAService', () => {
 
             const healthSurvey: st.HealthStatus = {
                 symptoms: ['Skipped meals', 'Fatigue'],
+                preExistingConditions: [],
             };
 
             await pdaService.writeHealthSurvey(healthSurvey);
@@ -126,6 +127,7 @@ describe('PDAService', () => {
 
             const healthSurvey: st.HealthStatus = {
                 symptoms: ['Skipped meals', 'Fatigue'],
+                preExistingConditions: [],
             };
 
             try {
@@ -133,6 +135,22 @@ describe('PDAService', () => {
             } catch (err) {
                 expect(err).toEqual(error);
             }
+        });
+
+        test('getting HeathSurveys', async () => {
+            const heathSurveys = [{ symptoms: [], preExistingConditions: [] }];
+
+            mockHatClient.mock.results[0].value
+                .hatData()
+                .getAll.mockResolvedValue({ parsedBody: heathSurveys });
+
+            await pdaService.getHealthSurveys();
+
+            expect(
+                mockHatClient.mock.results[0].value.hatData().getAll
+            ).toBeCalledWith('safetrace', 'healthsurveys', {
+                limit: '1',
+            });
         });
     });
 });
