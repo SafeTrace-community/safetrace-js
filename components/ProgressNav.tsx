@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import ProgressNavigationCheckedIcon from '../assets/progress-navigation-checked.svg';
 import ProgressNavigationUncheckedIcon from '../assets/progress-navigation-unchecked.svg';
 import NavigationCaretIcon from '../assets/navigation-caret.svg';
+import { Colors } from '../styles/shared';
 
 const styles = StyleSheet.create({
     progressNav: {
@@ -41,16 +42,19 @@ const styles = StyleSheet.create({
     },
 
     progressNavItemLinkText: {
-        fontFamily: 'AvenirNext-DemiBold',
+        fontFamily: 'AvenirNext-Medium',
         color: '#1F5992',
+    },
+
+    progressNavItemLinkTextComplete: {
+        color: Colors.dark,
+        fontFamily: 'AvenirNext',
     },
 
     progressNavItemDisabled: {
         opacity: 0.5,
     },
 });
-
-type ProgressNavProps = {};
 
 type ProgressNavItemProps = {
     isCompleted: boolean;
@@ -106,7 +110,15 @@ export const ProgressNavItem: FunctionComponent<ProgressNavItemProps> = ({
                             testID={`${testID}Completed`}
                         />
                     )}
-                    <Text style={styles.progressNavItemLinkText}>{text}</Text>
+                    <Text
+                        style={[
+                            styles.progressNavItemLinkText,
+                            isCompleted &&
+                                styles.progressNavItemLinkTextComplete,
+                        ]}
+                    >
+                        {text}
+                    </Text>
                 </View>
                 {isEnabled && <NavigationCaretIcon height={10} width={5} />}
             </TouchableOpacity>

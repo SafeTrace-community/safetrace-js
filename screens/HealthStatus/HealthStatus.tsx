@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, {
+    useContext,
+    useEffect,
+    useState,
+    useCallback,
+    useMemo,
+} from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Main';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
@@ -16,6 +22,8 @@ import sharedStyles from '../../styles/shared';
 import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
 import { HatContext } from '../../context/HatContext';
 import { ProgressNav, ProgressNavItem } from '../../components/ProgressNav';
+import { HealthIndicator } from '../../components/HealthIndicator';
+import { isLoading } from 'expo-font';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -37,6 +45,14 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.05,
         shadowRadius: 8,
+        marginBottom: 18,
+    },
+    panelHeading: {
+        fontSize: 18,
+        fontFamily: 'AvenirNext',
+        fontWeight: '500',
+        marginBottom: 15,
+        alignSelf: 'center',
     },
     icon: {
         alignSelf: 'center',
@@ -85,55 +101,94 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
 
     useFocusEffect(onScreenEntry);
 
+    const hasCompletedHealthSurveySteps = (): boolean => {
+        return healthSurveys.length > 0;
+    };
+
+    const InitialView = useMemo(() => {
+        return (
+            <View style={styles.panel}>
+                <Image
+                    source={healthSurveyIcon}
+                    resizeMode="cover"
+                    style={styles.icon}
+                />
+
+                <Text style={[sharedStyles.text, styles.intro]}>
+                    In order to provide an assessment of your health status, we
+                    will need you to complete the 2 steps below.
+                </Text>
+
+                <ProgressNav>
+                    <ProgressNavItem
+                        onPress={() => navigation.navigate('GetStartedWithPDA')}
+                        testID={'createPersonalDataAccount'}
+                        isCompleted={isAuthenticated}
+                        isEnabled={!isAuthenticated}
+                        text="Create a personal data account"
+                    />
+
+                    <ProgressNavItem
+                        onPress={() => navigation.navigate('HealthSurvey')}
+                        testID={'providePreliminaryHealthSurvey'}
+                        isCompleted={false}
+                        isEnabled={isAuthenticated}
+                        text="Provide preliminary health
+                            survey"
+                    />
+                </ProgressNav>
+            </View>
+        );
+    }, [isAuthenticated]);
+
+    const CompletedView = useMemo(() => {
+        return (
+            <>
+                <View style={styles.panel} testID="HealthStatusIndicator">
+                    <Text style={styles.panelHeading}>Health Status</Text>
+                    <HealthIndicator status="pending" />
+                </View>
+
+                <View style={styles.panel}>
+                    <Text style={styles.panelHeading}>Complete profile</Text>
+
+                    <ProgressNav>
+                        <ProgressNavItem
+                            onPress={() =>
+                                navigation.navigate('GetStartedWithPDA')
+                            }
+                            testID={'createPersonalDataAccount'}
+                            isCompleted={true}
+                            isEnabled={false}
+                            text="Create a personal data account"
+                        />
+
+                        <ProgressNavItem
+                            onPress={() => navigation.navigate('HealthSurvey')}
+                            testID={'providePreliminaryHealthSurvey'}
+                            isCompleted={true}
+                            isEnabled={false}
+                            text="Provide preliminary health
+                            survey"
+                        />
+                    </ProgressNav>
+                </View>
+            </>
+        );
+    }, []);
+
     return (
         <SafeAreaView style={sharedStyles.safeArea}>
             <View style={[sharedStyles.container, styles.screen]}>
-                <View style={styles.panel}>
-                    <Image
-                        source={healthSurveyIcon}
-                        resizeMode="cover"
-                        style={styles.icon}
-                    />
+                {loading && (
+                    <View testID={'screenLoading'}>
+                        <ActivityIndicator size="large" />
+                    </View>
+                )}
+                {!loading && hasCompletedHealthSurveySteps()
+                    ? CompletedView
+                    : InitialView}
 
-                    <Text style={[sharedStyles.text, styles.intro]}>
-                        In order to provide an assessment of your health status,
-                        we will need you to complete the 2 steps below.
-                    </Text>
-
-                    {loading && (
-                        <View testID={'screenLoading'}>
-                            <ActivityIndicator size="large" />
-                        </View>
-                    )}
-
-                    {!loading && (
-                        <ProgressNav>
-                            <ProgressNavItem
-                                onPress={() =>
-                                    navigation.navigate('GetStartedWithPDA')
-                                }
-                                testID={'createPersonalDataAccount'}
-                                isCompleted={isAuthenticated}
-                                isEnabled={!isAuthenticated}
-                                text="Create a personal data account"
-                            />
-
-                            <ProgressNavItem
-                                onPress={() =>
-                                    navigation.navigate('HealthSurvey')
-                                }
-                                testID={'providePreliminaryHealthSurvey'}
-                                isCompleted={healthSurveys.length > 0}
-                                isEnabled={
-                                    isAuthenticated &&
-                                    healthSurveys.length === 0
-                                }
-                                text="Provide preliminary health
-                                    survey"
-                            />
-                        </ProgressNav>
-                    )}
-                </View>
                 <View style={{ marginTop: 'auto' }}>
                     <Button
                         onPress={() => TEMP_logout()}

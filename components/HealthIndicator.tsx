@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: Colors.green,
+        backgroundColor: 'white',
         padding: 25,
     },
     indicator: {
@@ -19,25 +19,67 @@ const styles = StyleSheet.create({
         height: 36,
         width: 36,
         borderRadius: 18,
-        backgroundColor: Colors.green,
     },
-    indicatorText: {
+    indicatorStatusText: {
         color: Colors.dark,
         fontSize: 18,
         lineHeight: 24,
         fontFamily: 'AvenirNext-DemiBold',
-        marginLeft: 15,
+        marginLeft: 10,
+        alignSelf: 'center',
+    },
+    indicatorExplanationText: {
+        alignSelf: 'center',
+        textAlign: 'center',
+    },
+    serious: {
+        backgroundColor: Colors.red,
+        borderColor: Colors.red,
+    },
+    caution: {
+        backgroundColor: Colors.amber,
+        borderColor: Colors.amber,
+    },
+    safe: {
+        backgroundColor: Colors.green,
+        borderColor: Colors.green,
+    },
+    pending: {
+        backgroundColor: '#888888',
+        borderColor: '#888888',
     },
 });
 
-export const HealthIndicator: FunctionComponent = () => (
-    <View style={styles.container}>
-        <View style={styles.indicator}>
-            <View style={styles.indicatorColor}></View>
-            <Text style={styles.indicatorText}>Safe</Text>
+type HealthStatus = 'serious' | 'caution' | 'safe' | 'pending';
+type Props = {
+    status: HealthStatus;
+};
+
+const indicatorExplanationTextMap: { [K in HealthStatus]: string } = {
+    serious: 'REPLACE: You are at serious risk',
+    caution: 'REPLACE: We advice caution',
+    safe: 'You have no current symptoms',
+    pending: "We don't have the data yet to show you your health score",
+};
+
+const indicatorStatusTextMap = {
+    serious: 'Serious',
+    caution: 'Caution advised',
+    safe: 'Safe',
+    pending: 'Waiting results',
+};
+
+export const HealthIndicator: FunctionComponent<Props> = ({ status }) => (
+    <View style={[styles[status], styles.container]}>
+        <View style={[styles.indicator]}>
+            <View style={[styles.indicatorColor, styles[status]]}></View>
+            <Text style={styles.indicatorStatusText}>
+                {' '}
+                {indicatorStatusTextMap[status]}{' '}
+            </Text>
         </View>
-        <Text style={sharedStyles.text}>
-            You have no underlying health conditions or current symptoms
+        <Text style={[sharedStyles.text, styles.indicatorExplanationText]}>
+            {indicatorExplanationTextMap[status]}
         </Text>
     </View>
 );

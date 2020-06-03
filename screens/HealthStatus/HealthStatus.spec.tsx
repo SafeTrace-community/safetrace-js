@@ -175,6 +175,27 @@ describe('Health status screen', () => {
                 expect(providePreliminaryHealthSurveyCompleted).toBeTruthy();
             });
         });
+
+        test('should show your health status', async () => {
+            const context = {
+                isAuthenticated: true,
+                healthSurveys: [
+                    { symptoms: ['fatigue'], timestamp: 1591105955 },
+                ],
+            };
+
+            const { findByTestId, findByText } = renderHealthStatusScreen({
+                context,
+            });
+
+            await act(async () => {
+                const healthStatusIndicator = await findByTestId(
+                    'HealthStatusIndicator'
+                );
+
+                expect(healthStatusIndicator).toBeTruthy();
+            });
+        });
     });
 });
 
