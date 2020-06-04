@@ -93,7 +93,7 @@ export class PDAService implements IPDAService {
             const pdaResponse = await this.hat!.hatData().getAll<
                 st.HealthSurvey
             >(this.namespace, 'healthsurveys', {
-                limit: '1',
+                take: '1',
             });
             if (!pdaResponse.parsedBody) {
                 throw new Error('No response for getHealthSurveys');

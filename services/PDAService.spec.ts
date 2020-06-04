@@ -149,7 +149,7 @@ describe('PDAService', () => {
             expect(
                 mockHatClient.mock.results[0].value.hatData().getAll
             ).toBeCalledWith('safetrace', 'healthsurveys', {
-                limit: '1',
+                take: '1',
             });
         });
     });
