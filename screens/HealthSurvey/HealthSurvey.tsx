@@ -150,18 +150,8 @@ const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
             <ScrollView style={[sharedStyles.container]}>
                 <Text style={styles.title}>Health Status</Text>
 
-                <Text style={[sharedStyles.text, styles.small]}>
-                    Answer the following questions to learn how your health
-                    status impacts your Covid-19 status.
-                </Text>
-
-                <Text style={styles.question}>
-                    Have you experienced any of the symptoms listed below?
-                </Text>
-
                 <Text style={sharedStyles.text}>
-                    Check any symptoms you have recently experienced. Click the
-                    "Next" button to proceed.
+                    Have you experienced any of these in the last 7 days?
                 </Text>
 
                 <View style={{ paddingVertical: 20 }}>
