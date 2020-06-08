@@ -1,6 +1,6 @@
 import React from 'react';
 import HealthStatusScreen from './HealthStatus';
-import { render, fireEvent, act } from '@testing-library/react-native';
+import { render, fireEvent, act, wait } from '@testing-library/react-native';
 import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import MockedNavigator from '../testUtils/MockedNavigator';
 
@@ -123,6 +123,19 @@ describe('Health status screen', () => {
     });
 
     describe('Preliminary health status survey completed', () => {
+        let originalDateNowFn: any;
+
+        beforeEach(() => {
+            originalDateNowFn = Date.now;
+            const now = Date.now();
+            Date.now = jest.fn().mockReturnValue(now);
+        });
+
+        afterEach(() => {
+            //@ts-ignore
+            Date.now = originalDateNowFn;
+        });
+
         test('checking if any health surveys have been completed on entering screen', () => {
             const context = {
                 isAuthenticated: true,
@@ -159,7 +172,7 @@ describe('Health status screen', () => {
             const context = {
                 isAuthenticated: true,
                 healthSurveys: [
-                    { symptoms: ['fatigue'], timestamp: 1591105955 },
+                    { symptoms: ['fatigue'], timestamp: 1591630396684 },
                 ],
             };
 
@@ -180,7 +193,7 @@ describe('Health status screen', () => {
             const context = {
                 isAuthenticated: true,
                 healthSurveys: [
-                    { symptoms: ['fatigue'], timestamp: 1591105955 },
+                    { symptoms: ['fatigue'], timestamp: 1591630396684 },
                 ],
             };
 
@@ -201,7 +214,7 @@ describe('Health status screen', () => {
             const context = {
                 isAuthenticated: true,
                 healthSurveys: [
-                    { symptoms: ['fatigue'], timestamp: 1591105955 },
+                    { symptoms: ['fatigue'], timestamp: 1591630396684 },
                 ],
             };
 
@@ -226,6 +239,71 @@ describe('Health status screen', () => {
                 expect(props.navigation.navigate).toBeCalledWith(
                     'HealthSurvey'
                 );
+            });
+        });
+
+        test('showing message that health survey was completed today', async () => {
+            const context = {
+                isAuthenticated: true,
+                healthSurveys: [
+                    {
+                        symptoms: ['fatigue'],
+                        timestamp: Date.now() - 3600000 /* 1 hour */,
+                    },
+                ],
+            };
+
+            const props = {
+                navigation: {
+                    navigate: jest.fn(),
+                },
+            };
+
+            const { findByTestId } = renderHealthStatusScreen({
+                props,
+                context,
+            });
+
+            await act(async () => {
+                const healthSurveyEngagementMessage = await findByTestId(
+                    'healthSurveyEngagementMessage'
+                );
+
+                expect(
+                    healthSurveyEngagementMessage.children.join('')
+                ).toContain('You have completed a health survey today');
+            });
+        });
+
+        test('showing the time since last completed health survey', async () => {
+            const context = {
+                isAuthenticated: true,
+                healthSurveys: [
+                    {
+                        symptoms: ['fatigue'],
+                        timestamp: Date.now() - 172800000,
+                    },
+                ],
+            };
+
+            const props = {
+                navigation: {
+                    navigate: jest.fn(),
+                },
+            };
+
+            const { findByTestId } = renderHealthStatusScreen({
+                props,
+                context,
+            });
+
+            await act(async () => {
+                const healthSurveyEngagementMessage = await findByTestId(
+                    'healthSurveyEngagementMessage'
+                );
+                expect(
+                    healthSurveyEngagementMessage.children.join('')
+                ).toContain('You last completed a health survey 2 days ago.');
             });
         });
     });
