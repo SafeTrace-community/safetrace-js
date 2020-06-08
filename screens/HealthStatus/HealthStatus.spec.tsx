@@ -1,14 +1,14 @@
 import React from 'react';
 import HealthStatusScreen from './HealthStatus';
 import { render, fireEvent, act } from '@testing-library/react-native';
-import { IHatContext, HatContext } from '../../context/HatContext';
+import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import MockedNavigator from '../testUtils/MockedNavigator';
 
 describe('Health status screen', () => {
     test('not requesting data if not authorized', () => {
-        const context: Partial<IHatContext> = {
+        const context: Partial<IPDAContext> = {
             isAuthenticated: false,
-            getHealthSurveys: jest.fn(),
+            getLatestHealthSurveys: jest.fn(),
             healthSurveys: [],
         };
 
@@ -16,13 +16,13 @@ describe('Health status screen', () => {
             context,
         });
 
-        expect(context.getHealthSurveys).not.toBeCalled();
+        expect(context.getLatestHealthSurveys).not.toBeCalled();
     });
 
     test('showing loading indictor while it loads any health survey data', async () => {
-        const context: Partial<IHatContext> = {
+        const context: Partial<IPDAContext> = {
             isAuthenticated: true,
-            getHealthSurveys: jest.fn().mockReturnValue(
+            getLatestHealthSurveys: jest.fn().mockReturnValue(
                 new Promise<any>(() => {})
             ),
             healthSurveys: [],
@@ -81,7 +81,7 @@ describe('Health status screen', () => {
     });
 
     test('showing creating a PDA step complete once signed into a HAT', async () => {
-        const context = { isAuthenticated: true } as IHatContext;
+        const context = { isAuthenticated: true } as IPDAContext;
 
         const { findByTestId } = renderHealthStatusScreen({
             context,
@@ -103,7 +103,7 @@ describe('Health status screen', () => {
             },
         };
 
-        const context = { isAuthenticated: true } as IHatContext;
+        const context = { isAuthenticated: true } as IPDAContext;
 
         const { findByTestId } = renderHealthStatusScreen({
             props,
@@ -126,14 +126,14 @@ describe('Health status screen', () => {
         test('checking if any health surveys have been completed on entering screen', () => {
             const context = {
                 isAuthenticated: true,
-                getHealthSurveys: jest.fn(),
+                getLatestHealthSurveys: jest.fn(),
             };
 
             renderHealthStatusScreen({
                 context,
             });
 
-            expect(context.getHealthSurveys).toBeCalledTimes(1);
+            expect(context.getLatestHealthSurveys).toBeCalledTimes(1);
         });
 
         test('showing the preliminary health status survey as incomplete if 0 health surveys are in the PDA', async () => {
@@ -206,19 +206,19 @@ function renderHealthStatusScreen({
     context = {},
 }: {
     props?: any;
-    context?: Partial<IHatContext>;
+    context?: Partial<IPDAContext>;
 }) {
     const mockContext = {
-        getHealthSurveys: jest.fn().mockResolvedValue([]) as any,
+        getLatestHealthSurveys: jest.fn().mockResolvedValue([]) as any,
         healthSurveys: [],
         ...context,
-    } as IHatContext;
+    } as IPDAContext;
     return render(
-        <HatContext.Provider value={mockContext}>
+        <PDAContext.Provider value={mockContext}>
             <MockedNavigator
                 ComponentForScreen={HealthStatusScreen}
                 propOverrides={props}
             />
-        </HatContext.Provider>
+        </PDAContext.Provider>
     );
 }

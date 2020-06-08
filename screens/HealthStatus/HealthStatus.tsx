@@ -20,7 +20,7 @@ import {
 import * as Sentry from 'sentry-expo';
 import sharedStyles from '../../styles/shared';
 import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
-import { HatContext } from '../../context/HatContext';
+import { PDAContext } from '../../context/PDAContext';
 import { ProgressNav, ProgressNavItem } from '../../components/ProgressNav';
 import { HealthIndicator } from '../../components/HealthIndicator';
 import { isLoading } from 'expo-font';
@@ -70,10 +70,10 @@ const styles = StyleSheet.create({
 const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     const {
         isAuthenticated,
-        getHealthSurveys,
+        getLatestHealthSurveys,
         healthSurveys,
         logout,
-    } = useContext(HatContext);
+    } = useContext(PDAContext);
 
     const TEMP_logout = async () => {
         await logout();
@@ -87,7 +87,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
 
         const getScreenData = async () => {
             if (isAuthenticated) {
-                await getHealthSurveys();
+                await getLatestHealthSurveys();
             }
             setLoading(false);
         };
@@ -102,7 +102,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     useFocusEffect(onScreenEntry);
 
     const hasCompletedHealthSurveySteps = (): boolean => {
-        return healthSurveys.length > 0;
+        return healthSurveys && healthSurveys.length > 0 ? true : false;
     };
 
     const InitialView = useMemo(() => {

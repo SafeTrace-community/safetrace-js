@@ -11,7 +11,7 @@ import {
 import CreatePDA from './CreatePDA';
 import * as WebBrowser from 'expo-web-browser';
 import { Linking } from 'expo';
-import { HatContext } from '../../context/HatContext';
+import { PDAContext } from '../../context/PDAContext';
 
 jest.mock('expo-web-browser');
 jest.mock('expo', () => {
@@ -64,7 +64,7 @@ describe('Create PDA', () => {
 
         await wait(() => {
             expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith(
-                `https://hatters.dataswift.io/services/baas/signup?hat_name=${username}&email=${email}&application_id=safe-trace-dev&redirect_uri=${redirectUri}`
+                `https://hatters.dataswift.io/services/baas/signup?hat_name=${username}&email=${email}&application_id=sharetrace-dev&redirect_uri=${redirectUri}`
             );
         });
     });
@@ -136,9 +136,9 @@ describe('Create PDA', () => {
             const token = 'dhfH£f4HJf4j43k£j4j£';
 
             const { container } = render(
-                <HatContext.Provider value={{ authenticateWithToken } as any}>
+                <PDAContext.Provider value={{ authenticateWithToken } as any}>
                     <CreatePDA navigation={{} as any} />
-                </HatContext.Provider>
+                </PDAContext.Provider>
             );
 
             submitFormWithEmail(container, 'me@email.com', 'me');
@@ -158,11 +158,11 @@ describe('Create PDA', () => {
 
         test('removing the listener for DS redirect on success', () => {
             const { container } = render(
-                <HatContext.Provider
+                <PDAContext.Provider
                     value={{ authenticateWithToken: jest.fn() } as any}
                 >
                     <CreatePDA navigation={{} as any} />
-                </HatContext.Provider>
+                </PDAContext.Provider>
             );
 
             submitFormWithEmail(container, 'me@email.com', 'me');
@@ -185,11 +185,11 @@ describe('Create PDA', () => {
 
         test('removing the listener for DS redirect on failure', () => {
             const { container } = render(
-                <HatContext.Provider
+                <PDAContext.Provider
                     value={{ authenticateWithToken: jest.fn() } as any}
                 >
                     <CreatePDA navigation={{} as any} />
-                </HatContext.Provider>
+                </PDAContext.Provider>
             );
 
             submitFormWithEmail(container, 'me@email.com', 'me');
@@ -228,11 +228,11 @@ describe('Create PDA', () => {
         ].forEach(({ error, expectedEmailError }) => {
             test(`showing an error when DS redirect returns ${error} email error`, () => {
                 const { container } = render(
-                    <HatContext.Provider
+                    <PDAContext.Provider
                         value={{ authenticateWithToken: jest.fn() } as any}
                     >
                         <CreatePDA navigation={{} as any} />
-                    </HatContext.Provider>
+                    </PDAContext.Provider>
                 );
 
                 submitFormWithEmail(container, 'me@email.com', 'me');
@@ -272,11 +272,11 @@ describe('Create PDA', () => {
         ].forEach(({ error, expectedUsernameError }) => {
             test(`showing an error when DS redirect returns ${error} username/hat name error`, () => {
                 const { container } = render(
-                    <HatContext.Provider
+                    <PDAContext.Provider
                         value={{ authenticateWithToken: jest.fn() } as any}
                     >
                         <CreatePDA navigation={{} as any} />
-                    </HatContext.Provider>
+                    </PDAContext.Provider>
                 );
 
                 submitFormWithEmail(container, 'me@email.com', 'me');

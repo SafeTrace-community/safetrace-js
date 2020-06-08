@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, wait, fireEvent, act } from '@testing-library/react-native';
 import Login from './Login';
-import { IHatContext, HatContext } from '../../context/HatContext';
+import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import * as WebBrowser from 'expo-web-browser';
 
 jest.mock('expo', () => {
@@ -22,9 +22,9 @@ describe('Login screen', () => {
         mockContext.getLoginUrl.mockResolvedValue(['There was an error', null]);
 
         const { getByTestId } = render(
-            <HatContext.Provider value={mockContext as IHatContext}>
+            <PDAContext.Provider value={mockContext as IPDAContext}>
                 <Login navigation={{} as any} />
-            </HatContext.Provider>
+            </PDAContext.Provider>
         );
 
         const input = getByTestId('inputHatDomain');
@@ -47,9 +47,9 @@ describe('Login screen', () => {
         mockContext.getLoginUrl.mockResolvedValue([null, validUrl]);
 
         const { getByTestId } = render(
-            <HatContext.Provider value={mockContext as IHatContext}>
+            <PDAContext.Provider value={mockContext as IPDAContext}>
                 <Login navigation={{} as any} />
-            </HatContext.Provider>
+            </PDAContext.Provider>
         );
 
         const input = getByTestId('inputHatDomain');
