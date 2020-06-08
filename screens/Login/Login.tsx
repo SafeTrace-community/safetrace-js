@@ -23,7 +23,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 import sharedStyles from '../../styles/shared';
-import { HatContext } from '../../context/HatContext';
+import { PDAContext } from '../../context/PDAContext';
 import Constants from 'expo-constants';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Input } from '../../components/Input';
@@ -51,7 +51,7 @@ const Login: FunctionComponent<Props> = () => {
     const [hatDomain, setHatDomain] = useState('');
     const [error, setError] = useState<string | null>(null);
 
-    const { getLoginUrl, authenticateWithToken } = useContext(HatContext);
+    const { getLoginUrl, authenticateWithToken } = useContext(PDAContext);
 
     const handleRedirect = (event: any): void => {
         if (Constants.platform!.ios) {

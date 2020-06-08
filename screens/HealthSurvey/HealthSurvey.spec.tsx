@@ -9,7 +9,8 @@ import {
 } from '@testing-library/react-native';
 import pdaService, { PDAService } from '../../services/PDAService';
 import { NavigationContainer } from '@react-navigation/native';
-import HealthSurveyScreen from './HealthSurvey';
+import HealthSurveyScreen, { Props as HealthSurveyProps } from './HealthSurvey';
+import PDAProvider, { IPDAContext, PDAContext } from '../../context/PDAContext';
 
 jest.mock('../../services/PDAService');
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -29,11 +30,7 @@ describe('Health Check Symptoms', () => {
     });
 
     test('view symptoms', () => {
-        const { getByLabelText } = render(
-            <NavigationContainer>
-                <HealthSurveyScreen navigation={{} as any} />
-            </NavigationContainer>
-        );
+        const { getByLabelText } = renderComponent();
 
         const symptoms = [
             'Loss of smell or taste',
@@ -51,11 +48,7 @@ describe('Health Check Symptoms', () => {
     test('when a symptom is selected', () => {
         const selectedSymptom = 'Fatigue';
 
-        const { getByLabelText } = render(
-            <NavigationContainer>
-                <HealthSurveyScreen navigation={{} as any} />
-            </NavigationContainer>
-        );
+        const { getByLabelText } = renderComponent();
 
         const symptom = getByLabelText(selectedSymptom);
 
@@ -68,11 +61,13 @@ describe('Health Check Symptoms', () => {
 
     describe('submitting health check', () => {
         test('disabling the button on submission', () => {
-            const { getByLabelText, getByTestId } = render(
-                <NavigationContainer>
-                    <HealthSurveyScreen navigation={{} as any} />
-                </NavigationContainer>
-            );
+            const mockContext = {
+                writeHealthSurvey: jest.fn().mockResolvedValue({}) as any,
+            };
+
+            const { getByLabelText, getByTestId } = renderComponent({
+                context: mockContext,
+            });
 
             mockPdaService.writeHealthSurvey.mockReturnValue(
                 new Promise(() => {})
@@ -82,7 +77,7 @@ describe('Health Check Symptoms', () => {
             fireEvent.press(getByTestId('symptomsNext'));
             fireEvent.press(getByTestId('symptomsNext'));
 
-            expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(1);
+            expect(mockContext.writeHealthSurvey).toHaveBeenCalledTimes(1);
         });
 
         test('re-enabling the button on submission', async () => {
@@ -91,23 +86,21 @@ describe('Health Check Symptoms', () => {
                 resolveHealthSurvey = resolve;
             });
 
-            const { getByLabelText, getByTestId } = render(
-                <NavigationContainer>
-                    <HealthSurveyScreen
-                        navigation={{ navigate: jest.fn() } as any}
-                    />
-                </NavigationContainer>
-            );
+            const mockContext = {
+                writeHealthSurvey: jest
+                    .fn()
+                    .mockReturnValue(healthSurveyPromise) as any,
+            };
 
-            mockPdaService.writeHealthSurvey.mockReturnValue(
-                healthSurveyPromise
-            );
+            const { getByLabelText, getByTestId } = renderComponent({
+                context: mockContext,
+            });
 
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
             fireEvent.press(getByTestId('symptomsNext'));
 
-            expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(1);
+            expect(mockContext.writeHealthSurvey).toHaveBeenCalledTimes(1);
 
             await act(async () => {
                 resolveHealthSurvey();
@@ -115,7 +108,7 @@ describe('Health Check Symptoms', () => {
                 await healthSurveyPromise;
 
                 fireEvent.press(getByTestId('symptomsNext'));
-                expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(2);
+                expect(mockContext.writeHealthSurvey).toHaveBeenCalledTimes(2);
             });
         });
 
@@ -125,15 +118,17 @@ describe('Health Check Symptoms', () => {
                 rejectHealthSurvey = reject;
             });
 
-            const { getByLabelText, getByTestId } = render(
-                <NavigationContainer>
-                    <HealthSurveyScreen navigation={{} as any} />
-                </NavigationContainer>
-            );
+            const mockContext = {
+                writeHealthSurvey: jest
+                    .fn()
+                    .mockReturnValue(healthSurveyPromise) as any,
+            };
 
-            mockPdaService.writeHealthSurvey.mockReturnValue(
-                healthSurveyPromise
-            );
+            const { getByLabelText, getByTestId } = renderComponent({
+                context: mockContext,
+            });
+
+            mockContext.writeHealthSurvey.mockReturnValue(healthSurveyPromise);
 
             fireEvent.press(getByLabelText('Fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
@@ -145,7 +140,7 @@ describe('Health Check Symptoms', () => {
                     await healthSurveyPromise;
                 } catch (err) {
                     fireEvent.press(getByTestId('symptomsNext'));
-                    expect(pdaService.writeHealthSurvey).toHaveBeenCalledTimes(
+                    expect(mockContext.writeHealthSurvey).toHaveBeenCalledTimes(
                         2
                     );
                 }
@@ -153,22 +148,23 @@ describe('Health Check Symptoms', () => {
         });
 
         test('saving symptoms to the PDA', () => {
-            const { getByLabelText, getByTestId } = render(
-                <NavigationContainer>
-                    <HealthSurveyScreen
-                        navigation={{ navigate: jest.fn() } as any}
-                    />
-                </NavigationContainer>
-            );
+            const mockContext = {
+                writeHealthSurvey: jest.fn().mockResolvedValue({}),
+            };
+
+            const { getByLabelText, getByTestId } = renderComponent({
+                context: mockContext,
+            });
 
             const selectedSymptoms = ['Loss of smell or taste', 'Fatigue'];
 
             selectedSymptoms.forEach((symptom) =>
                 fireEvent.press(getByLabelText(symptom))
             );
+
             fireEvent.press(getByTestId('symptomsNext'));
 
-            expect(pdaService.writeHealthSurvey).toHaveBeenCalledWith({
+            expect(mockContext.writeHealthSurvey).toHaveBeenCalledWith({
                 symptoms: selectedSymptoms,
                 timestamp: Date.now(),
             });
@@ -176,13 +172,10 @@ describe('Health Check Symptoms', () => {
 
         test('navigating to the success route on successful response', async () => {
             const navigateStub = jest.fn();
-            const { getByLabelText, getByTestId } = render(
-                <NavigationContainer>
-                    <HealthSurveyScreen
-                        navigation={{ navigate: navigateStub } as any}
-                    />
-                </NavigationContainer>
-            );
+
+            const { getByLabelText, getByTestId } = renderComponent({
+                props: { navigation: { navigate: navigateStub } },
+            });
 
             mockPdaService.writeHealthSurvey.mockResolvedValue();
 
@@ -198,17 +191,19 @@ describe('Health Check Symptoms', () => {
         });
 
         test('showing an error if the request to writeHealthSurvey fails', async () => {
-            const { getByLabelText, getByTestId, findByTestId } = render(
-                <NavigationContainer>
-                    <HealthSurveyScreen
-                        navigation={{ navigate: jest.fn() } as any}
-                    />
-                </NavigationContainer>
-            );
+            const mockContext = {
+                writeHealthSurvey: jest
+                    .fn()
+                    .mockRejectedValue('HTTP_RESPONSE_ERROR'),
+            };
 
-            mockPdaService.writeHealthSurvey.mockRejectedValue(
-                'HTTP_RESPONSE_ERROR'
-            );
+            const {
+                getByLabelText,
+                getByTestId,
+                findByTestId,
+            } = renderComponent({
+                context: mockContext,
+            });
 
             fireEvent.press(getByLabelText('Loss of smell or taste'));
             fireEvent.press(getByLabelText('Fatigue'));
@@ -225,3 +220,24 @@ describe('Health Check Symptoms', () => {
         });
     });
 });
+
+function renderComponent({
+    props = { navigation: { navigate: jest.fn() } },
+    context = {},
+}: {
+    props?: any;
+    context?: Partial<IPDAContext>;
+} = {}) {
+    const mockContext = {
+        writeHealthSurvey: jest.fn().mockResolvedValue({}) as any,
+        healthSurveys: [],
+        ...context,
+    } as IPDAContext;
+    return render(
+        <PDAContext.Provider value={mockContext}>
+            <NavigationContainer>
+                <HealthSurveyScreen {...props} />
+            </NavigationContainer>
+        </PDAContext.Provider>
+    );
+}

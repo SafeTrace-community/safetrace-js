@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePDA from './screens/CreatePDA/CreatePDA';
 import GetStartedWithPDA from './screens/GetStartedWithPDA/GetStartedWithPDA';
-import { HatContext } from './context/HatContext';
+import { PDAContext } from './context/PDAContext';
 import Login from './screens/Login/Login';
 import Introduction from './screens/Introduction/Introduction';
 import HealthStatusScreen from './screens/HealthStatus/HealthStatus';
@@ -38,7 +38,7 @@ const hasCompletedDemographicSurvey = async (): Promise<boolean> => {
 const Main: FunctionComponent = () => {
     const [showIntroduction, setShowIntroduction] = useState<boolean>(true);
     const { isAuthenticated, authenticateFromStoredToken } = useContext(
-        HatContext
+        PDAContext
     );
 
     const setup = async () => {

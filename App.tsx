@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as Sentry from 'sentry-expo';
 import { StatusBar, Platform, Text } from 'react-native';
 import Main from './Main';
-import HatProvider from './context/HatContext';
+import PDAProvider from './context/PDAContext';
 import { loadAsync, FontDisplay, FontResource } from 'expo-font';
 
 Platform.OS === 'android' ? StatusBar.setBackgroundColor('#FFFFFF') : '';
@@ -38,9 +38,9 @@ export default function App() {
     }, []);
 
     return (
-        <HatProvider>
+        <PDAProvider>
             <StatusBar barStyle="dark-content" />
             {fontsLoaded && <Main />}
-        </HatProvider>
+        </PDAProvider>
     );
 }

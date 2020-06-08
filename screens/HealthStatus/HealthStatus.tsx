@@ -1,10 +1,4 @@
-import React, {
-    useContext,
-    useEffect,
-    useState,
-    useCallback,
-    useMemo,
-} from 'react';
+import React, { useContext, useState, useCallback, useMemo } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Main';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
@@ -20,9 +14,11 @@ import {
 import * as Sentry from 'sentry-expo';
 import sharedStyles from '../../styles/shared';
 import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
-import { HatContext } from '../../context/HatContext';
+import { PDAContext } from '../../context/PDAContext';
 import { ProgressNav, ProgressNavItem } from '../../components/ProgressNav';
 import { HealthIndicator } from '../../components/HealthIndicator';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import { SecondaryButton } from '../../components/SecondaryButton';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -35,7 +31,7 @@ const styles = StyleSheet.create({
     },
     panel: {
         backgroundColor: 'white',
-        padding: 18,
+        padding: 32,
         borderRadius: 8,
         shadowColor: '#000',
         shadowOffset: {
@@ -69,10 +65,10 @@ const styles = StyleSheet.create({
 const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     const {
         isAuthenticated,
-        getHealthSurveys,
+        getLatestHealthSurveys,
         healthSurveys,
         logout,
-    } = useContext(HatContext);
+    } = useContext(PDAContext);
 
     const TEMP_logout = async () => {
         await logout();
@@ -86,7 +82,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
 
         const getScreenData = async () => {
             if (isAuthenticated) {
-                await getHealthSurveys();
+                await getLatestHealthSurveys();
             }
             setLoading(false);
         };
@@ -101,7 +97,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     useFocusEffect(onScreenEntry);
 
     const hasCompletedHealthSurveySteps = (): boolean => {
-        return healthSurveys.length > 0;
+        return healthSurveys && healthSurveys.length > 0 ? true : false;
     };
 
     const InitialView = useMemo(() => {
@@ -146,6 +142,14 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                 <View style={styles.panel} testID="HealthStatusIndicator">
                     <Text style={styles.panelHeading}>Health Status</Text>
                     <HealthIndicator status="pending" />
+                </View>
+
+                <View style={styles.panel}>
+                    <SecondaryButton
+                        testID="retakeHealthSurvey"
+                        text="Retake health survey"
+                        onPress={() => navigation.navigate('HealthSurvey')}
+                    />
                 </View>
 
                 <View style={styles.panel}>

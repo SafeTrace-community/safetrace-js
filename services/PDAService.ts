@@ -14,8 +14,8 @@ export interface IPDAService {
 }
 
 export class PDAService implements IPDAService {
-    public static APPLICATION_ID: string = 'safe-trace-dev';
-    private namespace: string = 'safetrace';
+    public static APPLICATION_ID: string = 'sharetrace-dev';
+    private namespace: string = 'sharetrace';
     private hat: HatClient;
 
     constructor() {
@@ -107,7 +107,6 @@ export class PDAService implements IPDAService {
     }
 
     public async logout() {
-        await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
         await this.hat.auth().signOut();
     }
 }

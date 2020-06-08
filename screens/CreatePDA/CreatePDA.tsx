@@ -12,7 +12,7 @@ import { Linking } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
 import sharedStyles, { Colors } from '../../styles/shared';
 import Constants from 'expo-constants';
-import { HatContext } from '../../context/HatContext';
+import { PDAContext } from '../../context/PDAContext';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Main';
 import { RouteProp } from '@react-navigation/native';
@@ -93,7 +93,7 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
 
-    const { authenticateWithToken } = useContext(HatContext);
+    const { authenticateWithToken } = useContext(PDAContext);
 
     const mapBackendError = useCallback((backendError: string): void => {
         switch (backendError) {
@@ -191,7 +191,7 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
 
         addLinkingListener();
         const redirectUri = Linking.makeUrl('/signup-return');
-        const url = `https://hatters.dataswift.io/services/baas/signup?hat_name=${username}&email=${email}&application_id=safe-trace-dev&redirect_uri=${redirectUri}`;
+        const url = `https://hatters.dataswift.io/services/baas/signup?hat_name=${username}&email=${email}&application_id=sharetrace-dev&redirect_uri=${redirectUri}`;
 
         try {
             await WebBrowser.openBrowserAsync(url);

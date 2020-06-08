@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Main';
 import { RouteProp } from '@react-navigation/native';
@@ -17,6 +17,7 @@ import CheckIcon from '../../assets/icons/check.svg';
 import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
 import Back from '../../components/Back';
 import { PrimaryButton } from '../../components/PrimaryButton';
+import { PDAContext } from '../../context/PDAContext';
 
 export const styles = StyleSheet.create({
     title: {
@@ -93,7 +94,7 @@ export const styles = StyleSheet.create({
     },
 });
 
-type Props = {
+export type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
     route?: RouteProp<RootStackParamList, 'HealthSurvey'>;
 };
@@ -125,13 +126,13 @@ const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     const [error, setError] = useState<string | null>(null);
     const [declaredSymptoms, setDeclaredSymptoms] = useState<string[]>([]);
     const [submitting, setSubmitting] = useState(false);
-
+    const { writeHealthSurvey } = useContext(PDAContext);
     const submitHealthSurvey = useCallback(async () => {
         setError(null);
         setSubmitting(true);
 
         try {
-            await pdaService.writeHealthSurvey({
+            await writeHealthSurvey({
                 symptoms: declaredSymptoms,
                 timestamp: Date.now(),
             });

@@ -86,13 +86,6 @@ describe('PDAService', () => {
     });
 
     describe('logging out of a PDA', () => {
-        test('removing the token from storage', async () => {
-            await pdaService.logout();
-            expect(SecureStore.deleteItemAsync).toBeCalledWith(
-                TOKEN_STORAGE_KEY
-            );
-        });
-
         test('signing out of the HAT via SDK', async () => {
             await pdaService.logout();
             expect(
@@ -116,7 +109,7 @@ describe('PDAService', () => {
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
-            ).toBeCalledWith('safetrace', 'healthsurveys', healthSurvey);
+            ).toBeCalledWith('sharetrace', 'healthsurveys', healthSurvey);
         });
 
         test('handle error when saving HealthSurvey', async () => {
@@ -148,7 +141,7 @@ describe('PDAService', () => {
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().getAll
-            ).toBeCalledWith('safetrace', 'healthsurveys', {
+            ).toBeCalledWith('sharetrace', 'healthsurveys', {
                 take: '1',
             });
         });
