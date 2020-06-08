@@ -1,10 +1,4 @@
-import React, {
-    useContext,
-    useEffect,
-    useState,
-    useCallback,
-    useMemo,
-} from 'react';
+import React, { useContext, useState, useCallback, useMemo } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../Main';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
@@ -23,7 +17,8 @@ import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
 import { PDAContext } from '../../context/PDAContext';
 import { ProgressNav, ProgressNavItem } from '../../components/ProgressNav';
 import { HealthIndicator } from '../../components/HealthIndicator';
-import { isLoading } from 'expo-font';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import { SecondaryButton } from '../../components/SecondaryButton';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -36,7 +31,7 @@ const styles = StyleSheet.create({
     },
     panel: {
         backgroundColor: 'white',
-        padding: 18,
+        padding: 32,
         borderRadius: 8,
         shadowColor: '#000',
         shadowOffset: {
@@ -147,6 +142,14 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                 <View style={styles.panel} testID="HealthStatusIndicator">
                     <Text style={styles.panelHeading}>Health Status</Text>
                     <HealthIndicator status="pending" />
+                </View>
+
+                <View style={styles.panel}>
+                    <SecondaryButton
+                        testID="retakeHealthSurvey"
+                        text="Retake health survey"
+                        onPress={() => navigation.navigate('HealthSurvey')}
+                    />
                 </View>
 
                 <View style={styles.panel}>

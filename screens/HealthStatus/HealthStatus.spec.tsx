@@ -196,6 +196,38 @@ describe('Health status screen', () => {
                 expect(healthStatusIndicator).toBeTruthy();
             });
         });
+
+        test('being able to retake the survey', async () => {
+            const context = {
+                isAuthenticated: true,
+                healthSurveys: [
+                    { symptoms: ['fatigue'], timestamp: 1591105955 },
+                ],
+            };
+
+            const props = {
+                navigation: {
+                    navigate: jest.fn(),
+                },
+            };
+
+            const { findByTestId } = renderHealthStatusScreen({
+                props,
+                context,
+            });
+
+            await act(async () => {
+                const retakeHealthSurveyBtn = await findByTestId(
+                    'retakeHealthSurvey'
+                );
+
+                fireEvent.press(retakeHealthSurveyBtn);
+
+                expect(props.navigation.navigate).toBeCalledWith(
+                    'HealthSurvey'
+                );
+            });
+        });
     });
 });
 
