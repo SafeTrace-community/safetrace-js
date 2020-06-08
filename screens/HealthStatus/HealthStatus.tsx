@@ -23,7 +23,6 @@ import healthSurveyIcon from '../../assets/icons/health-check-icon.png';
 import { HatContext } from '../../context/HatContext';
 import { ProgressNav, ProgressNavItem } from '../../components/ProgressNav';
 import { HealthIndicator } from '../../components/HealthIndicator';
-import { isLoading } from 'expo-font';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -178,7 +177,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     }, []);
 
     return (
-        <SafeAreaView style={sharedStyles.safeArea}>
+        <SafeAreaView style={sharedStyles.safeArea} testID="healthStatusScreen">
             <View style={[sharedStyles.container, styles.screen]}>
                 {loading && (
                     <View testID={'screenLoading'}>

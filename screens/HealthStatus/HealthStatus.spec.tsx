@@ -2,7 +2,7 @@ import React from 'react';
 import HealthStatusScreen from './HealthStatus';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import { IHatContext, HatContext } from '../../context/HatContext';
-import MockedNavigator from '../testUtils/MockedNavigator';
+import MockedNavigator from '../../testUtils/MockedNavigator';
 
 describe('Health status screen', () => {
     test('not requesting data if not authorized', () => {

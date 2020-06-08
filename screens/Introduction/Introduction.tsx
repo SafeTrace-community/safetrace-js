@@ -7,12 +7,12 @@ import {
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { View, Image, Text } from 'react-native';
-import introHeader from '../assets/intro-header.png';
+import introHeader from '../../assets/intro-header.png';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../Main';
-import { ToggleAppearance } from '../components/ToggleAppearance';
-import sharedStyles, { Colors } from '../styles/shared';
+import { RootStackParamList } from '../../Main';
+import { ToggleAppearance } from '../../components/ToggleAppearance';
+import sharedStyles, { Colors } from '../../styles/shared';
 import { useFocusEffect } from '@react-navigation/native';
 const styles = StyleSheet.create({
     screen: {
@@ -144,7 +144,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
     );
 
     return (
-        <View style={[styles.screen]}>
+        <View style={[styles.screen]} testID="introductionScreen">
             <View style={styles.skipIntroWrapper}>
                 <ToggleAppearance visible={showSkipButton}>
                     <TouchableOpacity
@@ -272,7 +272,7 @@ const Introduction: FunctionComponent<Props> = ({ navigation }) => {
                         <ToggleAppearance visible={showButton}>
                             <TouchableOpacity
                                 onPress={() =>
-                                    navigation.navigate('HealthStatus')
+                                    navigation.navigate('DemographicSurvey')
                                 }
                                 style={styles.button}
                                 testID="continueButton"

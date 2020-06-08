@@ -11,4 +11,9 @@ declare namespace st {
         symptoms: string[] | null;
         timestamp: number;
     };
+
+    export type Demographic = {
+        age: number;
+        sex: 'male' | 'female';
+    };
 }

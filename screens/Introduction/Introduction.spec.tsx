@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    render,
-    fireEvent,
-    NativeTestEvent,
-} from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import Introduction from './Introduction';
 
 jest.mock('@react-navigation/native');
@@ -28,7 +24,7 @@ describe('Introduction screen', () => {
 
         fireEvent.press(getByTestId('continueButton'));
 
-        expect(navigateStub).toHaveBeenCalledWith('HealthStatus');
+        expect(navigateStub).toHaveBeenCalledWith('DemographicSurvey');
     });
 
     test('having a button to skip intro', () => {
