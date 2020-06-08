@@ -1,20 +1,22 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import * as WebBrowser from 'expo-web-browser';
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Platform, StatusBar } from 'react-native';
 import {
+    StyleSheet,
+    Platform,
+    StatusBar,
     View,
     Image,
     Text,
     SafeAreaView,
-    TouchableOpacity,
 } from 'react-native';
-import logo from '../../assets/sharetrace-logo.png';
-import sharedStyles from '../../styles/shared';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+
 import { RootStackParamList } from '../../Main';
-import * as WebBrowser from 'expo-web-browser';
-import { PrimaryButton } from '../../components/PrimaryButton';
+import logo from '../../assets/sharetrace-logo.png';
 import { Link } from '../../components/Link';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import sharedStyles from '../../styles/shared';
 
 const styles = StyleSheet.create({
     safeArea: {

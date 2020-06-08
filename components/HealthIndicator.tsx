@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
 import sharedStyles, { Colors } from '../styles/shared';
 
 const styles = StyleSheet.create({
@@ -72,7 +73,7 @@ const indicatorStatusTextMap = {
 export const HealthIndicator: FunctionComponent<Props> = ({ status }) => (
     <View style={[styles[status], styles.container]}>
         <View style={[styles.indicator]}>
-            <View style={[styles.indicatorColor, styles[status]]}></View>
+            <View style={[styles.indicatorColor, styles[status]]} />
             <Text style={styles.indicatorStatusText}>
                 {' '}
                 {indicatorStatusTextMap[status]}{' '}

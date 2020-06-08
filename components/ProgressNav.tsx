@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+
+import NavigationCaretIcon from '../assets/navigation-caret.svg';
 import ProgressNavigationCheckedIcon from '../assets/progress-navigation-checked.svg';
 import ProgressNavigationUncheckedIcon from '../assets/progress-navigation-unchecked.svg';
-import NavigationCaretIcon from '../assets/navigation-caret.svg';
 import { Colors } from '../styles/shared';
 
 const styles = StyleSheet.create({

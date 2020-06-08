@@ -1,7 +1,6 @@
-import pdaService, { PDAService } from './PDAService';
 import { HatClient } from '@dataswift/hat-js';
-import * as SecureStore from 'expo-secure-store';
-import { TOKEN_STORAGE_KEY } from '../Constants';
+
+import pdaService, { PDAService } from './PDAService';
 
 jest.useFakeTimers();
 jest.mock('expo-secure-store');

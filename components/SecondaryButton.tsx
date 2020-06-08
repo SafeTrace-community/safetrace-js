@@ -1,3 +1,4 @@
+import React, { FunctionComponent } from 'react';
 import {
     TouchableOpacity,
     GestureResponderEvent,
@@ -5,8 +6,6 @@ import {
     StyleSheet,
     TouchableOpacityProps,
 } from 'react-native';
-import React from 'react';
-import { FunctionComponent } from 'react';
 
 const styles = StyleSheet.create({
     button: {

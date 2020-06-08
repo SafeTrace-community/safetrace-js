@@ -1,19 +1,22 @@
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { FunctionComponent, useState, useCallback } from 'react';
 import {
     StyleSheet,
     StatusBar,
     TouchableOpacity,
     Platform,
+    View,
+    Image,
+    Text,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { View, Image, Text } from 'react-native';
-import introHeader from '../assets/intro-header.png';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+
 import { RootStackParamList } from '../Main';
+import introHeader from '../assets/intro-header.png';
 import { ToggleAppearance } from '../components/ToggleAppearance';
 import sharedStyles, { Colors } from '../styles/shared';
-import { useFocusEffect } from '@react-navigation/native';
+
 const styles = StyleSheet.create({
     screen: {
         flex: 1,

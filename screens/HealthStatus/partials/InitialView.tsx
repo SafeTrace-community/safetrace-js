@@ -1,11 +1,12 @@
-import React, { FunctionComponent } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
+import React, { FunctionComponent } from 'react';
 import { View, Image, Text } from 'react-native';
+
 import { RootStackParamList } from '../../../Main';
-import { styles } from '../HealthStatus';
 import healthSurveyIcon from '../../../assets/icons/health-check-icon.png';
-import sharedStyles from '../../../styles/shared';
 import { ProgressNav, ProgressNavItem } from '../../../components/ProgressNav';
+import sharedStyles from '../../../styles/shared';
+import { styles } from '../HealthStatus';
 
 type Props = {
     isAuthenticated: boolean;
@@ -32,7 +33,7 @@ const InitialView: FunctionComponent<Props> = ({
             <ProgressNav>
                 <ProgressNavItem
                     onPress={() => navigation.navigate('GetStartedWithPDA')}
-                    testID={'createPersonalDataAccount'}
+                    testID="createPersonalDataAccount"
                     isCompleted={isAuthenticated}
                     isEnabled={!isAuthenticated}
                     text="Create a personal data account"
@@ -40,7 +41,7 @@ const InitialView: FunctionComponent<Props> = ({
 
                 <ProgressNavItem
                     onPress={() => navigation.navigate('HealthSurvey')}
-                    testID={'providePreliminaryHealthSurvey'}
+                    testID="providePreliminaryHealthSurvey"
                     isCompleted={false}
                     isEnabled={isAuthenticated}
                     text="Provide preliminary health

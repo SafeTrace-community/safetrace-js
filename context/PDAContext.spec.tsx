@@ -1,4 +1,3 @@
-import React, { useContext, FunctionComponent, useEffect } from 'react';
 import {
     render,
     cleanup,
@@ -6,15 +5,17 @@ import {
     wait,
     fireEvent,
 } from '@testing-library/react-native';
+import * as SecureStore from 'expo-secure-store';
+import React, { useContext, FunctionComponent, useEffect } from 'react';
 import { Text, Button, AsyncStorage } from 'react-native';
+
+import { TOKEN_STORAGE_KEY } from '../Constants';
+import pdaService, { PDAService } from '../services/PDAService';
+import PDAProvider, { PDAContext } from './PDAContext';
 
 jest.mock('../services/PDAService');
 jest.mock('expo-secure-store');
 jest.mock('sentry-expo', () => ({}));
-import * as SecureStore from 'expo-secure-store';
-import PDAProvider, { PDAContext } from './PDAContext';
-import pdaService, { PDAService } from '../services/PDAService';
-import { TOKEN_STORAGE_KEY } from '../Constants';
 const mockPdaService = pdaService as jest.Mocked<PDAService>;
 
 describe('PDAContext provider', () => {

@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { NavigationContainer } from '@react-navigation/native';
 import {
     render,
     fireEvent,
@@ -7,10 +6,11 @@ import {
     wait,
     getByTestId,
 } from '@testing-library/react-native';
+import React from 'react';
+
+import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import pdaService, { PDAService } from '../../services/PDAService';
-import { NavigationContainer } from '@react-navigation/native';
-import HealthSurveyScreen, { Props as HealthSurveyProps } from './HealthSurvey';
-import PDAProvider, { IPDAContext, PDAContext } from '../../context/PDAContext';
+import HealthSurveyScreen from './HealthSurvey';
 
 jest.mock('../../services/PDAService');
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -81,7 +81,7 @@ describe('Health Check Symptoms', () => {
         });
 
         test('re-enabling the button on submission', async () => {
-            let resolveHealthSurvey: Function;
+            let resolveHealthSurvey: any;
             const healthSurveyPromise = new Promise<void>((resolve) => {
                 resolveHealthSurvey = resolve;
             });
@@ -113,7 +113,7 @@ describe('Health Check Symptoms', () => {
         });
 
         test('re-enabling the button on submission with error', async () => {
-            let rejectHealthSurvey: Function;
+            let rejectHealthSurvey: any;
             const healthSurveyPromise = new Promise<void>((_, reject) => {
                 rejectHealthSurvey = reject;
             });

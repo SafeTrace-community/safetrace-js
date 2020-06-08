@@ -1,8 +1,9 @@
+import { render, fireEvent, act } from '@testing-library/react-native';
 import React from 'react';
-import HealthStatusScreen from './HealthStatus';
-import { render, fireEvent, act, wait } from '@testing-library/react-native';
+
 import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import MockedNavigator from '../testUtils/MockedNavigator';
+import HealthStatusScreen from './HealthStatus';
 
 describe('Health status screen', () => {
     test('not requesting data if not authorized', () => {
@@ -12,7 +13,7 @@ describe('Health status screen', () => {
             healthSurveys: [],
         };
 
-        const { findByTestId } = renderHealthStatusScreen({
+        renderHealthStatusScreen({
             context,
         });
 
@@ -197,7 +198,7 @@ describe('Health status screen', () => {
                 ],
             };
 
-            const { findByTestId, findByText } = renderHealthStatusScreen({
+            const { findByTestId } = renderHealthStatusScreen({
                 context,
             });
 

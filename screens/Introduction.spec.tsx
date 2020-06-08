@@ -1,9 +1,6 @@
+import { render, fireEvent } from '@testing-library/react-native';
 import React from 'react';
-import {
-    render,
-    fireEvent,
-    NativeTestEvent,
-} from '@testing-library/react-native';
+
 import Introduction from './Introduction';
 
 jest.mock('@react-navigation/native');

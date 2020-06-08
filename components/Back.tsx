@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+
 import ChevronLeftIcon from '../assets/icons/chevron-left.svg';
 
 const styles = StyleSheet.create({

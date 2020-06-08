@@ -1,9 +1,9 @@
 import { HatClient, HatClientConfig } from '@dataswift/hat-js';
-import * as SecureStore from 'expo-secure-store';
-
-import * as Sentry from 'sentry-expo';
-import { TOKEN_STORAGE_KEY } from '../Constants';
 import { Linking } from 'expo';
+import * as SecureStore from 'expo-secure-store';
+import * as Sentry from 'sentry-expo';
+
+import { TOKEN_STORAGE_KEY } from '../Constants';
 
 export interface IPDAService {
     isAuthenticated(): boolean;

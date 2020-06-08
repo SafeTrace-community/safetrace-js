@@ -1,12 +1,12 @@
-import React from 'react';
-import { FunctionComponent } from 'react';
 import { differenceInDays } from 'date-fns';
+import React, { FunctionComponent } from 'react';
 import { View, Text } from 'react-native';
-import { styles } from '../HealthStatus';
+
 import { HealthIndicator } from '../../../components/HealthIndicator';
-import sharedStyles from '../../../styles/shared';
-import { SecondaryButton } from '../../../components/SecondaryButton';
 import { ProgressNav, ProgressNavItem } from '../../../components/ProgressNav';
+import { SecondaryButton } from '../../../components/SecondaryButton';
+import sharedStyles from '../../../styles/shared';
+import { styles } from '../HealthStatus';
 
 const getEngagementMessage = (latestHealthSurvey: st.HealthSurvey) => {
     const daysSinceLastHealthSurvey = differenceInDays(
@@ -56,16 +56,16 @@ const CompletedHealthStatusView: FunctionComponent<Props> = ({
                 <ProgressNav>
                     <ProgressNavItem
                         onPress={() => {}}
-                        testID={'createPersonalDataAccount'}
-                        isCompleted={true}
+                        testID="createPersonalDataAccount"
+                        isCompleted
                         isEnabled={false}
                         text="Create a personal data account"
                     />
 
                     <ProgressNavItem
                         onPress={() => {}}
-                        testID={'providePreliminaryHealthSurvey'}
-                        isCompleted={true}
+                        testID="providePreliminaryHealthSurvey"
+                        isCompleted
                         isEnabled={false}
                         text="Provide preliminary health
                         survey"

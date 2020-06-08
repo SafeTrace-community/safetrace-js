@@ -1,7 +1,6 @@
-import React, { useContext, useState, useCallback, useMemo } from 'react';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../Main';
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useContext, useState, useCallback } from 'react';
 import {
     View,
     SafeAreaView,
@@ -9,12 +8,11 @@ import {
     Button,
     ActivityIndicator,
 } from 'react-native';
-
 import * as Sentry from 'sentry-expo';
-import sharedStyles from '../../styles/shared';
 
+import { RootStackParamList } from '../../Main';
 import { PDAContext } from '../../context/PDAContext';
-
+import sharedStyles from '../../styles/shared';
 import CompletedHealthStatusView from './partials/CompletedView';
 import InitialView from './partials/InitialView';
 
@@ -100,14 +98,14 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     useFocusEffect(onScreenEntry);
 
     const hasCompletedHealthSurveySteps = (): boolean => {
-        return healthSurveys && healthSurveys.length > 0 ? true : false;
+        return !!(healthSurveys && healthSurveys.length > 0);
     };
 
     return (
         <SafeAreaView style={sharedStyles.safeArea}>
             <View style={[sharedStyles.container, styles.screen]}>
                 {loading && (
-                    <View testID={'screenLoading'}>
+                    <View testID="screenLoading">
                         <ActivityIndicator size="large" />
                     </View>
                 )}

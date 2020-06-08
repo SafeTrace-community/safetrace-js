@@ -1,3 +1,4 @@
+import * as SecureStore from 'expo-secure-store';
 import React, {
     createContext,
     FunctionComponent,
@@ -5,10 +6,10 @@ import React, {
     useState,
     useEffect,
 } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import { AsyncStorage } from 'react-native';
+
 import { TOKEN_STORAGE_KEY } from '../Constants';
 import pdaService from '../services/PDAService';
-import { AsyncStorage } from 'react-native';
 
 export interface IPDAContext {
     isAuthenticated: boolean;

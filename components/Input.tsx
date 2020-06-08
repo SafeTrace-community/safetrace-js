@@ -1,6 +1,5 @@
+import React, { FunctionComponent } from 'react';
 import { TextInputProps, TextInput } from 'react-native';
-import React from 'react';
-import { FunctionComponent } from 'react';
 
 const styles = {
     input: {
