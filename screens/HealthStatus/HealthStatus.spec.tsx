@@ -3,6 +3,11 @@ import HealthStatusScreen from './HealthStatus';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import MockedNavigator from '../../testUtils/MockedNavigator';
 import { IPDAContext, PDAContext } from '../../context/PDAContext';
+import demographicInformationService from '../../services/DemographicInformationService';
+
+jest.mock('../../services/DemographicInformationService');
+
+const mockDemographicInformationService: jest.Mocked<typeof demographicInformationService> = demographicInformationService as any;
 
 describe('Health status screen', () => {
     test('not requesting data if not authorized', () => {
@@ -122,6 +127,20 @@ describe('Health status screen', () => {
         });
     });
 
+    describe('saving the demographic information to the PDA on when first hitting this route after creating a PDA', () => {
+        test('pushing', () => {
+            renderHealthStatusScreen({
+                context: {
+                    isAuthenticated: true,
+                },
+            });
+
+            expect(
+                mockDemographicInformationService.pushToPDA
+            ).toHaveBeenCalled();
+        });
+    });
+
     describe('Preliminary health status survey completed', () => {
         test('checking if any health surveys have been completed on entering screen', () => {
             const context = {
@@ -184,7 +203,7 @@ describe('Health status screen', () => {
                 ],
             };
 
-            const { findByTestId, findByText } = renderHealthStatusScreen({
+            const { findByTestId } = renderHealthStatusScreen({
                 context,
             });
 

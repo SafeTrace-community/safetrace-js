@@ -1,10 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
-
-import { DEMOGRAPHIC_STORAGE_KEY } from '../Constants';
+import { DEMOGRAPHIC_STORAGE_KEY, DEMOGRAPHIC_SENT_FLAG } from '../Constants';
+import pdaService from './PDAService';
+import { AsyncStorage } from 'react-native';
 
 interface IDemographicInformationService {
     saveDemographicInformation(demographicInfo: st.Demographic): Promise<void>;
     getDemographicInformation(): Promise<st.Demographic | null>;
+    pushToPDA(): Promise<void>;
 }
 
 export class DemographicInformationService
@@ -26,6 +28,18 @@ export class DemographicInformationService
         }
 
         return null;
+    }
+
+    public async pushToPDA(): Promise<void> {
+        const hasPushed = await AsyncStorage.getItem(DEMOGRAPHIC_SENT_FLAG);
+
+        if (hasPushed) {
+            return;
+        }
+
+        const demographicInfo = await this.getDemographicInformation();
+        await pdaService.writeToLocation('demographic', demographicInfo);
+        await AsyncStorage.setItem(DEMOGRAPHIC_SENT_FLAG, 'true');
     }
 }
 

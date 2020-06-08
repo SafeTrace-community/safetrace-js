@@ -19,6 +19,7 @@ import { ProgressNav, ProgressNavItem } from '../../components/ProgressNav';
 import { HealthIndicator } from '../../components/HealthIndicator';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { SecondaryButton } from '../../components/SecondaryButton';
+import demographicInformationService from '../../services/DemographicInformationService';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -83,6 +84,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
         const getScreenData = async () => {
             if (isAuthenticated) {
                 await getLatestHealthSurveys();
+                await demographicInformationService.pushToPDA();
             }
             setLoading(false);
         };

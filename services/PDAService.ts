@@ -13,6 +13,8 @@ export interface IPDAService {
     writeHealthSurvey(healthSurvey: st.HealthSurvey): Promise<void>;
 }
 
+type Location = 'healthsurveys' | 'demographic';
+
 export class PDAService implements IPDAService {
     public static APPLICATION_ID: string = 'sharetrace-dev';
     private namespace: string = 'sharetrace';
@@ -108,6 +110,19 @@ export class PDAService implements IPDAService {
 
     public async logout() {
         await this.hat.auth().signOut();
+    }
+
+    //Trying this
+    public async writeToLocation<T>(
+        location: Location,
+        data: T
+    ): Promise<void> {
+        try {
+            await this.hat!.hatData().create<T>(this.namespace, location, data);
+        } catch (err) {
+            Sentry.captureException(err);
+            throw err;
+        }
     }
 }
 
