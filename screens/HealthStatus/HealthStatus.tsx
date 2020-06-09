@@ -1,5 +1,6 @@
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Constants from 'expo-constants';
 import React, { useContext, useState, useCallback } from 'react';
 import {
     View,
@@ -7,6 +8,7 @@ import {
     StyleSheet,
     Button,
     ActivityIndicator,
+    Text,
 } from 'react-native';
 import * as Sentry from 'sentry-expo';
 
@@ -129,6 +131,9 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                         onPress={() => TEMP_logout()}
                         title="Logout / Reset"
                     />
+                    <Text style={{ textAlign: 'center', color: '#888' }}>
+                        {Constants.nativeBuildVersion}
+                    </Text>
                 </View>
             </View>
         </SafeAreaView>
