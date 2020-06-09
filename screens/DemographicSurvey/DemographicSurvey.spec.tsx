@@ -2,13 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent, wait, act } from '@testing-library/react-native';
 import React from 'react';
 
-import { PDAContext, IPDAContext } from '../../context/PDAContext';
+import { PDAContext } from '../../context/PDAContext';
 import DemographicSurveyScreen from './DemographicSurvey';
 
 describe('DemographicSurvey', () => {
     describe('completing the survey', () => {
         describe('validating', () => {
-            test('showing an error if no age is provided', () => {
+            test('showing errors if no values have been submitted', () => {
                 const { getByTestId } = render(
                     <NavigationContainer>
                         <DemographicSurveyScreen
@@ -22,9 +22,12 @@ describe('DemographicSurvey', () => {
                 expect(getByTestId('ageError').props.children).toContain(
                     'Please enter your age'
                 );
+                expect(getByTestId('sexError').props.children).toContain(
+                    'Please indicate if you are biologically male'
+                );
             });
 
-            test('showing an error if no sex is provided', () => {
+            test('showing an error if no age is provided', () => {
                 const { getByTestId } = render(
                     <NavigationContainer>
                         <DemographicSurveyScreen
@@ -32,6 +35,28 @@ describe('DemographicSurvey', () => {
                         />
                     </NavigationContainer>
                 );
+
+                const femaleRadio = getByTestId('femaleRadio');
+                fireEvent.press(femaleRadio);
+
+                fireEvent.press(getByTestId('nextButton'));
+
+                expect(getByTestId('ageError').props.children).toContain(
+                    'Please enter your age'
+                );
+            });
+
+            test('showing an error if no sex is provided', () => {
+                const { getByTestId, getByLabelText } = render(
+                    <NavigationContainer>
+                        <DemographicSurveyScreen
+                            navigation={{ navigate: jest.fn() } as any}
+                        />
+                    </NavigationContainer>
+                );
+
+                const ageInput = getByLabelText('What is your age?');
+                fireEvent.changeText(ageInput, 35);
 
                 fireEvent.press(getByTestId('nextButton'));
 

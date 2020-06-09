@@ -99,14 +99,16 @@ const PDAProvider: FunctionComponent = ({ children }) => {
 
     const logout = useCallback(async () => {
         await pdaService.logout();
-        await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
-        await SecureStore.deleteItemAsync(DEMOGRAPHIC_STORAGE_KEY);
 
-        if (await SecureStore.getItemAsync(DEMOGRAPHIC_SENT_FLAG)) {
+        try {
+            await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
+            await AsyncStorage.clear();
             await SecureStore.deleteItemAsync(DEMOGRAPHIC_SENT_FLAG);
+            await SecureStore.deleteItemAsync(DEMOGRAPHIC_STORAGE_KEY);
+        } catch (err) {
+            console.log('Nothing to delete');
         }
 
-        await AsyncStorage.clear();
         setHealthSurveys([]);
         setIsAuthenticated(pdaService.isAuthenticated());
     }, []);

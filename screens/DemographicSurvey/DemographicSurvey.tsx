@@ -11,7 +11,9 @@ import {
     StyleSheet,
     SafeAreaView,
     TouchableWithoutFeedback,
+    KeyboardAvoidingView,
     Keyboard,
+    Platform,
     ActivityIndicator,
 } from 'react-native';
 import styled from 'styled-components/native';
@@ -22,7 +24,6 @@ import { Input } from '../../components/Input';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { RadioButton } from '../../components/RadioButton/RadioButton';
 import { PDAContext } from '../../context/PDAContext';
-import demographicInformationService from '../../services/DemographicInformationService';
 import sharedStyles, { Colors } from '../../styles/shared';
 
 const styles = StyleSheet.create({
@@ -103,12 +104,12 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
         clearErrors();
         let isValid = true;
 
-        if (!demographic || demographic.age === null) {
+        if (!demographic || typeof demographic.age !== 'number') {
             setAgeError('Please enter your age');
             isValid = false;
         }
 
-        if (!demographic || demographic.sex === null) {
+        if (!demographic || !demographic.sex) {
             setSexError('Please indicate if you are biologically male');
             isValid = false;
         }
@@ -132,7 +133,10 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <SafeAreaView style={sharedStyles.safeArea}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={[sharedStyles.safeArea]}
+            >
                 <View style={[sharedStyles.container, styles.container]}>
                     <Title>Demographic Information</Title>
 
@@ -228,7 +232,7 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
                         </PrimaryButton>
                     </FormActions>
                 </View>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
     );
 };
