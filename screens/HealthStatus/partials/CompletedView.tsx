@@ -1,4 +1,4 @@
-import { differenceInDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 import React, { FunctionComponent } from 'react';
 import { View, Text } from 'react-native';
 
@@ -9,14 +9,19 @@ import sharedStyles from '../../../styles/shared';
 import { styles } from '../HealthStatus';
 
 const getEngagementMessage = (latestHealthSurvey: st.HealthSurvey) => {
-    const daysSinceLastHealthSurvey = differenceInDays(
+    const daysSinceLastHealthSurvey = differenceInCalendarDays(
         new Date(),
         new Date(latestHealthSurvey.timestamp)
     );
 
-    return daysSinceLastHealthSurvey === 0
-        ? `You have completed a health survey today.`
-        : `You last completed a health survey ${daysSinceLastHealthSurvey} days ago. Please consider taking the survey again.`;
+    switch (daysSinceLastHealthSurvey) {
+        case 0:
+            return 'You have completed a health survey today.';
+        case 1:
+            return `You last completed a health survey yesterday. Please consider taking the survey again.`;
+        default:
+            return `You last completed a health survey ${daysSinceLastHealthSurvey} days ago. Please consider taking the survey again.`;
+    }
 };
 
 type Props = {
