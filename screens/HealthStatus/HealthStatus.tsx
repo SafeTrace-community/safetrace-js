@@ -130,7 +130,6 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
 
                 <View
                     style={{
-                        marginTop: 'auto',
                         borderWidth: 1,
                         borderColor: 'red',
                         borderStyle: 'dashed',
