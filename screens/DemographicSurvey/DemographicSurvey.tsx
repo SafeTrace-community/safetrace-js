@@ -114,9 +114,8 @@ export const DemographicSurvey: FunctionComponent<Props> = ({ navigation }) => {
             return;
         }
 
-        await demographicInformationService.saveDemographicInformation(
-            demographic as st.Demographic
-        );
+        // call method on context
+        await demographicInformationService.save(demographic as st.Demographic);
 
         setSubmitting(false);
         navigation.navigate('HealthStatus');
@@ -150,10 +149,10 @@ export const DemographicSurvey: FunctionComponent<Props> = ({ navigation }) => {
                             }}
                             value={
                                 (demographic &&
-                                    demographic.age &&
-                                    String(demographic.age)) as
-                                    | string
-                                    | undefined
+                                    demographic.age !== null &&
+                                    demographic.age !== undefined &&
+                                    demographic.age.toString()) ||
+                                ''
                             }
                             accessibilityLabel="What is your age?"
                             placeholder="e.g. 35"

@@ -84,7 +84,6 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
         const getScreenData = async () => {
             if (isAuthenticated) {
                 await getLatestHealthSurveys();
-                await demographicInformationService.pushToPDA();
             }
             setLoading(false);
         };

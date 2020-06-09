@@ -4,6 +4,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
+import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePDA from './screens/CreatePDA/CreatePDA';
@@ -30,31 +31,32 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const hasCompletedDemographicSurvey = async (): Promise<boolean> => {
-    const demographicInfo = await demographicInformationService.getDemographicInformation();
-    return !!demographicInfo;
-};
-
 const Main: FunctionComponent = () => {
-    const [showIntroduction, setShowIntroduction] = useState<boolean>(true);
-    const { isAuthenticated, authenticateFromStoredToken } = useContext(
-        PDAContext
-    );
-
-    const setup = async () => {
-        authenticateFromStoredToken();
-
-        const showIntro = await hasCompletedDemographicSurvey();
-        setShowIntroduction(showIntro);
-    };
+    const {
+        isInitialized,
+        isAuthenticated,
+        authenticateFromStoredToken,
+        demographicInformation,
+    } = useContext(PDAContext);
 
     useEffect(() => {
-        setup();
+        authenticateFromStoredToken();
     }, []);
+
+    if (!isInitialized) {
+        // empty view while not initialised
+        return <View testID="loading"></View>;
+    }
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator
+                initialRouteName={
+                    demographicInformation === null
+                        ? 'Introduction'
+                        : 'HealthStatus'
+                }
+            >
                 {isAuthenticated ? (
                     <>
                         <Stack.Screen

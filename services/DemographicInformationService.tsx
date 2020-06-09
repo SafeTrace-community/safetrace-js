@@ -4,21 +4,21 @@ import pdaService from './PDAService';
 import { AsyncStorage } from 'react-native';
 
 interface IDemographicInformationService {
-    saveDemographicInformation(demographicInfo: st.Demographic): Promise<void>;
-    getDemographicInformation(): Promise<st.Demographic | null>;
+    save(demographicInfo: st.Demographic): Promise<void>;
+    get(): Promise<st.Demographic | null>;
     pushToPDA(): Promise<void>;
 }
 
 export class DemographicInformationService
     implements IDemographicInformationService {
-    public async saveDemographicInformation(demographicInfo: st.Demographic) {
+    public async save(demographicInfo: st.Demographic) {
         await SecureStore.setItemAsync(
             DEMOGRAPHIC_STORAGE_KEY,
             JSON.stringify(demographicInfo)
         );
     }
 
-    public async getDemographicInformation(): Promise<st.Demographic | null> {
+    public async get(): Promise<st.Demographic | null> {
         const jsonString = await SecureStore.getItemAsync(
             DEMOGRAPHIC_STORAGE_KEY
         );
@@ -37,7 +37,7 @@ export class DemographicInformationService
             return;
         }
 
-        const demographicInfo = await this.getDemographicInformation();
+        const demographicInfo = await this.get();
         await pdaService.writeToLocation('demographic', demographicInfo);
         await AsyncStorage.setItem(DEMOGRAPHIC_SENT_FLAG, 'true');
     }

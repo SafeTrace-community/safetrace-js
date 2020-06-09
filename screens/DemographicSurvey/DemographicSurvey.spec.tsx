@@ -16,7 +16,7 @@ const mockDemographicInformationService: jest.Mocked<typeof demographicInformati
 
 describe('DemographicSurvey', () => {
     beforeEach(() => {
-        mockDemographicInformationService.saveDemographicInformation.mockReset();
+        mockDemographicInformationService.save.mockReset();
     });
 
     describe('completing the survey', () => {
@@ -101,19 +101,17 @@ describe('DemographicSurvey', () => {
 
             fireEvent.press(getByTestId('nextButton'));
 
-            expect(
-                mockDemographicInformationService.saveDemographicInformation
-            ).toHaveBeenCalledWith({
-                age: 35,
-                sex: 'female',
-            });
+            expect(mockDemographicInformationService.save).toHaveBeenCalledWith(
+                {
+                    age: 35,
+                    sex: 'female',
+                }
+            );
         });
 
         test('set the button to submitting while the save is in progress', async () => {
             const savePromise = Promise.resolve();
-            mockDemographicInformationService.saveDemographicInformation.mockReturnValue(
-                savePromise
-            );
+            mockDemographicInformationService.save.mockReturnValue(savePromise);
 
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>

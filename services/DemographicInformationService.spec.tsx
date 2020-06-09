@@ -23,7 +23,7 @@ describe('DemographicInformationService', () => {
             sex: 'female',
         };
 
-        await demographicInformationService.saveDemographicInformation(info);
+        await demographicInformationService.save(info);
 
         expect(mockSecureStore.setItemAsync).toHaveBeenCalledWith(
             DEMOGRAPHIC_STORAGE_KEY,
@@ -33,7 +33,7 @@ describe('DemographicInformationService', () => {
 
     describe('getting demographic info', () => {
         test('returning null when no demographic information is in storage', async () => {
-            const demographicInfo = await demographicInformationService.getDemographicInformation();
+            const demographicInfo = await demographicInformationService.get();
 
             expect(mockSecureStore.getItemAsync).toHaveBeenCalledWith(
                 DEMOGRAPHIC_STORAGE_KEY
@@ -49,7 +49,7 @@ describe('DemographicInformationService', () => {
             mockSecureStore.getItemAsync.mockResolvedValue(
                 JSON.stringify(savedInfo)
             );
-            const demographicInfo = await demographicInformationService.getDemographicInformation();
+            const demographicInfo = await demographicInformationService.get();
 
             expect(mockSecureStore.getItemAsync).toHaveBeenCalledWith(
                 DEMOGRAPHIC_STORAGE_KEY

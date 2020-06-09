@@ -7,15 +7,20 @@ import {
     fireEvent,
 } from '@testing-library/react-native';
 import { Text, Button, AsyncStorage } from 'react-native';
-
-jest.mock('../services/PDAService');
-jest.mock('expo-secure-store');
-jest.mock('sentry-expo', () => ({}));
 import * as SecureStore from 'expo-secure-store';
 import PDAProvider, { PDAContext } from './PDAContext';
 import pdaService, { PDAService } from '../services/PDAService';
 import { TOKEN_STORAGE_KEY } from '../Constants';
+import demographicInformationService from '../services/DemographicInformationService';
+
+jest.mock('expo-secure-store');
+jest.mock('sentry-expo', () => ({}));
+jest.mock('../services/PDAService');
+jest.mock('../services/DemographicInformationService');
+
+const mockSecureStore: jest.Mocked<typeof SecureStore> = SecureStore as any;
 const mockPdaService = pdaService as jest.Mocked<PDAService>;
+const mockDemographicInformationService: jest.Mocked<typeof demographicInformationService> = demographicInformationService as any;
 
 describe('PDAContext provider', () => {
     beforeEach(cleanup);
@@ -27,6 +32,41 @@ describe('PDAContext provider', () => {
             </PDAProvider>
         );
     }
+
+    test('determining if the data has been initialized', async () => {
+        const AsyncStorageGetSpy = jest.spyOn(AsyncStorage, 'getItem');
+
+        const demographicInfoPromise = Promise.resolve({} as any);
+        const healthSurveyPromise = Promise.resolve('[]');
+
+        AsyncStorageGetSpy.mockReturnValue(healthSurveyPromise);
+        mockDemographicInformationService.get.mockReturnValue(
+            demographicInfoPromise
+        );
+
+        const TestComponent: FunctionComponent = () => {
+            const { isInitialized } = useContext(PDAContext);
+
+            return (
+                <Text testID="isInitialized">
+                    {isInitialized ? 'true' : 'false'}
+                </Text>
+            );
+        };
+
+        const { getByTestId } = renderComponent(TestComponent);
+
+        expect(getByTestId('isInitialized').children.join('')).toEqual('false');
+
+        await act(async () => {
+            await healthSurveyPromise;
+            await demographicInfoPromise;
+        });
+
+        expect(getByTestId('isInitialized').children.join('')).toEqual('true');
+
+        AsyncStorageGetSpy.mockRestore();
+    });
 
     describe('is authenticated', () => {
         test('default value is whatever the PDAService.isAuthenticated returns (true)', () => {
@@ -387,6 +427,74 @@ describe('PDAContext provider', () => {
             );
 
             expect(mockPdaService.getHealthSurveys).toBeCalledTimes(2);
+        });
+    });
+
+    describe('getting demographic information', () => {
+        beforeEach(() => {
+            mockDemographicInformationService.get.mockReset();
+        });
+
+        test('retrieving the demographic information', async () => {
+            const demographicInfo: st.Demographic = {
+                age: 60,
+                sex: 'female',
+            };
+            mockDemographicInformationService.get.mockResolvedValue(
+                demographicInfo
+            );
+
+            const TestComponent: FunctionComponent = () => {
+                const { demographicInformation } = useContext(PDAContext);
+
+                return (
+                    <>
+                        <Text testID="demographicInformation">
+                            {JSON.stringify(demographicInformation)}
+                        </Text>
+                    </>
+                );
+            };
+
+            const { getByTestId } = renderComponent(TestComponent);
+
+            await act(async () => {
+                await wait(() =>
+                    expect(
+                        mockDemographicInformationService.get
+                    ).toHaveBeenCalled()
+                );
+            });
+
+            expect(
+                getByTestId('demographicInformation').children.join('')
+            ).toEqual(JSON.stringify(demographicInfo));
+        });
+
+        test('pushing to PDA after creating/logging into account', async () => {
+            const TOKEN = '12345';
+            mockSecureStore.getItemAsync.mockResolvedValue(TOKEN);
+            mockPdaService.authenticate.mockResolvedValue();
+
+            const TestComponent: FunctionComponent = () => {
+                const { authenticateWithToken } = useContext(PDAContext);
+
+                useEffect(() => {
+                    authenticateWithToken(TOKEN);
+                }, []);
+
+                return <Text>Logging into PDA</Text>;
+            };
+
+            renderComponent(TestComponent);
+
+            await act(async () => {
+                await wait(() =>
+                    expect(
+                        mockDemographicInformationService.pushToPDA
+                    ).toHaveBeenCalled()
+                );
+            });
         });
     });
 

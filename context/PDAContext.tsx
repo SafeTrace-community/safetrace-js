@@ -6,18 +6,25 @@ import React, {
     useEffect,
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { TOKEN_STORAGE_KEY } from '../Constants';
+import {
+    TOKEN_STORAGE_KEY,
+    DEMOGRAPHIC_STORAGE_KEY,
+    DEMOGRAPHIC_SENT_FLAG,
+} from '../Constants';
 import pdaService from '../services/PDAService';
 import { AsyncStorage } from 'react-native';
+import demographicInformationService from '../services/DemographicInformationService';
 
 export interface IPDAContext {
+    isInitialized: boolean;
     isAuthenticated: boolean;
-    authenticateFromStoredToken: () => void;
-    logout: () => void;
-    authenticateWithToken: (token: string) => void;
     pdaDomain: string;
     getLoginUrl(hatDomain: string): Promise<[string | null, string | null]>;
     healthSurveys: st.HealthSurvey[] | null;
+    demographicInformation: st.Demographic | null;
+    authenticateFromStoredToken: () => void;
+    authenticateWithToken: (token: string) => void;
+    logout: () => void;
     getLatestHealthSurveys: (options?: { refresh: boolean }) => Promise<void>;
     writeHealthSurvey: (healthSurvey: st.HealthSurvey) => Promise<void>;
 }
@@ -25,15 +32,18 @@ export interface IPDAContext {
 export const PDAContext = createContext<IPDAContext>({} as any);
 
 const PDAProvider: FunctionComponent = ({ children }) => {
+    const [isInitialized, setIsInitialized] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(
         pdaService.isAuthenticated()
     );
-
     const [pdaDomain, setPdaDomain] = useState(pdaService.getHatDomain());
-
     const [healthSurveys, setHealthSurveys] = useState<
         st.HealthSurvey[] | null
     >(null);
+    const [
+        demographicInformation,
+        setDemographicInformation,
+    ] = useState<st.Demographic | null>(null);
 
     useEffect(() => {
         async function getInitialData() {
@@ -44,6 +54,12 @@ const PDAProvider: FunctionComponent = ({ children }) => {
             if (healthSurveysFromStorage) {
                 setHealthSurveys(JSON.parse(healthSurveysFromStorage));
             }
+
+            setDemographicInformation(
+                await demographicInformationService.get()
+            );
+
+            setIsInitialized(true);
         }
 
         getInitialData();
@@ -52,6 +68,11 @@ const PDAProvider: FunctionComponent = ({ children }) => {
     useEffect(() => {
         setPdaDomain(pdaService.getHatDomain());
     }, [isAuthenticated]);
+
+    // lifecycle method called when user has logged in/created an account
+    const onAuthenticationComplete = useCallback(async () => {
+        demographicInformationService.pushToPDA();
+    }, []);
 
     const authenticateFromStoredToken = useCallback(async () => {
         const token = await SecureStore.getItemAsync(TOKEN_STORAGE_KEY);
@@ -68,12 +89,15 @@ const PDAProvider: FunctionComponent = ({ children }) => {
             console.error(e);
         }
 
-        authenticateFromStoredToken();
+        await authenticateFromStoredToken();
+        await onAuthenticationComplete();
     }, []);
 
     const logout = useCallback(async () => {
         await pdaService.logout();
         await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
+        await SecureStore.deleteItemAsync(DEMOGRAPHIC_STORAGE_KEY);
+        await SecureStore.deleteItemAsync(DEMOGRAPHIC_SENT_FLAG);
         await AsyncStorage.clear();
         setHealthSurveys([]);
         setIsAuthenticated(pdaService.isAuthenticated());
@@ -106,6 +130,7 @@ const PDAProvider: FunctionComponent = ({ children }) => {
     );
 
     const value = {
+        isInitialized,
         isAuthenticated,
         authenticateFromStoredToken,
         authenticateWithToken,
@@ -115,6 +140,7 @@ const PDAProvider: FunctionComponent = ({ children }) => {
         getLatestHealthSurveys,
         healthSurveys,
         writeHealthSurvey,
+        demographicInformation,
     };
 
     return <PDAContext.Provider value={value}>{children}</PDAContext.Provider>;
