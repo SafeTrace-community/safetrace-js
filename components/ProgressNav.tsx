@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     progressNavItemLinkContent: {
         flexDirection: 'row',
         alignItems: 'center',
+        flex: 0.85,
     },
 
     progressNavItemLinkContentIcon: {
@@ -54,6 +55,9 @@ const styles = StyleSheet.create({
 
     progressNavItemDisabled: {
         opacity: 0.5,
+    },
+    progressNavItemLinkIcon: {
+        paddingLeft: 10,
     },
 });
 
@@ -121,7 +125,13 @@ export const ProgressNavItem: FunctionComponent<ProgressNavItemProps> = ({
                         {text}
                     </Text>
                 </View>
-                {isEnabled && <NavigationCaretIcon height={10} width={5} />}
+                {isEnabled && (
+                    <NavigationCaretIcon
+                        height={10}
+                        width={5}
+                        style={styles.progressNavItemLinkIcon}
+                    />
+                )}
             </TouchableOpacity>
         </View>
     );
