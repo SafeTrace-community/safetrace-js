@@ -1,13 +1,7 @@
-import React, { Context } from 'react';
+import React from 'react';
 import { render, wait, act } from '@testing-library/react-native';
 import Main from './Main';
 import { PDAContext, IPDAContext } from './context/PDAContext';
-
-import demographicInformationService from './services/DemographicInformationService';
-
-jest.mock('./services/DemographicInformationService');
-
-const mockDemographicInformationService: jest.Mocked<typeof demographicInformationService> = demographicInformationService as any;
 
 describe('Main', () => {
     test('rendering a loading screen until the app is initialized', async () => {

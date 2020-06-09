@@ -1,8 +1,8 @@
-import { RootStackParamList } from '../../Main';
-import * as WebBrowser from 'expo-web-browser';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Linking } from 'expo';
-import { RouteProp } from '@react-navigation/native';
+import Constants from 'expo-constants';
+import * as WebBrowser from 'expo-web-browser';
 import React, {
     FunctionComponent,
     useState,
@@ -10,23 +10,20 @@ import React, {
     useCallback,
 } from 'react';
 import {
-    SafeAreaView,
     View,
     StyleSheet,
-    Image,
-    TextInput,
     Text,
-    Button,
     KeyboardAvoidingView,
     Platform,
     Keyboard,
     TouchableWithoutFeedback,
 } from 'react-native';
-import sharedStyles from '../../styles/shared';
-import { PDAContext } from '../../context/PDAContext';
-import Constants from 'expo-constants';
-import { PrimaryButton } from '../../components/PrimaryButton';
+
+import { RootStackParamList } from '../../Main';
 import { Input } from '../../components/Input';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import { PDAContext } from '../../context/PDAContext';
+import sharedStyles from '../../styles/shared';
 
 type Props = {
     navigation: StackNavigationProp<RootStackParamList>;
@@ -60,7 +57,7 @@ const Login: FunctionComponent<Props> = () => {
             removeLinkingListener();
         }
 
-        let data = Linking.parse(event.url);
+        const data = Linking.parse(event.url);
 
         if (data.path !== 'login-success' && data.path !== 'login-failure') {
             return;
@@ -73,7 +70,6 @@ const Login: FunctionComponent<Props> = () => {
 
         if (data.queryParams!.token) {
             authenticateWithToken(data.queryParams!.token);
-            return;
         }
     };
 
@@ -103,7 +99,7 @@ const Login: FunctionComponent<Props> = () => {
 
     return (
         <KeyboardAvoidingView
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={sharedStyles.safeArea}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

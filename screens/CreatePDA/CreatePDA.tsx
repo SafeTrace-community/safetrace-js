@@ -1,3 +1,8 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Linking } from 'expo';
+import Constants from 'expo-constants';
+import * as WebBrowser from 'expo-web-browser';
 import React, { useState, useContext, useCallback } from 'react';
 import {
     StyleSheet,
@@ -8,18 +13,14 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
 } from 'react-native';
-import { Linking } from 'expo';
-import * as WebBrowser from 'expo-web-browser';
-import sharedStyles, { Colors } from '../../styles/shared';
-import Constants from 'expo-constants';
-import { PDAContext } from '../../context/PDAContext';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../Main';
-import { RouteProp } from '@react-navigation/native';
-import { PrimaryButton } from '../../components/PrimaryButton';
-import { Input } from '../../components/Input';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import { RootStackParamList } from '../../Main';
+import { Input } from '../../components/Input';
 import { Link } from '../../components/Link';
+import { PrimaryButton } from '../../components/PrimaryButton';
+import { PDAContext } from '../../context/PDAContext';
+import sharedStyles, { Colors } from '../../styles/shared';
 
 const styles = StyleSheet.create({
     screen: {
@@ -131,7 +132,7 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
             removeLinkingListener();
         }
 
-        let data = Linking.parse(event.url);
+        const data = Linking.parse(event.url);
 
         if (data.path !== 'signup-return') {
             return;
@@ -147,7 +148,6 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
 
         if (data.queryParams!.token) {
             authenticateWithToken(data.queryParams!.token);
-            return;
         }
     }, []);
 
@@ -202,7 +202,7 @@ const CreatePDA: React.FunctionComponent<Props> = () => {
 
     return (
         <KeyboardAvoidingView
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={[sharedStyles.safeArea, styles.screen]}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

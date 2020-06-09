@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+
+import NavigationCaretIcon from '../assets/navigation-caret.svg';
 import ProgressNavigationCheckedIcon from '../assets/progress-navigation-checked.svg';
 import ProgressNavigationUncheckedIcon from '../assets/progress-navigation-unchecked.svg';
-import NavigationCaretIcon from '../assets/navigation-caret.svg';
 import { Colors } from '../styles/shared';
 
 const styles = StyleSheet.create({
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
     progressNavItemLinkContent: {
         flexDirection: 'row',
         alignItems: 'center',
+        flex: 0.85,
     },
 
     progressNavItemLinkContentIcon: {
@@ -53,6 +55,9 @@ const styles = StyleSheet.create({
 
     progressNavItemDisabled: {
         opacity: 0.5,
+    },
+    progressNavItemLinkIcon: {
+        paddingLeft: 10,
     },
 });
 
@@ -120,7 +125,13 @@ export const ProgressNavItem: FunctionComponent<ProgressNavItemProps> = ({
                         {text}
                     </Text>
                 </View>
-                {isEnabled && <NavigationCaretIcon height={10} width={5} />}
+                {isEnabled && (
+                    <NavigationCaretIcon
+                        height={10}
+                        width={5}
+                        style={styles.progressNavItemLinkIcon}
+                    />
+                )}
             </TouchableOpacity>
         </View>
     );

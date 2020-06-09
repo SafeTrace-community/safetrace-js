@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { NavigationContainer } from '@react-navigation/native';
 import {
     render,
     fireEvent,
@@ -7,10 +6,11 @@ import {
     wait,
     getByTestId,
 } from '@testing-library/react-native';
+import React from 'react';
+
+import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import pdaService, { PDAService } from '../../services/PDAService';
-import { NavigationContainer } from '@react-navigation/native';
-import HealthSurveyScreen, { Props as HealthSurveyProps } from './HealthSurvey';
-import PDAProvider, { IPDAContext, PDAContext } from '../../context/PDAContext';
+import HealthSurveyScreen from './HealthSurvey';
 
 jest.mock('../../services/PDAService');
 jest.mock('react-native/Libraries/Animated/src/NativeAnimatedHelper');
@@ -33,11 +33,10 @@ describe('Health Check Symptoms', () => {
         const { getByLabelText } = renderComponent();
 
         const symptoms = [
-            'Loss of smell or taste',
+            'Loss of smell and taste',
+            'Severe or significant persistent cough',
+            'Severe fatigue',
             'Skipped meals',
-            'Fatigue',
-            'Fever',
-            'Persistent cough',
         ];
 
         symptoms.forEach((symptom) =>
@@ -46,7 +45,7 @@ describe('Health Check Symptoms', () => {
     });
 
     test('when a symptom is selected', () => {
-        const selectedSymptom = 'Fatigue';
+        const selectedSymptom = 'Severe fatigue';
 
         const { getByLabelText } = renderComponent();
 
@@ -73,7 +72,7 @@ describe('Health Check Symptoms', () => {
                 new Promise(() => {})
             );
 
-            fireEvent.press(getByLabelText('Fatigue'));
+            fireEvent.press(getByLabelText('Severe fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
             fireEvent.press(getByTestId('symptomsNext'));
 
@@ -81,7 +80,7 @@ describe('Health Check Symptoms', () => {
         });
 
         test('re-enabling the button on submission', async () => {
-            let resolveHealthSurvey: Function;
+            let resolveHealthSurvey: any;
             const healthSurveyPromise = new Promise<void>((resolve) => {
                 resolveHealthSurvey = resolve;
             });
@@ -96,7 +95,7 @@ describe('Health Check Symptoms', () => {
                 context: mockContext,
             });
 
-            fireEvent.press(getByLabelText('Fatigue'));
+            fireEvent.press(getByLabelText('Severe fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
             fireEvent.press(getByTestId('symptomsNext'));
 
@@ -113,7 +112,7 @@ describe('Health Check Symptoms', () => {
         });
 
         test('re-enabling the button on submission with error', async () => {
-            let rejectHealthSurvey: Function;
+            let rejectHealthSurvey: any;
             const healthSurveyPromise = new Promise<void>((_, reject) => {
                 rejectHealthSurvey = reject;
             });
@@ -130,7 +129,7 @@ describe('Health Check Symptoms', () => {
 
             mockContext.writeHealthSurvey.mockReturnValue(healthSurveyPromise);
 
-            fireEvent.press(getByLabelText('Fatigue'));
+            fireEvent.press(getByLabelText('Severe fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
 
             await act(async () => {
@@ -156,7 +155,10 @@ describe('Health Check Symptoms', () => {
                 context: mockContext,
             });
 
-            const selectedSymptoms = ['Loss of smell or taste', 'Fatigue'];
+            const selectedSymptoms = [
+                'Loss of smell and taste',
+                'Severe fatigue',
+            ];
 
             selectedSymptoms.forEach((symptom) =>
                 fireEvent.press(getByLabelText(symptom))
@@ -165,7 +167,9 @@ describe('Health Check Symptoms', () => {
             fireEvent.press(getByTestId('symptomsNext'));
 
             expect(mockContext.writeHealthSurvey).toHaveBeenCalledWith({
-                symptoms: selectedSymptoms,
+                symptoms: selectedSymptoms.map((symptom) =>
+                    symptom.toLowerCase()
+                ),
                 timestamp: Date.now(),
             });
         });
@@ -179,8 +183,8 @@ describe('Health Check Symptoms', () => {
 
             mockPdaService.writeHealthSurvey.mockResolvedValue();
 
-            fireEvent.press(getByLabelText('Loss of smell or taste'));
-            fireEvent.press(getByLabelText('Fatigue'));
+            fireEvent.press(getByLabelText('Loss of smell and taste'));
+            fireEvent.press(getByLabelText('Severe fatigue'));
             fireEvent.press(getByTestId('symptomsNext'));
 
             await act(async () => {
@@ -205,8 +209,8 @@ describe('Health Check Symptoms', () => {
                 context: mockContext,
             });
 
-            fireEvent.press(getByLabelText('Loss of smell or taste'));
-            fireEvent.press(getByLabelText('Fatigue'));
+            fireEvent.press(getByLabelText('Loss of smell and taste'));
+            fireEvent.press(getByLabelText('Severe fatigue'));
 
             await act(async () => {
                 fireEvent.press(getByTestId('symptomsNext'));

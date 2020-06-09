@@ -1,11 +1,11 @@
-import pdaService, { PDAService } from './PDAService';
 import { HatClient } from '@dataswift/hat-js';
-import * as SecureStore from 'expo-secure-store';
-import { TOKEN_STORAGE_KEY } from '../Constants';
+import { v4 as uuidv4 } from 'uuid';
+import { v4, v4String } from 'uuid/interfaces';
 
+import pdaService, { PDAService } from './PDAService';
 jest.useFakeTimers();
 jest.mock('expo-secure-store');
-
+jest.mock('uuid');
 jest.mock('expo', () => {
     return {
         Linking: {
@@ -31,6 +31,7 @@ jest.mock('@dataswift/hat-js', () => ({
 }));
 
 const mockHatClient: jest.Mock<HatClient> = HatClient as any;
+const mockuuidv4 = uuidv4 as jest.Mock;
 
 describe('PDAService', () => {
     beforeEach(() => {
@@ -95,7 +96,11 @@ describe('PDAService', () => {
     });
 
     describe('writing HealthSurvey data to a PDA', () => {
-        test('saving HealthSurvey', async () => {
+        test('saving HealthSurvey with a UUID', async () => {
+            const generatedUUID = '12321-2312312-123123-123123';
+
+            mockuuidv4.mockReturnValue(generatedUUID);
+
             mockHatClient.mock.results[0].value
                 .hatData()
                 .create.mockResolvedValue({});
@@ -109,7 +114,10 @@ describe('PDAService', () => {
 
             expect(
                 mockHatClient.mock.results[0].value.hatData().create
-            ).toBeCalledWith('sharetrace', 'healthsurveys', healthSurvey);
+            ).toBeCalledWith('sharetrace', 'healthsurveys', {
+                id: generatedUUID,
+                ...healthSurvey,
+            });
         });
 
         test('handle error when saving HealthSurvey', async () => {

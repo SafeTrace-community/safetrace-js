@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import GetStartedWithPDA from './GetStartedWithPDA';
 import * as WebBrowser from 'expo-web-browser';
+import React from 'react';
+
+import GetStartedWithPDA from './GetStartedWithPDA';
 
 jest.mock('expo-web-browser');
 

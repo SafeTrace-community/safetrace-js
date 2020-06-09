@@ -1,9 +1,10 @@
 import { HatClient, HatClientConfig } from '@dataswift/hat-js';
-import * as SecureStore from 'expo-secure-store';
-
-import * as Sentry from 'sentry-expo';
-import { TOKEN_STORAGE_KEY } from '../Constants';
 import { Linking } from 'expo';
+import * as SecureStore from 'expo-secure-store';
+import * as Sentry from 'sentry-expo';
+import { v4 as uuidv4 } from 'uuid';
+
+import { TOKEN_STORAGE_KEY } from '../Constants';
 
 export interface IPDAService {
     isAuthenticated(): boolean;
@@ -79,11 +80,10 @@ export class PDAService implements IPDAService {
 
     public async writeHealthSurvey(healthSurvey: st.HealthSurvey) {
         try {
-            await this.hat!.hatData().create(
-                this.namespace,
-                'healthsurveys',
-                healthSurvey
-            );
+            await this.hat!.hatData().create(this.namespace, 'healthsurveys', {
+                id: uuidv4(),
+                ...healthSurvey,
+            });
         } catch (err) {
             Sentry.captureException(err);
             throw err;

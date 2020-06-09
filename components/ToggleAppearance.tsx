@@ -1,6 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useRef, FunctionComponent, useEffect, useState } from 'react';
 import { Animated } from 'react-native';
-import { FunctionComponent, useEffect, useState } from 'react';
 
 export const ToggleAppearance: FunctionComponent<{
     visible: boolean;
@@ -26,7 +25,11 @@ export const ToggleAppearance: FunctionComponent<{
     };
 
     useEffect(() => {
-        visible ? fadeIn() : fadeOut();
+        if (visible) {
+            fadeIn();
+        } else {
+            fadeOut();
+        }
     }, [visible]);
 
     return (

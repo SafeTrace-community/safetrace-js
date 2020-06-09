@@ -69,7 +69,9 @@ type FormOptions = {
     sex?: 'male' | 'female';
 };
 
-export const DemographicSurvey: FunctionComponent<Props> = ({ navigation }) => {
+export const DemographicSurveyScreen: FunctionComponent<Props> = ({
+    navigation,
+}) => {
     const [demographic, setDemographic] = useState<FormOptions>();
     const [ageError, setAgeError] = useState<string | null>(null);
     const [sexError, setSexError] = useState<string | null>(null);
@@ -223,3 +225,5 @@ export const DemographicSurvey: FunctionComponent<Props> = ({ navigation }) => {
         </TouchableWithoutFeedback>
     );
 };
+
+export default DemographicSurveyScreen;

@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useContext } from 'react';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../Main';
 import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     StyleSheet,
     SafeAreaView,
@@ -11,13 +10,14 @@ import {
     TouchableOpacity,
     ActivityIndicator,
 } from 'react-native';
-import sharedStyles, { Colors } from '../../styles/shared';
-import pdaService from '../../services/PDAService';
+
+import { RootStackParamList } from '../../Main';
 import CheckIcon from '../../assets/icons/check.svg';
 import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
 import Back from '../../components/Back';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { PDAContext } from '../../context/PDAContext';
+import sharedStyles, { Colors } from '../../styles/shared';
 
 export const styles = StyleSheet.create({
     title: {
@@ -100,26 +100,27 @@ export type Props = {
 };
 
 const isSelected = (collection: string[], selection: string): boolean =>
-    collection.some((ds) => ds === selection);
+    collection.some((ds) => ds === selection.toLowerCase());
 
 const toggleSelection = (collection: string[], selection: string): string[] => {
     let newCollection: string[];
 
     if (isSelected(collection, selection)) {
-        newCollection = collection.filter((ds) => ds !== selection);
+        newCollection = collection.filter(
+            (ds) => ds !== selection.toLowerCase()
+        );
     } else {
-        newCollection = [...collection, selection];
+        newCollection = [...collection, selection.toLowerCase()];
     }
 
     return newCollection;
 };
 
 const symptoms = [
-    'Loss of smell or taste',
+    'Loss of smell and taste',
+    'Severe or significant persistent cough',
+    'Severe fatigue',
     'Skipped meals',
-    'Fatigue',
-    'Fever',
-    'Persistent cough',
 ];
 
 const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
@@ -159,7 +160,7 @@ const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                     {symptoms.map((symptom, index) => (
                         <TouchableOpacity
                             key={index}
-                            accessible={true}
+                            accessible
                             accessibilityLabel={symptom}
                             onPress={() => {
                                 const newSymptoms = toggleSelection(

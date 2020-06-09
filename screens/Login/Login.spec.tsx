@@ -1,8 +1,9 @@
-import React from 'react';
 import { render, wait, fireEvent, act } from '@testing-library/react-native';
-import Login from './Login';
-import { IPDAContext, PDAContext } from '../../context/PDAContext';
 import * as WebBrowser from 'expo-web-browser';
+import React from 'react';
+
+import { IPDAContext, PDAContext } from '../../context/PDAContext';
+import Login from './Login';
 
 jest.mock('expo', () => {
     return {

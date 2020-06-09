@@ -6,7 +6,7 @@ import {
     queryByTestId,
     act,
 } from '@testing-library/react-native';
-import { DemographicSurvey } from './DemographicSurvey';
+import DemographicSurveyScreen from './DemographicSurvey';
 import { NavigationContainer } from '@react-navigation/native';
 import demographicInformationService from '../../services/DemographicInformationService';
 
@@ -24,7 +24,7 @@ describe('DemographicSurvey', () => {
             test('showing an error if no age is provided', () => {
                 const { getByTestId } = render(
                     <NavigationContainer>
-                        <DemographicSurvey
+                        <DemographicSurveyScreen
                             navigation={{ navigate: jest.fn() } as any}
                         />
                     </NavigationContainer>
@@ -40,7 +40,7 @@ describe('DemographicSurvey', () => {
             test('showing an error if no sex is provided', () => {
                 const { getByTestId } = render(
                     <NavigationContainer>
-                        <DemographicSurvey
+                        <DemographicSurveyScreen
                             navigation={{ navigate: jest.fn() } as any}
                         />
                     </NavigationContainer>
@@ -56,7 +56,7 @@ describe('DemographicSurvey', () => {
             test('clearing error when after changing field value', () => {
                 const { getByTestId, getByLabelText, queryByTestId } = render(
                     <NavigationContainer>
-                        <DemographicSurvey
+                        <DemographicSurveyScreen
                             navigation={{ navigate: jest.fn() } as any}
                         />
                     </NavigationContainer>
@@ -87,7 +87,7 @@ describe('DemographicSurvey', () => {
         test('saving the demographic information in secure storage', () => {
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <DemographicSurvey
+                    <DemographicSurveyScreen
                         navigation={{ navigate: jest.fn() } as any}
                     />
                 </NavigationContainer>
@@ -115,7 +115,7 @@ describe('DemographicSurvey', () => {
 
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <DemographicSurvey
+                    <DemographicSurveyScreen
                         navigation={{ navigate: jest.fn() } as any}
                     />
                 </NavigationContainer>
@@ -146,7 +146,7 @@ describe('DemographicSurvey', () => {
             const navigateStub = jest.fn();
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <DemographicSurvey
+                    <DemographicSurveyScreen
                         navigation={{ navigate: navigateStub } as any}
                     />
                 </NavigationContainer>

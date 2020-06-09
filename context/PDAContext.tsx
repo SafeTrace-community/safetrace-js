@@ -5,12 +5,12 @@ import React, {
     useState,
     useEffect,
 } from 'react';
-import * as SecureStore from 'expo-secure-store';
 import {
     TOKEN_STORAGE_KEY,
     DEMOGRAPHIC_STORAGE_KEY,
     DEMOGRAPHIC_SENT_FLAG,
 } from '../Constants';
+import * as SecureStore from 'expo-secure-store';
 import pdaService from '../services/PDAService';
 import { AsyncStorage } from 'react-native';
 import demographicInformationService from '../services/DemographicInformationService';

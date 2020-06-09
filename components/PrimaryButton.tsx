@@ -1,15 +1,13 @@
+import React, { FunctionComponent } from 'react';
 import {
     TouchableOpacity,
     GestureResponderEvent,
     Text,
     StyleSheet,
     TouchableOpacityProps,
-    View,
     StyleProp,
     TextStyle,
 } from 'react-native';
-import React from 'react';
-import { FunctionComponent } from 'react';
 
 const styles = StyleSheet.create({
     button: {

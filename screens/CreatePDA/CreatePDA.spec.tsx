@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     render,
     fireEvent,
@@ -8,10 +7,12 @@ import {
     act,
     queryByTestId,
 } from '@testing-library/react-native';
-import CreatePDA from './CreatePDA';
-import * as WebBrowser from 'expo-web-browser';
 import { Linking } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
+import React from 'react';
+
 import { PDAContext } from '../../context/PDAContext';
+import CreatePDA from './CreatePDA';
 
 jest.mock('expo-web-browser');
 jest.mock('expo', () => {

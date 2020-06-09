@@ -1,10 +1,5 @@
-import React, {
-    FunctionComponent,
-    useContext,
-    useEffect,
-    useState,
-} from 'react';
-import { Text, View } from 'react-native';
+import React, { FunctionComponent, useContext, useEffect } from 'react';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreatePDA from './screens/CreatePDA/CreatePDA';
@@ -14,8 +9,7 @@ import Login from './screens/Login/Login';
 import Introduction from './screens/Introduction/Introduction';
 import HealthStatusScreen from './screens/HealthStatus/HealthStatus';
 import HealthSurveyScreen from './screens/HealthSurvey/HealthSurvey';
-import { DemographicSurvey } from './screens/DemographicSurvey/DemographicSurvey';
-import demographicInformationService from './services/DemographicInformationService';
+import DemographicSurveyScreen from './screens/DemographicSurvey/DemographicSurvey';
 
 export type RootStackParamList = {
     // Specifying undefined means that the route is there but has no params
@@ -81,7 +75,7 @@ const Main: FunctionComponent = () => {
                         />
                         <Stack.Screen
                             name="DemographicSurvey"
-                            component={DemographicSurvey}
+                            component={DemographicSurveyScreen}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
