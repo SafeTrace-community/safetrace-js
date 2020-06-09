@@ -9,6 +9,7 @@ import {
     Button,
     ActivityIndicator,
     Text,
+    ScrollView,
 } from 'react-native';
 import * as Sentry from 'sentry-expo';
 
@@ -105,7 +106,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
 
     return (
         <SafeAreaView style={sharedStyles.safeArea}>
-            <View style={[sharedStyles.container, styles.screen]}>
+            <ScrollView style={[sharedStyles.container, styles.screen]}>
                 {loading && (
                     <View testID="screenLoading">
                         <ActivityIndicator size="large" />
@@ -159,7 +160,7 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                         {Constants.nativeBuildVersion}
                     </Text>
                 </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
