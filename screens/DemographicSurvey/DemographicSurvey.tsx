@@ -58,10 +58,6 @@ const FormField = styled.View`
     margin-bottom: 30px;
 `;
 
-const FormActions = styled.View`
-    margin-top: auto;
-`;
-
 const Error = styled.Text`
     color: ${Colors.red};
     margin-bottom: 5px;
@@ -201,36 +197,34 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
                         />
                     </FormField>
 
-                    <FormActions>
-                        <PrimaryButton
-                            onPress={submitDemographicInformation}
-                            text={submitting ? 'Submitting' : 'Next'}
-                            testID="nextButton"
-                            disabled={submitting}
-                            style={[
-                                {
-                                    alignSelf: 'flex-end',
-                                    width: 'auto',
-                                    paddingVertical: 8,
-                                },
-                                submitting && { opacity: 0.8 },
-                            ]}
-                            textStyle={{
-                                fontSize: 16,
-                                lineHeight: 20,
-                            }}
-                        >
-                            {!submitting && (
-                                <ChevronRightIcon style={{ marginLeft: 10 }} />
-                            )}
-                            {submitting && (
-                                <ActivityIndicator
-                                    color="white"
-                                    style={{ marginLeft: 10 }}
-                                />
-                            )}
-                        </PrimaryButton>
-                    </FormActions>
+                    <PrimaryButton
+                        onPress={submitDemographicInformation}
+                        text={submitting ? 'Submitting' : 'Next'}
+                        testID="nextButton"
+                        disabled={submitting}
+                        style={[
+                            {
+                                alignSelf: 'flex-end',
+                                width: 'auto',
+                                paddingVertical: 8,
+                            },
+                            submitting && { opacity: 0.8 },
+                        ]}
+                        textStyle={{
+                            fontSize: 16,
+                            lineHeight: 20,
+                        }}
+                    >
+                        {!submitting && (
+                            <ChevronRightIcon style={{ marginLeft: 10 }} />
+                        )}
+                        {submitting && (
+                            <ActivityIndicator
+                                color="white"
+                                style={{ marginLeft: 10 }}
+                            />
+                        )}
+                    </PrimaryButton>
                 </View>
             </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
