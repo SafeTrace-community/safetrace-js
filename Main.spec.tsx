@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, wait, act } from '@testing-library/react-native';
+import React from 'react';
+
 import Main from './Main';
 import { PDAContext, IPDAContext } from './context/PDAContext';
 

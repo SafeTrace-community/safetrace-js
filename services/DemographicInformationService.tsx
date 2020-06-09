@@ -1,7 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
+import { AsyncStorage } from 'react-native';
+
 import { DEMOGRAPHIC_STORAGE_KEY, DEMOGRAPHIC_SENT_FLAG } from '../Constants';
 import pdaService from './PDAService';
-import { AsyncStorage } from 'react-native';
 
 interface IDemographicInformationService {
     save(demographicInfo: st.Demographic): Promise<void>;

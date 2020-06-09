@@ -1,14 +1,9 @@
-import React from 'react';
-import {
-    render,
-    fireEvent,
-    wait,
-    queryByTestId,
-    act,
-} from '@testing-library/react-native';
-import DemographicSurveyScreen from './DemographicSurvey';
 import { NavigationContainer } from '@react-navigation/native';
+import { render, fireEvent, wait, act } from '@testing-library/react-native';
+import React from 'react';
+
 import demographicInformationService from '../../services/DemographicInformationService';
+import DemographicSurveyScreen from './DemographicSurvey';
 
 jest.mock('../../services/DemographicInformationService');
 

@@ -1,3 +1,4 @@
+import * as SecureStore from 'expo-secure-store';
 import React, {
     createContext,
     FunctionComponent,
@@ -5,15 +6,15 @@ import React, {
     useState,
     useEffect,
 } from 'react';
+import { AsyncStorage } from 'react-native';
+
 import {
     TOKEN_STORAGE_KEY,
     DEMOGRAPHIC_STORAGE_KEY,
     DEMOGRAPHIC_SENT_FLAG,
 } from '../Constants';
-import * as SecureStore from 'expo-secure-store';
-import pdaService from '../services/PDAService';
-import { AsyncStorage } from 'react-native';
 import demographicInformationService from '../services/DemographicInformationService';
+import pdaService from '../services/PDAService';
 
 export interface IPDAContext {
     isInitialized: boolean;
@@ -97,7 +98,11 @@ const PDAProvider: FunctionComponent = ({ children }) => {
         await pdaService.logout();
         await SecureStore.deleteItemAsync(TOKEN_STORAGE_KEY);
         await SecureStore.deleteItemAsync(DEMOGRAPHIC_STORAGE_KEY);
-        await SecureStore.deleteItemAsync(DEMOGRAPHIC_SENT_FLAG);
+
+        if (await SecureStore.getItemAsync(DEMOGRAPHIC_SENT_FLAG)) {
+            await SecureStore.deleteItemAsync(DEMOGRAPHIC_SENT_FLAG);
+        }
+
         await AsyncStorage.clear();
         setHealthSurveys([]);
         setIsAuthenticated(pdaService.isAuthenticated());

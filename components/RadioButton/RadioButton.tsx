@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { TouchableOpacityProps, View } from 'react-native';
+import { TouchableOpacityProps } from 'react-native';
 import styled from 'styled-components/native';
+
 import { Colors } from '../../styles/shared';
 
 const Radio = styled.TouchableOpacity<{ isSelected: boolean }>`

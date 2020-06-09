@@ -8,10 +8,11 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import React, { useContext, FunctionComponent, useEffect } from 'react';
 import { Text, Button, AsyncStorage } from 'react-native';
-import PDAProvider, { PDAContext } from './PDAContext';
-import pdaService, { PDAService } from '../services/PDAService';
+
 import { TOKEN_STORAGE_KEY } from '../Constants';
 import demographicInformationService from '../services/DemographicInformationService';
+import pdaService, { PDAService } from '../services/PDAService';
+import PDAProvider, { PDAContext } from './PDAContext';
 
 jest.mock('../services/PDAService');
 jest.mock('expo-secure-store');

@@ -1,10 +1,10 @@
+import { wait } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import { AsyncStorage } from 'react-native';
-import demographicInformationService from './DemographicInformationService';
 
 import { DEMOGRAPHIC_STORAGE_KEY, DEMOGRAPHIC_SENT_FLAG } from '../Constants';
+import demographicInformationService from './DemographicInformationService';
 import pdaService from './PDAService';
-import { wait } from '@testing-library/react-native';
 
 jest.mock('expo-secure-store');
 jest.mock('./PDAService');
@@ -86,9 +86,7 @@ describe('DemographicInformationService', () => {
         });
 
         test('preventing a repeat push', async () => {
-            const AsyncStorageSetSpy = jest
-                .spyOn(AsyncStorage, 'getItem')
-                .mockResolvedValue('true');
+            jest.spyOn(AsyncStorage, 'getItem').mockResolvedValue('true');
 
             await demographicInformationService.pushToPDA();
 

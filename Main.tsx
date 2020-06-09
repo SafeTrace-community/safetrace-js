@@ -1,15 +1,16 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react';
-import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import CreatePDA from './screens/CreatePDA/CreatePDA';
-import GetStartedWithPDA from './screens/GetStartedWithPDA/GetStartedWithPDA';
+import React, { FunctionComponent, useContext, useEffect } from 'react';
+import { View } from 'react-native';
+
 import { PDAContext } from './context/PDAContext';
-import Login from './screens/Login/Login';
-import Introduction from './screens/Introduction/Introduction';
+import CreatePDA from './screens/CreatePDA/CreatePDA';
+import DemographicSurveyScreen from './screens/DemographicSurvey/DemographicSurvey';
+import GetStartedWithPDA from './screens/GetStartedWithPDA/GetStartedWithPDA';
 import HealthStatusScreen from './screens/HealthStatus/HealthStatus';
 import HealthSurveyScreen from './screens/HealthSurvey/HealthSurvey';
-import DemographicSurveyScreen from './screens/DemographicSurvey/DemographicSurvey';
+import Introduction from './screens/Introduction/Introduction';
+import Login from './screens/Login/Login';
 
 export type RootStackParamList = {
     // Specifying undefined means that the route is there but has no params
@@ -39,7 +40,7 @@ const Main: FunctionComponent = () => {
 
     if (!isInitialized) {
         // empty view while not initialised
-        return <View testID="loading"></View>;
+        return <View testID="loading" />;
     }
 
     return (

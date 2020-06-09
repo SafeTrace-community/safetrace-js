@@ -1,6 +1,5 @@
 import { HatClient } from '@dataswift/hat-js';
 import { v4 as uuidv4 } from 'uuid';
-import { v4, v4String } from 'uuid/interfaces';
 
 import pdaService, { PDAService } from './PDAService';
 jest.useFakeTimers();

@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, getByTestId } from '@testing-library/react-native';
+import React from 'react';
+
 import { RadioButton } from './RadioButton';
 
 describe('RadioButton', () => {
@@ -27,7 +28,7 @@ describe('RadioButton', () => {
     test('rendering the radio icon as selected', () => {
         const label = 'Label 1';
         const { getByLabelText, getByTestId } = render(
-            <RadioButton label={label} isSelected={true} />
+            <RadioButton label={label} isSelected />
         );
 
         const [iconStyles] = getByTestId('radioIcon').props.style;

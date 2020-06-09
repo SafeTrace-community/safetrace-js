@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
-import MockedNavigator from '../../testUtils/MockedNavigator';
+import React from 'react';
+
 import { IPDAContext, PDAContext } from '../../context/PDAContext';
+import MockedNavigator from '../../testUtils/MockedNavigator';
 import HealthStatusScreen from './HealthStatus';
 
 describe('Health status screen', () => {

@@ -11,6 +11,7 @@ import {
     Text,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
+
 import { RootStackParamList } from '../../Main';
 import introHeader from '../../assets/intro-header.png';
 import { ToggleAppearance } from '../../components/ToggleAppearance';

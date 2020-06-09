@@ -1,7 +1,6 @@
-import React, { FunctionComponent, useState, useCallback } from 'react';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../Main';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { FunctionComponent, useState, useCallback } from 'react';
 import {
     View,
     StyleSheet,
@@ -10,13 +9,15 @@ import {
     Keyboard,
     ActivityIndicator,
 } from 'react-native';
+import styled from 'styled-components/native';
+
+import { RootStackParamList } from '../../Main';
+import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
 import { Input } from '../../components/Input';
-import sharedStyles, { Colors } from '../../styles/shared';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { RadioButton } from '../../components/RadioButton/RadioButton';
 import demographicInformationService from '../../services/DemographicInformationService';
-import styled from 'styled-components/native';
-import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
+import sharedStyles, { Colors } from '../../styles/shared';
 
 const styles = StyleSheet.create({
     container: {
