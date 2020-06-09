@@ -107,58 +107,61 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
     return (
         <SafeAreaView style={sharedStyles.safeArea} testID="healthStatusScreen">
             <ScrollView style={[sharedStyles.container, styles.screen]}>
-                {loading && (
-                    <View testID="screenLoading">
-                        <ActivityIndicator size="large" />
+                <View>
+                    {loading && (
+                        <View testID="screenLoading">
+                            <ActivityIndicator size="large" />
+                        </View>
+                    )}
+
+                    {!loading && hasCompletedHealthSurveySteps() && (
+                        <CompletedHealthStatusView
+                            latestHeathSurvey={healthSurveys![0]}
+                            handleRetakeSurvey={() =>
+                                navigation.navigate('HealthSurvey')
+                            }
+                        />
+                    )}
+
+                    {!loading && !hasCompletedHealthSurveySteps() && (
+                        <InitialView
+                            isAuthenticated={isAuthenticated}
+                            navigation={navigation}
+                        />
+                    )}
+
+                    <View
+                        style={{
+                            borderWidth: 1,
+                            borderColor: 'red',
+                            borderStyle: 'dashed',
+                            padding: 10,
+                            marginBottom: 50,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                marginBottom: 5,
+                                color: '#888',
+                            }}
+                        >
+                            Debug
+                        </Text>
+                        <Button
+                            onPress={() => TEMP_logout()}
+                            title="Logout / Reset"
+                        />
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                color: '#888',
+                                paddingVertical: 5,
+                            }}
+                        >
+                            {Constants.nativeBuildVersion}
+                        </Text>
                     </View>
-                )}
-
-                {!loading && hasCompletedHealthSurveySteps() && (
-                    <CompletedHealthStatusView
-                        latestHeathSurvey={healthSurveys![0]}
-                        handleRetakeSurvey={() =>
-                            navigation.navigate('HealthSurvey')
-                        }
-                    />
-                )}
-
-                {!loading && !hasCompletedHealthSurveySteps() && (
-                    <InitialView
-                        isAuthenticated={isAuthenticated}
-                        navigation={navigation}
-                    />
-                )}
-
-                <View
-                    style={{
-                        borderWidth: 1,
-                        borderColor: 'red',
-                        borderStyle: 'dashed',
-                        padding: 10,
-                    }}
-                >
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            marginBottom: 5,
-                            color: '#888',
-                        }}
-                    >
-                        Debug
-                    </Text>
-                    <Button
-                        onPress={() => TEMP_logout()}
-                        title="Logout / Reset"
-                    />
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            color: '#888',
-                            marginVertical: 5,
-                        }}
-                    >
-                        {Constants.nativeBuildVersion}
-                    </Text>
                 </View>
             </ScrollView>
         </SafeAreaView>

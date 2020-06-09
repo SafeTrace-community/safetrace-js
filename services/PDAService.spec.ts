@@ -1,10 +1,10 @@
 import { HatClient } from '@dataswift/hat-js';
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'uuid-random';
 
 import pdaService, { PDAService } from './PDAService';
 jest.useFakeTimers();
 jest.mock('expo-secure-store');
-jest.mock('uuid');
+jest.mock('uuid-random');
 jest.mock('expo', () => {
     return {
         Linking: {
@@ -30,7 +30,6 @@ jest.mock('@dataswift/hat-js', () => ({
 }));
 
 const mockHatClient: jest.Mock<HatClient> = HatClient as any;
-const mockuuidv4 = uuidv4 as jest.Mock;
 
 describe('PDAService', () => {
     beforeEach(() => {
@@ -97,8 +96,8 @@ describe('PDAService', () => {
     describe('writing HealthSurvey data to a PDA', () => {
         test('saving HealthSurvey with a UUID', async () => {
             const generatedUUID = '12321-2312312-123123-123123';
-
-            mockuuidv4.mockReturnValue(generatedUUID);
+            //@ts-ignore
+            uuid.mockReturnValue(generatedUUID);
 
             mockHatClient.mock.results[0].value
                 .hatData()

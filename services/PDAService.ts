@@ -2,7 +2,7 @@ import { HatClient, HatClientConfig } from '@dataswift/hat-js';
 import { Linking } from 'expo';
 import * as SecureStore from 'expo-secure-store';
 import * as Sentry from 'sentry-expo';
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'uuid-random';
 
 import { TOKEN_STORAGE_KEY } from '../Constants';
 
@@ -81,7 +81,7 @@ export class PDAService implements IPDAService {
     public async writeHealthSurvey(healthSurvey: st.HealthSurvey) {
         try {
             await this.hat!.hatData().create(this.namespace, 'healthsurveys', {
-                id: uuidv4(),
+                id: uuid(),
                 ...healthSurvey,
             });
         } catch (err) {

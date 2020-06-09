@@ -1854,11 +1854,6 @@
     "@types/react-native" "*"
     csstype "^2.2.0"
 
-"@types/uuid@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.0.0.tgz#165aae4819ad2174a17476dbe66feebd549556c0"
-  integrity sha512-xSQfNcvOiE5f9dyd4Kzxbof1aTrLobL278pGLKOZI6esGfZ7ts9Ka16CzIN6Y8hFHE1C7jIBZokULhK1bOgjRw==
-
 "@types/websql@^0.0.27":
   version "0.0.27"
   resolved "https://registry.yarnpkg.com/@types/websql/-/websql-0.0.27.tgz#621a666a7f02018e7cbb4abab956a25736c27d71"
@@ -8534,6 +8529,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
+
+uuid-random@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/uuid-random/-/uuid-random-1.3.0.tgz#62e982fb1ecd03451d199d47588359064d6d3fe4"
+  integrity sha512-FSIlv8RFRPOjcHeDYStV7u6aJRfp+THrcWkbAJpw51JCyQLDxsFz+4dHgTYP8hSpZeSMXBpb/1qrK4bodXpSRA==
 
 uuid@^3.3.2, uuid@^3.4.0:
   version "3.4.0"
