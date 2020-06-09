@@ -28,6 +28,9 @@ export interface IPDAContext {
     logout: () => void;
     getLatestHealthSurveys: (options?: { refresh: boolean }) => Promise<void>;
     writeHealthSurvey: (healthSurvey: st.HealthSurvey) => Promise<void>;
+    saveDemographicInformation: (
+        demographicInfo: st.Demographic
+    ) => Promise<void>;
 }
 
 export const PDAContext = createContext<IPDAContext>({} as any);
@@ -134,6 +137,17 @@ const PDAProvider: FunctionComponent = ({ children }) => {
         [healthSurveys]
     );
 
+    const saveDemographicInformation = useCallback(
+        async (demographicInfo: st.Demographic) => {
+            await demographicInformationService.save(demographicInfo);
+            setDemographicInformation(
+                await demographicInformationService.get()
+            );
+            console.log('set demographic info');
+        },
+        []
+    );
+
     const value = {
         isInitialized,
         isAuthenticated,
@@ -146,6 +160,7 @@ const PDAProvider: FunctionComponent = ({ children }) => {
         healthSurveys,
         writeHealthSurvey,
         demographicInformation,
+        saveDemographicInformation,
     };
 
     return <PDAContext.Provider value={value}>{children}</PDAContext.Provider>;

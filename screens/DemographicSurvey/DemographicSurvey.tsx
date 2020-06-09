@@ -1,6 +1,11 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { FunctionComponent, useState, useCallback } from 'react';
+import React, {
+    FunctionComponent,
+    useState,
+    useCallback,
+    useContext,
+} from 'react';
 import {
     View,
     StyleSheet,
@@ -16,6 +21,7 @@ import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
 import { Input } from '../../components/Input';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { RadioButton } from '../../components/RadioButton/RadioButton';
+import { PDAContext } from '../../context/PDAContext';
 import demographicInformationService from '../../services/DemographicInformationService';
 import sharedStyles, { Colors } from '../../styles/shared';
 
@@ -77,6 +83,7 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
     const [ageError, setAgeError] = useState<string | null>(null);
     const [sexError, setSexError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const { saveDemographicInformation } = useContext(PDAContext);
 
     const selectSex = useCallback(
         (sex: 'male' | 'female') => {
@@ -109,7 +116,7 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
         return isValid;
     }, [demographic]);
 
-    const saveDemographicInformation = async () => {
+    const submitDemographicInformation = async () => {
         setSubmitting(true);
 
         if (!validateForm()) {
@@ -117,8 +124,7 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
             return;
         }
 
-        // call method on context
-        await demographicInformationService.save(demographic as st.Demographic);
+        await saveDemographicInformation(demographic as st.Demographic);
 
         setSubmitting(false);
         navigation.navigate('HealthStatus');
@@ -193,7 +199,7 @@ export const DemographicSurveyScreen: FunctionComponent<Props> = ({
 
                     <FormActions>
                         <PrimaryButton
-                            onPress={saveDemographicInformation}
+                            onPress={submitDemographicInformation}
                             text={submitting ? 'Submitting' : 'Next'}
                             testID="nextButton"
                             disabled={submitting}

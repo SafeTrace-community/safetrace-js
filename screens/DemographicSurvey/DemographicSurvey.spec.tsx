@@ -2,18 +2,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { render, fireEvent, wait, act } from '@testing-library/react-native';
 import React from 'react';
 
-import demographicInformationService from '../../services/DemographicInformationService';
+import { PDAContext, IPDAContext } from '../../context/PDAContext';
 import DemographicSurveyScreen from './DemographicSurvey';
 
-jest.mock('../../services/DemographicInformationService');
-
-const mockDemographicInformationService: jest.Mocked<typeof demographicInformationService> = demographicInformationService as any;
-
 describe('DemographicSurvey', () => {
-    beforeEach(() => {
-        mockDemographicInformationService.save.mockReset();
-    });
-
     describe('completing the survey', () => {
         describe('validating', () => {
             test('showing an error if no age is provided', () => {
@@ -80,11 +72,17 @@ describe('DemographicSurvey', () => {
         });
 
         test('saving the demographic information in secure storage', () => {
+            const saveDemographicInformation = jest.fn();
+
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <DemographicSurveyScreen
-                        navigation={{ navigate: jest.fn() } as any}
-                    />
+                    <PDAContext.Provider
+                        value={{ saveDemographicInformation } as any}
+                    >
+                        <DemographicSurveyScreen
+                            navigation={{ navigate: jest.fn() } as any}
+                        />
+                    </PDAContext.Provider>
                 </NavigationContainer>
             );
 
@@ -96,23 +94,27 @@ describe('DemographicSurvey', () => {
 
             fireEvent.press(getByTestId('nextButton'));
 
-            expect(mockDemographicInformationService.save).toHaveBeenCalledWith(
-                {
-                    age: 35,
-                    sex: 'female',
-                }
-            );
+            expect(saveDemographicInformation).toHaveBeenCalledWith({
+                age: 35,
+                sex: 'female',
+            });
         });
 
         test('set the button to submitting while the save is in progress', async () => {
             const savePromise = Promise.resolve();
-            mockDemographicInformationService.save.mockReturnValue(savePromise);
+            const saveDemographicInformation = jest
+                .fn()
+                .mockReturnValue(savePromise);
 
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <DemographicSurveyScreen
-                        navigation={{ navigate: jest.fn() } as any}
-                    />
+                    <PDAContext.Provider
+                        value={{ saveDemographicInformation } as any}
+                    >
+                        <DemographicSurveyScreen
+                            navigation={{ navigate: jest.fn() } as any}
+                        />
+                    </PDAContext.Provider>
                 </NavigationContainer>
             );
 
@@ -139,11 +141,17 @@ describe('DemographicSurvey', () => {
 
         test('navigating to HealthStatus on successful save', async () => {
             const navigateStub = jest.fn();
+            const saveDemographicInformation = jest.fn().mockResolvedValue({});
+
             const { getByLabelText, getByTestId } = render(
                 <NavigationContainer>
-                    <DemographicSurveyScreen
-                        navigation={{ navigate: navigateStub } as any}
-                    />
+                    <PDAContext.Provider
+                        value={{ saveDemographicInformation } as any}
+                    >
+                        <DemographicSurveyScreen
+                            navigation={{ navigate: navigateStub } as any}
+                        />
+                    </PDAContext.Provider>
                 </NavigationContainer>
             );
 

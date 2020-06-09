@@ -431,12 +431,13 @@ describe('PDAContext provider', () => {
         });
     });
 
-    describe('getting demographic information', () => {
+    describe('demographic information', () => {
         beforeEach(() => {
             mockDemographicInformationService.get.mockReset();
+            mockDemographicInformationService.save.mockReset();
         });
 
-        test('retrieving the demographic information', async () => {
+        test('retrieving from storage', async () => {
             const demographicInfo: st.Demographic = {
                 age: 60,
                 sex: 'female',
@@ -494,6 +495,55 @@ describe('PDAContext provider', () => {
                     expect(
                         mockDemographicInformationService.pushToPDA
                     ).toHaveBeenCalled()
+                );
+            });
+        });
+
+        test('saving to storage', async () => {
+            const demographicInfo: st.Demographic = {
+                age: 60,
+                sex: 'female',
+            };
+
+            mockDemographicInformationService.get.mockResolvedValue(
+                demographicInfo
+            );
+
+            const TestComponent: FunctionComponent = () => {
+                const {
+                    saveDemographicInformation,
+                    demographicInformation,
+                } = useContext(PDAContext);
+
+                return (
+                    <>
+                        <Text testID="demographicInfo">
+                            {demographicInformation &&
+                                demographicInformation.age}
+                        </Text>
+                        <Button
+                            title="saveDemographicInformationButton"
+                            testID="saveDemographicInformationButton"
+                            onPress={() =>
+                                saveDemographicInformation(demographicInfo)
+                            }
+                        />
+                    </>
+                );
+            };
+
+            const { getByTestId } = renderComponent(TestComponent);
+            fireEvent.press(getByTestId('saveDemographicInformationButton'));
+
+            expect(mockDemographicInformationService.save).toHaveBeenCalledWith(
+                demographicInfo
+            );
+
+            await act(async () => {
+                await wait(() =>
+                    expect(
+                        getByTestId('demographicInfo').props.children
+                    ).toEqual(demographicInfo.age)
                 );
             });
         });
