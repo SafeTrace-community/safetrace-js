@@ -112,26 +112,51 @@ const HealthStatusScreen: React.FunctionComponent<Props> = ({ navigation }) => {
                     </View>
                 )}
 
-                {!loading && hasCompletedHealthSurveySteps() ? (
+                {!loading && hasCompletedHealthSurveySteps() && (
                     <CompletedHealthStatusView
                         latestHeathSurvey={healthSurveys![0]}
                         handleRetakeSurvey={() =>
                             navigation.navigate('HealthSurvey')
                         }
                     />
-                ) : (
+                )}
+
+                {!loading && !hasCompletedHealthSurveySteps() && (
                     <InitialView
                         isAuthenticated={isAuthenticated}
                         navigation={navigation}
                     />
                 )}
 
-                <View style={{ marginTop: 'auto' }}>
+                <View
+                    style={{
+                        marginTop: 'auto',
+                        borderWidth: 1,
+                        borderColor: 'red',
+                        borderStyle: 'dashed',
+                        padding: 10,
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            marginBottom: 5,
+                            color: '#888',
+                        }}
+                    >
+                        Debug
+                    </Text>
                     <Button
                         onPress={() => TEMP_logout()}
                         title="Logout / Reset"
                     />
-                    <Text style={{ textAlign: 'center', color: '#888' }}>
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: '#888',
+                            marginVertical: 5,
+                        }}
+                    >
                         {Constants.nativeBuildVersion}
                     </Text>
                 </View>
