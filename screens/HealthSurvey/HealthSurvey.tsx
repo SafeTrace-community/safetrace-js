@@ -100,26 +100,27 @@ export type Props = {
 };
 
 const isSelected = (collection: string[], selection: string): boolean =>
-    collection.some((ds) => ds === selection);
+    collection.some((ds) => ds === selection.toLowerCase());
 
 const toggleSelection = (collection: string[], selection: string): string[] => {
     let newCollection: string[];
 
     if (isSelected(collection, selection)) {
-        newCollection = collection.filter((ds) => ds !== selection);
+        newCollection = collection.filter(
+            (ds) => ds !== selection.toLowerCase()
+        );
     } else {
-        newCollection = [...collection, selection];
+        newCollection = [...collection, selection.toLowerCase()];
     }
 
     return newCollection;
 };
 
 const symptoms = [
-    'Loss of smell or taste',
+    'Loss of smell and taste',
+    'Severe or significant persistent cough',
+    'Severe fatigue',
     'Skipped meals',
-    'Fatigue',
-    'Fever',
-    'Persistent cough',
 ];
 
 const HealthSurveyScreen: React.FunctionComponent<Props> = ({ navigation }) => {
